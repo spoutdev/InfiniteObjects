@@ -1,0 +1,26 @@
+name: test
+variables:
+  test: 64 * 43
+  height: randomInt(32, 56)
+  lowestLeafGroup: randomInt(16, 32)
+  leafGroupCount: randomInt(1, 5)
+
+lists:
+  randomAngles: <leafGroupCount> randomFloat(0, 2 * PI)
+  leafGroupsX: <leafGroupCount> sin(randomAngles) * randomInt(3, 7)
+  leafGroupsY: <leafGroupCount> lowestLeafGroup += randomInt(4, 8)
+  leafGroupsZ: <leafGroupCount> cos(randomAngles) * randomInt(3, 7)
+  branchBaseY: <leafGroupCount> leafGroups - 4
+
+shapes:
+  trunk: Cuboid(2, height, 2)
+  leaves[leafGroupCount]: Sphere(randomInt(2, 4), randomInt(2, 4), randomInt(2, 4))
+
+pickers:
+  leavesPicker: InnerOuterPicker(100, LEAVES.3, 50, LEAVES.3)
+
+build:
+  - place(trunk, LOG.3, 0, 0, 0)
+  - place(leaves, leavesPicker, leafGroupsX, leafGroupsY, leafGroupsZ)
+  - trace(0, branchBaseY, 0, leafGroupsX, leafGroupsY, leafGroupsZ, LOG.3)
+ 
