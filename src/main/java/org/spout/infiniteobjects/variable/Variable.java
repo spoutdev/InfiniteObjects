@@ -26,9 +26,11 @@
  */
 package org.spout.infiniteobjects.variable;
 
-import de.congrace.exp4j.Calculable;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.congrace.exp4j.Calculable;
+
 import org.spout.infiniteobjects.IFOWorldGeneratorObject;
 
 public class Variable {
@@ -64,7 +66,7 @@ public class Variable {
 	public String getName() {
 		return name;
 	}
-	
+
 	public void addReference(Variable variable) {
 		referenced.add(variable);
 	}

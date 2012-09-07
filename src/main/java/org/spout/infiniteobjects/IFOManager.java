@@ -26,9 +26,6 @@
  */
 package org.spout.infiniteobjects;
 
-import de.congrace.exp4j.CustomFunction;
-import de.congrace.exp4j.ExpressionBuilder;
-import de.congrace.exp4j.InvalidCustomFunctionException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,9 +36,15 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import de.congrace.exp4j.CustomFunction;
+import de.congrace.exp4j.ExpressionBuilder;
+import de.congrace.exp4j.InvalidCustomFunctionException;
+
 import org.spout.api.exception.ConfigurationException;
 import org.spout.api.util.config.ConfigurationNode;
 import org.spout.api.util.config.yaml.YamlConfiguration;
+
 import org.spout.infiniteobjects.function.RandomFloatFunction;
 import org.spout.infiniteobjects.function.RandomIntFunction;
 import org.spout.infiniteobjects.variable.Variable;
@@ -95,7 +98,7 @@ public class IFOManager {
 		buildVariables(ifowgo, config.getNode("variables"));
 		return ifowgo;
 	}
-	
+
 	private void buildVariables(IFOWorldGeneratorObject ifowgo, ConfigurationNode variables) {
 		final Set<String> keys = variables.getKeys(false);
 		final List<VariableBuilder> builders = new ArrayList<VariableBuilder>();
@@ -112,11 +115,11 @@ public class IFOManager {
 			}
 		}
 	}
-	
+
 	public Collection<IFOWorldGeneratorObject> getIFOs() {
 		return ifowgos.values();
 	}
-	
+
 	public IFOWorldGeneratorObject getIFO(String name) {
 		return ifowgos.get(name);
 	}

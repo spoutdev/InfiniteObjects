@@ -26,15 +26,17 @@
  */
 package org.spout.infiniteobjects.function;
 
+import java.util.Random;
+
 import de.congrace.exp4j.CustomFunction;
 import de.congrace.exp4j.InvalidCustomFunctionException;
-import java.util.Random;
+
 import org.spout.infiniteobjects.util.IFOUtils;
 
 public class RandomFloatFunction extends CustomFunction {
 	private final Random random = new Random();
 
-	public RandomFloatFunction() throws InvalidCustomFunctionException{
+	public RandomFloatFunction() throws InvalidCustomFunctionException {
 		super("randomFloat", 2);
 	}
 

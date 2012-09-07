@@ -31,8 +31,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import org.spout.api.generator.WorldGeneratorObject;
 import org.spout.api.geo.World;
+
 import org.spout.infiniteobjects.variable.Variable;
 
 public class IFOWorldGeneratorObject extends WorldGeneratorObject {

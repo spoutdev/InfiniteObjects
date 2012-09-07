@@ -26,9 +26,11 @@
  */
 package org.spout.infiniteobjects.function;
 
+import java.util.Random;
+
 import de.congrace.exp4j.CustomFunction;
 import de.congrace.exp4j.InvalidCustomFunctionException;
-import java.util.Random;
+
 import org.spout.infiniteobjects.util.IFOUtils;
 
 public class RandomIntFunction extends CustomFunction {

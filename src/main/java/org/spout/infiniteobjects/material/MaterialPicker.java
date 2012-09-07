@@ -24,8 +24,7 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.api.generator.assembly.material;
+package org.spout.infiniteobjects.material;
 
 public class MaterialPicker {
-
 }

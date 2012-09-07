@@ -27,5 +27,4 @@
 package org.spout.infiniteobjects.shape;
 
 public class Circle {
-
 }

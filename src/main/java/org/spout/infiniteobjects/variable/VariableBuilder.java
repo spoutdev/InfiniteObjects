@@ -26,14 +26,16 @@
  */
 package org.spout.infiniteobjects.variable;
 
-import de.congrace.exp4j.Calculable;
-import de.congrace.exp4j.ExpressionBuilder;
-import de.congrace.exp4j.UnknownFunctionException;
-import de.congrace.exp4j.UnparsableExpressionException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import de.congrace.exp4j.Calculable;
+import de.congrace.exp4j.ExpressionBuilder;
+import de.congrace.exp4j.UnknownFunctionException;
+import de.congrace.exp4j.UnparsableExpressionException;
+
 import org.spout.infiniteobjects.IFOManager;
 import org.spout.infiniteobjects.IFOWorldGeneratorObject;
 import org.spout.infiniteobjects.util.IFOUtils;

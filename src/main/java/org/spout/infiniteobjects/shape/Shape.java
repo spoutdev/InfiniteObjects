@@ -24,7 +24,7 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.api.generator.assembly.shape;
+package org.spout.infiniteobjects.shape;
 
 public interface Shape {
 	public void draw();
