@@ -10,6 +10,6 @@ variables:
   
 lists:
    ltest1: <test1> test2
-   ltest2: <test4> randomInt(3, 34)
+   ltest2: <24> randomInt(3, 34)
    ltest3: <test1> ltest1
-   ltest4: <test2> ltest3 + test4
+   ltest4: <test1> ltest3 + t4est

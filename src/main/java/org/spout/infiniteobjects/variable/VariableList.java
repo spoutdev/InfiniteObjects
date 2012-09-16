@@ -1,10 +1,10 @@
-package org.spout.infiniteobjects.list;
+package org.spout.infiniteobjects.variable;
 
 import de.congrace.exp4j.Calculable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.spout.infiniteobjects.IFOWorldGeneratorObject;
-import org.spout.infiniteobjects.variable.Variable;
 
 public class VariableList {
 	private final IFOWorldGeneratorObject owner;
@@ -23,7 +23,31 @@ public class VariableList {
 		this.rawValue = rawValue;
 		values = new double[size];
 	}
+	
+	public void addVariableReference(Variable variable) {
+		referencedVariables.add(variable);
+	}
+	
+	public void addVariableReferences(Collection<Variable> variables) {
+		referencedVariables.addAll(variables);
+	}
 
+	public void addListReference(VariableList variable) {
+		referencedLists.add(variable);
+	}
+	
+	public void addListReferences(Collection<VariableList> variables) {
+		referencedLists.addAll(variables);
+	}
+
+	public List<VariableList> getReferencedLists() {
+		return referencedLists;
+	}
+
+	public List<Variable> getReferencedVariables() {
+		return referencedVariables;
+	}
+	
 	public void calculateValues() {
 		for (Variable ref : referencedVariables) {
 			rawValue.setVariable(ref.getName(), ref.getValue());
@@ -42,5 +66,9 @@ public class VariableList {
 
 	public String getName() {
 		return name;
+	}
+	
+	public int getSize() {
+		return values.length;
 	}
 }

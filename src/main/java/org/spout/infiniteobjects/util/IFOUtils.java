@@ -27,6 +27,8 @@
 package org.spout.infiniteobjects.util;
 
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class IFOUtils {
 	public static int nextInt(Random random, int min, int max) {
@@ -35,5 +37,29 @@ public class IFOUtils {
 
 	public static float nextFloat(Random random, float min, float max) {
 		return random.nextFloat() * (min - max) + min;
+	}
+
+	public static String getListSizeExpression(String expression) {
+		final String[] split = expression.split("\\>", 2);
+		if (split.length < 2) {
+			throw new IllegalArgumentException("Malformed list expression.");
+		}
+		return split[0].substring(1).trim();
+	}
+
+	public static String getListCalculableExpression(String expression) {
+		final String[] split = expression.split("\\>", 2);
+		if (split.length < 2) {
+			throw new IllegalArgumentException("Malformed list expression.");
+		}
+		return split[1].trim();
+	}
+
+	public static boolean hasMatch(String match, String string) {
+		final Matcher matcher = Pattern.compile(match).matcher(string);
+		while (matcher.find()) {
+			return true;
+		}
+		return false;
 	}
 }

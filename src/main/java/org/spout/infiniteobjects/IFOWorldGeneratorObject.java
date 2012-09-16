@@ -34,12 +34,14 @@ import java.util.Set;
 
 import org.spout.api.generator.WorldGeneratorObject;
 import org.spout.api.geo.World;
+import org.spout.infiniteobjects.variable.VariableList;
 
 import org.spout.infiniteobjects.variable.Variable;
 
 public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 	private final String name;
 	private final Map<String, Variable> variables = new HashMap<String, Variable>();
+	private final Map<String, VariableList> lists = new HashMap<String, VariableList>();
 
 	public IFOWorldGeneratorObject(String name) {
 		this.name = name;
@@ -59,20 +61,8 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		return name;
 	}
 
-	public boolean hasVariable(String name) {
-		return variables.containsKey(name);
-	}
-
 	public Variable getVariable(String name) {
 		return variables.get(name);
-	}
-
-	public Map<String, Variable> getVariableMap() {
-		return variables;
-	}
-
-	public Collection<Variable> getVariables() {
-		return variables.values();
 	}
 
 	public Set<Variable> getVariables(Collection<String> varNames) {
@@ -84,6 +74,10 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 			}
 		}
 		return vars;
+	}
+	
+	public Collection<Variable> getVariables() {
+		return variables.values();
 	}
 
 	public void addVariable(Variable variable) {
@@ -98,6 +92,42 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 						&& calculated.containsAll(variable.getReferencedVariables())) {
 					variable.calculateValue();
 					calculated.add(variable);
+				}
+			}
+		}
+	}
+	
+	public VariableList getList(String name) {
+		return lists.get(name);
+	}
+	
+	public Set<VariableList> getLists(Collection<String> listNames) {
+		final Set<VariableList> variableLists = new HashSet<VariableList>();
+		for (String listName : listNames) {
+			final VariableList list = lists.get(listName);
+			if (list != null) {
+				variableLists.add(list);
+			}
+		}
+		return variableLists;
+	}
+	
+	public Collection<VariableList> getLists() {
+		return lists.values();
+	}
+	
+	public void addList(String name, VariableList list) {
+		lists.put(name, list);
+	}
+	
+	public void calculateLists() {
+		final Set<VariableList> calculated = new HashSet<VariableList>();
+		while (calculated.size() < lists.size()) {
+			for (VariableList list : lists.values()) {
+				if (!calculated.contains(list)
+						&& calculated.containsAll(list.getReferencedLists())) {
+					list.calculateValues();
+					calculated.add(list);
 				}
 			}
 		}

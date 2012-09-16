@@ -41,8 +41,6 @@ import java.util.logging.Logger;
 import de.congrace.exp4j.CustomFunction;
 import de.congrace.exp4j.ExpressionBuilder;
 import de.congrace.exp4j.InvalidCustomFunctionException;
-import de.congrace.exp4j.UnknownFunctionException;
-import de.congrace.exp4j.UnparsableExpressionException;
 import java.util.HashSet;
 
 import org.spout.api.exception.ConfigurationException;
@@ -51,6 +49,8 @@ import org.spout.api.util.config.yaml.YamlConfiguration;
 
 import org.spout.infiniteobjects.function.RandomFloatFunction;
 import org.spout.infiniteobjects.function.RandomIntFunction;
+import org.spout.infiniteobjects.variable.VariableList;
+import org.spout.infiniteobjects.util.IFOUtils;
 import org.spout.infiniteobjects.variable.Variable;
 
 public class IFOManager {
@@ -99,18 +99,20 @@ public class IFOManager {
 	private IFOWorldGeneratorObject buildIFO(YamlConfiguration config) {
 		final IFOWorldGeneratorObject ifowgo = new IFOWorldGeneratorObject(config.getNode("name").getString());
 		buildVariables(ifowgo, config.getNode("variables"));
+		ifowgo.calculateVariables();
 		buildLists(ifowgo, config.getNode("lists"));
+		ifowgo.calculateLists();
 		return ifowgo;
 	}
 
-	private void buildVariables(IFOWorldGeneratorObject ifowgo, ConfigurationNode variableNode) {
-		final Set<String> variableNames = variableNode.getKeys(false);
+	private void buildVariables(IFOWorldGeneratorObject ifowgo, ConfigurationNode variablesNode) {
+		final Set<String> variableNames = variablesNode.getKeys(false);
 		final Map<Variable, Set<String>> references = new HashMap<Variable, Set<String>>();
 		for (String variableName : variableNames) {
-			final String expression = variableNode.getNode(variableName).getString();
+			final String expression = variablesNode.getNode(variableName).getString();
 			final Set<String> referencedVariableNames = new HashSet<String>();
 			for (String vn : variableNames) {
-				if (expression.contains(vn)) {
+				if (IFOUtils.hasMatch("\\b\\Q" + vn + "\\E\\b", expression)) {
 					referencedVariableNames.add(vn);
 				}
 			}
@@ -121,9 +123,7 @@ public class IFOManager {
 				final Variable variable = new Variable(ifowgo, variableName, rawValue);
 				ifowgo.addVariable(variable);
 				references.put(variable, referencedVariableNames);
-			} catch (UnknownFunctionException ex) {
-				Logger.getLogger(IFOManager.class.getName()).log(Level.SEVERE, null, ex);
-			} catch (UnparsableExpressionException ex) {
+			} catch (Exception ex) {
 				Logger.getLogger(IFOManager.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
@@ -132,7 +132,51 @@ public class IFOManager {
 		}
 	}
 
-	private void buildLists(IFOWorldGeneratorObject ifowgo, ConfigurationNode lists) {
+	private void buildLists(IFOWorldGeneratorObject ifowgo, ConfigurationNode listsNode) {
+		final Set<String> listNames = listsNode.getKeys(false);
+		final Map<VariableList, Set<String>> references = new HashMap<VariableList, Set<String>>();
+		for (String listName : listNames) {
+			final String listExpression = listsNode.getNode(listName).getString();
+			final int size = getListSize(ifowgo, IFOUtils.getListSizeExpression(listExpression));
+			final String expression = IFOUtils.getListCalculableExpression(listExpression);
+			final Set<Variable> referencedVariables = new HashSet<Variable>();
+			for (Variable variable : ifowgo.getVariables()) {
+				if (IFOUtils.hasMatch("\\b\\Q" + variable.getName() + "\\E\\b", expression)) {
+					referencedVariables.add(variable);
+				}
+			}
+			final Set<String> referencedListNames = new HashSet<String>();
+			for (String ln : listNames) {
+				if (IFOUtils.hasMatch("\\b\\Q" + ln + "\\E\\b", expression)) {
+					referencedListNames.add(ln);
+				}
+			}
+			try {
+				final ExpressionBuilder builder = getExpressionBuilder(expression);
+				for (Variable referencedVariable : referencedVariables) {
+					builder.withVariableNames(referencedVariable.getName());
+				}
+				builder.withVariableNames(referencedListNames.toArray(new String[referencedListNames.size()]));
+				final Calculable rawValue = builder.build();
+				final VariableList list = new VariableList(ifowgo, listName, rawValue, size);
+				ifowgo.addList(listName, list);
+				list.addVariableReferences(referencedVariables);
+				references.put(list, referencedListNames);
+			} catch (Exception ex) {
+				Logger.getLogger(IFOManager.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		for (Entry<VariableList, Set<String>> entry : references.entrySet()) {
+			entry.getKey().addListReferences(ifowgo.getLists(entry.getValue()));
+		}
+	}
+
+	private int getListSize(IFOWorldGeneratorObject ifowgo, String sizeExpression) {
+		try {
+			return Integer.parseInt(sizeExpression);
+		} catch (Exception ex) {
+			return (int) ifowgo.getVariable(sizeExpression).getValue();
+		}
 	}
 
 	public Collection<IFOWorldGeneratorObject> getIFOs() {

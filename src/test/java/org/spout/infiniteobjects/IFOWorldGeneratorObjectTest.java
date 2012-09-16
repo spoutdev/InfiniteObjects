@@ -31,13 +31,34 @@ import java.io.File;
 import org.junit.Test;
 import org.junit.Assert;
 
+import org.spout.infiniteobjects.variable.VariableList;
+
 public class IFOWorldGeneratorObjectTest {
 	@Test
-	public void testVariables() {
+	public void testIFOWGO() {
 		final IFOManager manager = new IFOManager(new File("src/test/resources"));
 		manager.loadIFOs();
 		final IFOWorldGeneratorObject ifowgo = manager.getIFO("test");
-		ifowgo.calculateVariables();
+		Assert.assertTrue(ifowgo != null);
+		testVariables(ifowgo);
+		testLists(ifowgo);
+	}
+
+	private void testVariables(IFOWorldGeneratorObject ifowgo) {
 		Assert.assertTrue(ifowgo.getVariable("test1").getValue() == 6);
+	}
+
+	private void testLists(IFOWorldGeneratorObject ifowgo) {
+		final double test1Value = ifowgo.getVariable("test1").getValue();
+		final double t4estValue = ifowgo.getVariable("t4est").getValue();
+		final VariableList ltest3 = ifowgo.getList("ltest3");
+		final VariableList ltest4 = ifowgo.getList("ltest4");
+		Assert.assertTrue(ltest4.getSize() == test1Value);
+		Assert.assertTrue(ltest4.getSize() == ltest3.getSize());
+		for (int i = 0; i < ltest4.getSize(); i++) {
+			Assert.assertTrue(ltest3.getValue(i) + t4estValue == ltest4.getValue(i));
+		}
+		final VariableList ltest2 = ifowgo.getList("ltest2");
+		Assert.assertTrue(ltest2.getSize() == 24);
 	}
 }
