@@ -27,20 +27,17 @@
 package org.spout.infiniteobjects;
 
 import java.io.File;
-import org.junit.Test;
-import org.spout.infiniteobjects.variable.Variable;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import org.junit.Assert;
 
 public class IFOWorldGeneratorObjectTest {
-
 	@Test
 	public void testVariables() {
 		final IFOManager manager = new IFOManager(new File("src/test/resources"));
 		manager.loadIFOs();
 		final IFOWorldGeneratorObject ifowgo = manager.getIFO("test");
-		final Variable variable = ifowgo.getVariable("test");
-		variable.calculateValue();
-		assertTrue(variable.getValue() == 2752);
+		ifowgo.calculateVariables();
+		Assert.assertTrue(ifowgo.getVariable("test1").getValue() == 6);
 	}
 }

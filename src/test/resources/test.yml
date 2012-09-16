@@ -1,26 +1,15 @@
 name: test
 
 variables:
-  test: 64 * 43
-  height: randomInt(32, 56)
-  lowestLeafGroup: randomInt(16, 32)
-  leafGroupCount: randomInt(1, 5)
-
+  test1: 2 * 3
+  test2: randomInt(32, 56)
+  test3: test1 + test2
+  t4est: test3
+  test5: sin(test1 * PI) * 5 + test2
+  test6: 1 / t4est
+  
 lists:
-  randomAngles: <leafGroupCount> randomFloat(0, 2 * PI)
-  leafGroupsX: <leafGroupCount> sin(randomAngles) * randomInt(3, 7)
-  leafGroupsY: <leafGroupCount> lowestLeafGroup += randomInt(4, 8)
-  leafGroupsZ: <leafGroupCount> cos(randomAngles) * randomInt(3, 7)
-  branchBaseY: <leafGroupCount> leafGroupsY - 4
-
-shapes:
-  trunk: Cuboid(2, height, 2)
-  leaves: <leafGroupCount> Sphere(randomInt(2, 4), randomInt(2, 4), randomInt(2, 4))
-
-pickers:
-  leavesPicker: InnerOuterPicker(100, LEAVES.3, 50, LEAVES.3)
-
-build:
-  - place(trunk, LOG.3, 0, 0, 0)
-  - place(leaves, leavesPicker, leafGroupsX, leafGroupsY, leafGroupsZ)
-  - trace(0, branchBaseY, 0, leafGroupsX, leafGroupsY, leafGroupsZ, LOG.3)
+   ltest1: <test1> test2
+   ltest2: <test4> randomInt(3, 34)
+   ltest3: <test1> ltest1
+   ltest4: <test2> ltest3 + test4

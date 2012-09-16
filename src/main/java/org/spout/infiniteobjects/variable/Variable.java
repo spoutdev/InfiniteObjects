@@ -30,14 +30,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.congrace.exp4j.Calculable;
+import java.util.Collection;
 
 import org.spout.infiniteobjects.IFOWorldGeneratorObject;
 
 public class Variable {
-	//private static final Pattern LIST_PATTERN = Pattern.compile("\\A\\<\\w++\\>");
 	private final IFOWorldGeneratorObject owner;
 	private final String name;
-	// the expression used to calculate the value
+	// the expression used to calculateValue the value
 	private final Calculable rawValue;
 	// a cached value
 	private double value;
@@ -51,9 +51,7 @@ public class Variable {
 	}
 
 	public void calculateValue() {
-		// calculate all the referenced variables and set the values before attempting to calculate
 		for (Variable ref : referenced) {
-			ref.calculateValue();
 			rawValue.setVariable(ref.getName(), ref.getValue());
 		}
 		value = rawValue.calculate();
@@ -69,5 +67,39 @@ public class Variable {
 
 	public void addReference(Variable variable) {
 		referenced.add(variable);
+	}
+	
+	public void addReferences(Collection<Variable> variables) {
+		referenced.addAll(variables);
+	}
+
+	public List<Variable> getReferencedVariables() {
+		return referenced;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Variable other = (Variable) obj;
+		if (owner != other.owner && (owner == null || !owner.equals(other.owner))) {
+			return false;
+		}
+		if ((name == null) ? (other.name != null) : !name.equals(other.name)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 97 * hash + (this.owner != null ? this.owner.hashCode() : 0);
+		hash = 97 * hash + (this.name != null ? this.name.hashCode() : 0);
+		return hash;
 	}
 }

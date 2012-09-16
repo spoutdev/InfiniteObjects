@@ -9,7 +9,8 @@
 	<packaging>jar</packaging>
 
 	<name>InfiniteObjects</name>
-	<url>http://maven.apache.org</url>
+	<url>http://www.spout.org</url>
+	<description>An experimental project for user definable world generator objects using a script like file format based on YAML syntax.</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,11 +22,13 @@
 			<groupId>org.spout</groupId>
 			<artifactId>spoutapi</artifactId>
 			<version>dev-SNAPSHOT</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.congrace</groupId>
 			<artifactId>exp4j</artifactId>
 			<version>0.3.4</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

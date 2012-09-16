@@ -1,4 +1,4 @@
-name: test
+name: example
 
 variables:
   height: randomInt(32, 56)

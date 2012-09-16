@@ -89,4 +89,17 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 	public void addVariable(Variable variable) {
 		variables.put(variable.getName(), variable);
 	}
+
+	public void calculateVariables() {
+		final Set<Variable> calculated = new HashSet<Variable>();
+		while (calculated.size() < variables.size()) {
+			for (Variable variable : variables.values()) {
+				if (!calculated.contains(variable)
+						&& calculated.containsAll(variable.getReferencedVariables())) {
+					variable.calculateValue();
+					calculated.add(variable);
+				}
+			}
+		}
+	}
 }

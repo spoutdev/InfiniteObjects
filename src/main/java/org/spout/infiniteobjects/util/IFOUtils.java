@@ -26,29 +26,14 @@
  */
 package org.spout.infiniteobjects.util;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class IFOUtils {
-	private static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zA-Z]++[^\\(]");
-
 	public static int nextInt(Random random, int min, int max) {
 		return random.nextInt(max - min + 1) + min;
 	}
 
 	public static float nextFloat(Random random, float min, float max) {
 		return random.nextFloat() * (min - max) + min;
-	}
-
-	public static List<String> findVariables(String expression) {
-		final Matcher matcher = VARIABLE_PATTERN.matcher(expression);
-		final List<String> variables = new ArrayList<String>();
-		while (matcher.find()) {
-			variables.add(matcher.group());
-		}
-		return variables;
 	}
 }
