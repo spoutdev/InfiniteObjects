@@ -136,9 +136,9 @@ public class IFOManager {
 		final Set<String> listNames = listsNode.getKeys(false);
 		final Map<VariableList, Set<String>> references = new HashMap<VariableList, Set<String>>();
 		for (String listName : listNames) {
-			final String listExpression = listsNode.getNode(listName).getString();
-			final int size = getListSize(ifowgo, IFOUtils.getListSizeExpression(listExpression));
-			final String expression = IFOUtils.getListCalculableExpression(listExpression);
+			final ConfigurationNode listNode = listsNode.getNode(listName);
+			final int size = getListSize(ifowgo, listNode.getNode("size").getString());
+			final String expression = listNode.getNode("value").getString();
 			final Set<Variable> referencedVariables = new HashSet<Variable>();
 			for (Variable variable : ifowgo.getVariables()) {
 				if (IFOUtils.hasMatch("\\b\\Q" + variable.getName() + "\\E\\b", expression)) {

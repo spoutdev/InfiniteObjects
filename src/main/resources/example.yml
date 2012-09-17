@@ -6,11 +6,21 @@ variables:
   leafGroupCount: randomInt(1, 5)
 
 lists:
-  randomAngles: <leafGroupCount> randomFloat(0, 2 * PI)
-  leafGroupsX: <leafGroupCount> sin(randomAngles) * randomInt(3, 7)
-  leafGroupsY: <leafGroupCount> lowestLeafGroup += randomInt(4, 8)
-  leafGroupsZ: <leafGroupCount> cos(randomAngles) * randomInt(3, 7)
-  branchBaseY: <leafGroupCount> leafGroupsY - 4
+  randomAngles:
+    size: leafGroupCount
+    value: randomFloat(0, 2 * PI)
+  leafGroupsX:
+    size: leafGroupCount
+    value: sin(randomAngles) * randomInt(3, 7)
+  leafGroupsY: 
+    size: leafGroupCount
+    value: lowestLeafGroup += randomInt(4, 8)
+  leafGroupsZ:
+    size: leafGroupCount
+    value: cos(randomAngles) * randomInt(3, 7)
+  branchBaseY:
+    size: leafGroupCount
+    value: leafGroupsY - 4
 
 shapes:
   trunk: Cuboid(2, height, 2)

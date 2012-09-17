@@ -39,22 +39,6 @@ public class IFOUtils {
 		return random.nextFloat() * (min - max) + min;
 	}
 
-	public static String getListSizeExpression(String expression) {
-		final String[] split = expression.split("\\>", 2);
-		if (split.length < 2) {
-			throw new IllegalArgumentException("Malformed list expression.");
-		}
-		return split[0].substring(1).trim();
-	}
-
-	public static String getListCalculableExpression(String expression) {
-		final String[] split = expression.split("\\>", 2);
-		if (split.length < 2) {
-			throw new IllegalArgumentException("Malformed list expression.");
-		}
-		return split[1].trim();
-	}
-
 	public static boolean hasMatch(String match, String string) {
 		final Matcher matcher = Pattern.compile(match).matcher(string);
 		while (matcher.find()) {

@@ -9,7 +9,15 @@ variables:
   test6: 1 / t4est
   
 lists:
-   ltest1: <test1> test2
-   ltest2: <24> randomInt(3, 34)
-   ltest3: <test1> ltest1
-   ltest4: <test1> ltest3 + t4est
+   ltest1:
+     size: test1
+     value: test2	
+   ltest2:
+     size: 24
+     value: randomInt(3, 34)
+   ltest3:
+     size: test1
+     value: ltest1
+   ltest4:
+     size: test1
+     value: ltest3 + t4est
