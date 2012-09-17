@@ -1,9 +1,11 @@
 package org.spout.infiniteobjects.variable;
 
-import de.congrace.exp4j.Calculable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import de.congrace.exp4j.Calculable;
+
 import org.spout.infiniteobjects.IFOWorldGeneratorObject;
 
 public class VariableList {

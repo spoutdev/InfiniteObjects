@@ -34,8 +34,8 @@ import java.util.Set;
 
 import org.spout.api.generator.WorldGeneratorObject;
 import org.spout.api.geo.World;
-import org.spout.infiniteobjects.variable.VariableList;
 
+import org.spout.infiniteobjects.variable.VariableList;
 import org.spout.infiniteobjects.variable.Variable;
 
 public class IFOWorldGeneratorObject extends WorldGeneratorObject {
@@ -51,7 +51,7 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		calculateVariables();
 		calculateLists();
 	}
-	
+
 	@Override
 	public boolean canPlaceObject(World w, int x, int y, int z) {
 		throw new UnsupportedOperationException("Not supported yet.");
@@ -80,7 +80,7 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		}
 		return vars;
 	}
-	
+
 	public Collection<Variable> getVariables() {
 		return variables.values();
 	}
@@ -101,11 +101,11 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 			}
 		}
 	}
-	
+
 	public VariableList getList(String name) {
 		return lists.get(name);
 	}
-	
+
 	public Set<VariableList> getLists(Collection<String> listNames) {
 		final Set<VariableList> variableLists = new HashSet<VariableList>();
 		for (String listName : listNames) {
@@ -116,15 +116,15 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		}
 		return variableLists;
 	}
-	
+
 	public Collection<VariableList> getLists() {
 		return lists.values();
 	}
-	
+
 	public void addList(String name, VariableList list) {
 		lists.put(name, list);
 	}
-	
+
 	public void calculateLists() {
 		final Set<VariableList> calculated = new HashSet<VariableList>();
 		while (calculated.size() < lists.size()) {

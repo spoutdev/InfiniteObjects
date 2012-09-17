@@ -69,7 +69,7 @@ public class IFOWorldGeneratorObjectTest {
 		final VariableList ltest2 = ifowgo.getList("ltest2");
 		Assert.assertTrue(ltest2.getSize() == 12);
 	}
-	
+
 	private void printInfo(IFOWorldGeneratorObject ifowgo) {
 		System.out.println("Name:");
 		System.out.println("\t" + ifowgo.getName());
