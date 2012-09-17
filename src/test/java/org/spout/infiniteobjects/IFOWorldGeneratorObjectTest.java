@@ -27,10 +27,13 @@
 package org.spout.infiniteobjects;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.Assert;
 
+import org.spout.infiniteobjects.variable.Variable;
 import org.spout.infiniteobjects.variable.VariableList;
 
 public class IFOWorldGeneratorObjectTest {
@@ -40,8 +43,13 @@ public class IFOWorldGeneratorObjectTest {
 		manager.loadIFOs();
 		final IFOWorldGeneratorObject ifowgo = manager.getIFO("test");
 		Assert.assertTrue(ifowgo != null);
+		printInfo(ifowgo);
 		testVariables(ifowgo);
 		testLists(ifowgo);
+		long start = System.nanoTime();
+		ifowgo.randomize();
+		System.out.println("Estimated time for randomization: " + ((System.nanoTime() - start) / 1000000d) + "ms");
+		System.out.println();
 	}
 
 	private void testVariables(IFOWorldGeneratorObject ifowgo) {
@@ -59,6 +67,24 @@ public class IFOWorldGeneratorObjectTest {
 			Assert.assertTrue(ltest3.getValue(i) + t4estValue == ltest4.getValue(i));
 		}
 		final VariableList ltest2 = ifowgo.getList("ltest2");
-		Assert.assertTrue(ltest2.getSize() == 24);
+		Assert.assertTrue(ltest2.getSize() == 12);
+	}
+	
+	private void printInfo(IFOWorldGeneratorObject ifowgo) {
+		System.out.println("Name:");
+		System.out.println("\t" + ifowgo.getName());
+		System.out.println("Variables:");
+		for (Variable variable : ifowgo.getVariables()) {
+			System.out.println("\t" + variable.getName() + ": " + variable.getValue());
+		}
+		System.out.println("Lists:");
+		for (VariableList list : ifowgo.getLists()) {
+			final List<Double> values = new ArrayList<Double>();
+			for (int i = 0; i < list.getSize(); i++) {
+				values.add(list.getValue(i));
+			}
+			System.out.println("\t" + list.getName() + ": " + values);
+		}
+		System.out.println();
 	}
 }

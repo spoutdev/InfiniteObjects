@@ -51,6 +51,7 @@ import org.spout.infiniteobjects.function.RandomFloatFunction;
 import org.spout.infiniteobjects.function.RandomIntFunction;
 import org.spout.infiniteobjects.variable.VariableList;
 import org.spout.infiniteobjects.util.IFOUtils;
+import org.spout.infiniteobjects.variable.IncrementedVariableList;
 import org.spout.infiniteobjects.variable.Variable;
 
 public class IFOManager {
@@ -137,11 +138,19 @@ public class IFOManager {
 		final Map<VariableList, Set<String>> references = new HashMap<VariableList, Set<String>>();
 		for (String listName : listNames) {
 			final ConfigurationNode listNode = listsNode.getNode(listName);
-			final int size = getListSize(ifowgo, listNode.getNode("size").getString());
+			final Variable size = buildListVariable(ifowgo, "size", listNode.getNode("size").getString());
+			final String incrementExpression = listNode.getNode("increment").getString();
+			final Variable increment;
+			if (incrementExpression != null) {
+				increment = buildListVariable(ifowgo, "increment", incrementExpression);
+			} else {
+				increment = null;
+			}
 			final String expression = listNode.getNode("value").getString();
 			final Set<Variable> referencedVariables = new HashSet<Variable>();
 			for (Variable variable : ifowgo.getVariables()) {
-				if (IFOUtils.hasMatch("\\b\\Q" + variable.getName() + "\\E\\b", expression)) {
+				final String variableRegex = "\\b\\Q" + variable.getName() + "\\E\\b";
+				if (IFOUtils.hasMatch(variableRegex, expression)) {
 					referencedVariables.add(variable);
 				}
 			}
@@ -158,7 +167,12 @@ public class IFOManager {
 				}
 				builder.withVariableNames(referencedListNames.toArray(new String[referencedListNames.size()]));
 				final Calculable rawValue = builder.build();
-				final VariableList list = new VariableList(ifowgo, listName, rawValue, size);
+				final VariableList list;
+				if (increment == null) {
+					list = new VariableList(ifowgo, listName, rawValue, size);
+				} else {
+					list = new IncrementedVariableList(ifowgo, listName, rawValue, size, increment);
+				}
 				ifowgo.addList(listName, list);
 				list.addVariableReferences(referencedVariables);
 				references.put(list, referencedListNames);
@@ -171,12 +185,26 @@ public class IFOManager {
 		}
 	}
 
-	private int getListSize(IFOWorldGeneratorObject ifowgo, String sizeExpression) {
-		try {
-			return Integer.parseInt(sizeExpression);
-		} catch (Exception ex) {
-			return (int) ifowgo.getVariable(sizeExpression).getValue();
+	private Variable buildListVariable(IFOWorldGeneratorObject ifowgo, String name, String expression) {
+		final Set<Variable> referencedVariables = new HashSet<Variable>();
+		for (Variable variable : ifowgo.getVariables()) {
+			if (IFOUtils.hasMatch("\\b\\Q" + variable.getName() + "\\E\\b", expression)) {
+				referencedVariables.add(variable);
+			}
 		}
+		final ExpressionBuilder builder = getExpressionBuilder(expression);
+		for (Variable variable : ifowgo.getVariables()) {
+			builder.withVariableNames(variable.getName());
+		}
+		try {
+			final Calculable rawValue = builder.build();
+			final Variable variable = new Variable(ifowgo, name, rawValue);
+			variable.addReferences(referencedVariables);
+			return variable;
+		} catch (Exception ex) {
+			Logger.getLogger(IFOManager.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return null;
 	}
 
 	public Collection<IFOWorldGeneratorObject> getIFOs() {
@@ -188,11 +216,7 @@ public class IFOManager {
 	}
 
 	public static void addConstant(String name, double value) {
-		CONSTANTS.put(name, value);
-	}
-
-	public static Map<String, Double> getConstantMap() {
-		return CONSTANTS;
+		CONSTANTS.put(name.toUpperCase(), value);
 	}
 
 	public static String replaceConstants(String expression) {

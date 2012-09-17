@@ -14,7 +14,8 @@ lists:
     value: sin(randomAngles) * randomInt(3, 7)
   leafGroupsY: 
     size: leafGroupCount
-    value: lowestLeafGroup += randomInt(4, 8)
+    value: lowestLeafGroup + randomInt(4, 8)
+    increment: lowestLeafGroup
   leafGroupsZ:
     size: leafGroupCount
     value: cos(randomAngles) * randomInt(3, 7)

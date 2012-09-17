@@ -47,6 +47,11 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		this.name = name;
 	}
 
+	public void randomize() {
+		calculateVariables();
+		calculateLists();
+	}
+	
 	@Override
 	public boolean canPlaceObject(World w, int x, int y, int z) {
 		throw new UnsupportedOperationException("Not supported yet.");
