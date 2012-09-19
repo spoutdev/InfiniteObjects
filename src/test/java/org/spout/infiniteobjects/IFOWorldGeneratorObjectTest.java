@@ -115,10 +115,18 @@ public class IFOWorldGeneratorObjectTest {
 			"Wood",
 			"Cobblestone"
 		};
+		Constructor constructor = null;
+		try {
+			constructor = TestMaterial.class.getDeclaredConstructor(String.class);
+			constructor.setAccessible(true);
+		} catch (Exception ex) {
+			Logger.getLogger(IFOWorldGeneratorObjectTest.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		if (constructor == null) {
+			throw new IllegalStateException("Failed to initialize test materials");
+		}
 		for (String testMaterial : testMaterials) {
 			try {
-				final Constructor constructor = TestMaterial.class.getDeclaredConstructor(String.class);
-				constructor.setAccessible(true);
 				constructor.newInstance(testMaterial);
 			} catch (Exception ex) {
 				Logger.getLogger(IFOWorldGeneratorObjectTest.class.getName()).log(Level.SEVERE, null, ex);

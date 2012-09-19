@@ -26,25 +26,37 @@
  */
 package org.spout.infiniteobjects.shape;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.spout.infiniteobjects.IFOWorldGeneratorObject;
+import org.spout.infiniteobjects.material.MaterialPickers;
 
 public class Shapes {
-	private static final Map<String, Class<? extends Shape>> SHAPES = new HashMap<String, Class<? extends Shape>>();
+	private static final Map<String, Constructor<? extends Shape>> SHAPES =
+			new HashMap<String, Constructor<? extends Shape>>();
 
 	static {
-		SHAPES.put("sphere", Sphere.class);
-		SHAPES.put("cuboid", Cuboid.class);
+		register("sphere", Sphere.class);
+		register("cuboid", Cuboid.class);
 	}
 
 	public static Shape get(String name, IFOWorldGeneratorObject owner, String type) {
 		try {
-			final Class<? extends Shape> shapeClass = SHAPES.get(type.toLowerCase());
-			return shapeClass.getConstructor(IFOWorldGeneratorObject.class, String.class).newInstance(owner, name);
+			return SHAPES.get(type.toLowerCase()).newInstance(owner, name);
 		} catch (Exception ex) {
 			return null;
+		}
+	}
+
+	public static void register(String type, Class<? extends Shape> shape) {
+		try {
+			SHAPES.put(type, shape.getConstructor(IFOWorldGeneratorObject.class, String.class));
+		} catch (Exception ex) {
+			Logger.getLogger(MaterialPickers.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 }

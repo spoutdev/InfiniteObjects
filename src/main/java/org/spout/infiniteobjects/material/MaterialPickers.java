@@ -26,24 +26,35 @@
  */
 package org.spout.infiniteobjects.material;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MaterialPickers {
-	private static final Map<String, Class<? extends MaterialPicker>> PICKERS = new HashMap<String, Class<? extends MaterialPicker>>();
+	private static final Map<String, Constructor<? extends MaterialPicker>> PICKERS =
+			new HashMap<String, Constructor<? extends MaterialPicker>>();
 
 	static {
-		PICKERS.put("innerouter", InnerOuterPicker.class);
-		PICKERS.put("randominnerouter", RandomInnerOuterPicker.class);
-		PICKERS.put("randomuniform", RandomUniformPicker.class);
+		register("innerouter", InnerOuterPicker.class);
+		register("randominnerouter", RandomInnerOuterPicker.class);
+		register("randomuniform", RandomUniformPicker.class);
 	}
 
 	public static MaterialPicker get(String name, String type) {
 		try {
-			final Class<? extends MaterialPicker> pickerClass = PICKERS.get(type.toLowerCase());
-			return pickerClass.getConstructor(String.class).newInstance(name);
+			return PICKERS.get(type.toLowerCase()).newInstance(name);
 		} catch (Exception ex) {
 			return null;
+		}
+	}
+
+	public static void register(String type, Class<? extends MaterialPicker> picker) {
+		try {
+			PICKERS.put(type, picker.getConstructor(String.class));
+		} catch (Exception ex) {
+			Logger.getLogger(MaterialPickers.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 }
