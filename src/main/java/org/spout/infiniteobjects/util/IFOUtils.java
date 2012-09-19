@@ -30,6 +30,10 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.spout.api.material.BlockMaterial;
+import org.spout.api.material.Material;
+import org.spout.api.material.MaterialRegistry;
+
 public class IFOUtils {
 	public static int nextInt(Random random, int min, int max) {
 		return random.nextInt(max - min + 1) + min;
@@ -45,5 +49,22 @@ public class IFOUtils {
 			return true;
 		}
 		return false;
+	}
+
+	public static BlockMaterial getBlockMaterial(String expression) {
+		final String[] split = expression.split("\\.");
+		final Material material = MaterialRegistry.get(split[0]);
+		if (!(material instanceof BlockMaterial)) {
+			throw new IllegalArgumentException("Not a block material: " + split[0]);
+		}
+		if (split.length > 1) {
+			try {
+				final short data = Short.parseShort(split[1]);
+				return ((BlockMaterial) material).getSubMaterial(data);
+			} catch (NumberFormatException nfe) {
+				throw new IllegalArgumentException("Data is not a short");
+			}
+		}
+		return ((BlockMaterial) material);
 	}
 }

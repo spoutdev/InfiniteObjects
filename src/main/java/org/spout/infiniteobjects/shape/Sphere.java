@@ -26,5 +26,97 @@
  */
 package org.spout.infiniteobjects.shape;
 
-public class Sphere {
+import org.spout.infiniteobjects.IFOWorldGeneratorObject;
+import org.spout.infiniteobjects.variable.Variable;
+
+public class Sphere extends Shape {
+	private Variable halfWidth;
+	private Variable halfHeight;
+	private Variable halfDepth;
+	private double radiusX;
+	private double radiusY;
+	private double radiusZ;
+
+	public Sphere(IFOWorldGeneratorObject owner, String name) {
+		super(owner, name);
+	}
+
+	@Override
+	public void load(Variable... variables) {
+		if (variables.length < 3) {
+			throw new IllegalArgumentException("Expected at least 3 variables.");
+		}
+		halfWidth = variables[0];
+		halfHeight = variables[1];
+		halfDepth = variables[2];
+	}
+
+	@Override
+	public void draw(int x, int y, int z) {
+		final double rx = radiusX + 0.5;
+		final double ry = radiusY + 0.5;
+		final double rz = radiusZ + 0.5;
+		final double invRadiusX = 1 / rx;
+		final double invRadiusY = 1 / ry;
+		final double invRadiusZ = 1 / rz;
+		final int ceilRadiusX = (int) Math.ceil(rx);
+		final int ceilRadiusY = (int) Math.ceil(ry);
+		final int ceilRadiusZ = (int) Math.ceil(rz);
+
+		double nextXn = 0;
+		forX:
+		for (int xx = 0; xx <= ceilRadiusX; xx++) {
+			final double xn = nextXn;
+			nextXn = (xx + 1) * invRadiusX;
+			double nextYn = 0;
+			forY:
+			for (int yy = 0; yy <= ceilRadiusY; yy++) {
+				final double yn = nextYn;
+				nextYn = (yy + 1) * invRadiusY;
+				double nextZn = 0;
+				forZ:
+				for (int zz = 0; zz <= ceilRadiusZ; zz++) {
+					final double zn = nextZn;
+					nextZn = (zz + 1) * invRadiusZ;
+
+					if (lengthSqrt(xn, yn, zn) > 1) {
+						if (zz == 0) {
+							if (yy == 0) {
+								break forX;
+							}
+							break forY;
+						}
+						break forZ;
+					}
+
+					boolean outer = lengthSqrt(nextXn, yn, zn) > 1
+							|| lengthSqrt(xn, nextYn, zn) > 1
+							|| lengthSqrt(xn, yn, nextZn) > 1;
+
+					owner.setMaterial(picker.pickMaterial(outer), x + xx, y + yy, z + zz);
+					owner.setMaterial(picker.pickMaterial(outer), x - xx, y + yy, z + zz);
+					owner.setMaterial(picker.pickMaterial(outer), x + xx, y - yy, z + zz);
+					owner.setMaterial(picker.pickMaterial(outer), x + xx, y + yy, z - zz);
+					owner.setMaterial(picker.pickMaterial(outer), x - xx, y - yy, z + zz);
+					owner.setMaterial(picker.pickMaterial(outer), x + xx, y - yy, z - zz);
+					owner.setMaterial(picker.pickMaterial(outer), x - xx, y + yy, z - zz);
+					owner.setMaterial(picker.pickMaterial(outer), x - xx, y - yy, z - zz);
+				}
+			}
+		}
+	}
+
+	private double lengthSqrt(double x, double y, double z) {
+		return (x * x) + (y * y) + (z * z);
+	}
+
+	@Override
+	public void calculate() {
+		halfWidth.calculate();
+		radiusX = halfWidth.getValue();
+		halfHeight.calculate();
+		radiusY = halfHeight.getValue();
+		halfDepth.calculate();
+		radiusZ = halfDepth.getValue();
+	}
 }

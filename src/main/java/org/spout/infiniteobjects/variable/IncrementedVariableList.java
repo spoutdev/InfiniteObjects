@@ -40,12 +40,12 @@ public class IncrementedVariableList extends VariableList {
 	}
 
 	@Override
-	public void calculateValues() {
-		super.calculateValues();
+	public void calculate() {
+		super.calculate();
 		double incr = 0;
 		for (int i = 0; i < values.length; i++) {
 			values[i] += incr;
-			increment.calculateValue();
+			increment.calculate();
 			incr += increment.getValue();
 		}
 	}

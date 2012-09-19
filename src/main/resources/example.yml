@@ -24,11 +24,29 @@ lists:
     value: leafGroupsY - 4
 
 shapes:
-  trunk: Cuboid(2, height, 2)
-  leaves: <leafGroupCount> Sphere(randomInt(2, 4), randomInt(2, 4), randomInt(2, 4))
+  trunk:
+    type: cuboid
+    properties:
+      width: 2
+      height: height
+      depth: 2
+  leaves:
+    type: sphere
+    size: leafGroupCount
+    properties:
+      radius: 5
+      xScale: randomInt(2, 4)
+      yScale: randomInt(2, 4)
+      zScale: randomInt(2, 4)
 
 pickers:
-  leavesPicker: InnerOuterPicker(100, LEAVES.3, 50, LEAVES.3)
+  leavesPicker:
+    type: RandomInnerOuter
+    properties:
+      innerMaterial: LEAVES.3
+      innerOdd: 100
+      outerMaterial: LEAVES.3
+      outerOdd: 50
 
 build:
   - place(trunk, LOG.3, 0, 0, 0)

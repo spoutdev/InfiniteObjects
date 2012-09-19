@@ -26,21 +26,39 @@
  */
 package org.spout.infiniteobjects.material;
 
+import java.util.Random;
+
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.util.config.ConfigurationNode;
 
-public abstract class MaterialPicker {
-	private final String name;
+import org.spout.infiniteobjects.util.IFOUtils;
 
-	public MaterialPicker(String name) {
-		this.name = name;
+public class RandomUniformPicker extends MaterialPicker {
+	private Random random = new Random();
+	private BlockMaterial material;
+	private int odd;
+
+	public RandomUniformPicker(String name) {
+		super(name);
 	}
 
-	public abstract void load(ConfigurationNode config);
+	@Override
+	public void load(ConfigurationNode config) {
+		material = IFOUtils.getBlockMaterial(config.getNode("material").getString());
+		odd = config.getNode("odd").getInt();
+	}
 
-	public abstract BlockMaterial pickMaterial(boolean outer);
+	@Override
+	public BlockMaterial pickMaterial(boolean outer) {
+		return random.nextInt(100) < odd ? material : BlockMaterial.AIR;
+	}
 
-	public String getName() {
-		return name;
+	public void setRandom(Random random) {
+		this.random = random;
+	}
+
+	@Override
+	public String toString() {
+		return "Material: " + material.getDisplayName() + " with odd: " + odd;
 	}
 }

@@ -11,7 +11,7 @@ import org.spout.infiniteobjects.IFOWorldGeneratorObject;
 public class VariableList {
 	private final IFOWorldGeneratorObject owner;
 	private final String name;
-	// the expression used to calculateValue the value
+	// the expression used to calculate the value
 	private final Calculable rawValue;
 	private final Variable size;
 	// the cached values
@@ -51,8 +51,8 @@ public class VariableList {
 		return referencedVariables;
 	}
 
-	public void calculateValues() {
-		size.calculateValue();
+	public void calculate() {
+		size.calculate();
 		values = new double[(int) size.getValue()];
 		for (Variable ref : referencedVariables) {
 			rawValue.setVariable(ref.getName(), ref.getValue());

@@ -37,7 +37,7 @@ import org.spout.infiniteobjects.IFOWorldGeneratorObject;
 public class Variable {
 	private final IFOWorldGeneratorObject owner;
 	private final String name;
-	// the expression used to calculateValue the value
+	// the expression used to calculate the value
 	private final Calculable rawValue;
 	// a cached value
 	private double value;
@@ -50,7 +50,7 @@ public class Variable {
 		this.rawValue = rawValue;
 	}
 
-	public void calculateValue() {
+	public void calculate() {
 		for (Variable ref : referenced) {
 			rawValue.setVariable(ref.getName(), ref.getValue());
 		}

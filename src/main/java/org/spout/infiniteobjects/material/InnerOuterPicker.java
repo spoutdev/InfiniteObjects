@@ -29,18 +29,29 @@ package org.spout.infiniteobjects.material;
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.util.config.ConfigurationNode;
 
-public abstract class MaterialPicker {
-	private final String name;
+import org.spout.infiniteobjects.util.IFOUtils;
 
-	public MaterialPicker(String name) {
-		this.name = name;
+public class InnerOuterPicker extends MaterialPicker {
+	private BlockMaterial inner;
+	private BlockMaterial outer;
+
+	public InnerOuterPicker(String name) {
+		super(name);
 	}
 
-	public abstract void load(ConfigurationNode config);
+	@Override
+	public void load(ConfigurationNode config) {
+		inner = IFOUtils.getBlockMaterial(config.getNode("innerMaterial").getString());
+		outer = IFOUtils.getBlockMaterial(config.getNode("outerMaterial").getString());
+	}
 
-	public abstract BlockMaterial pickMaterial(boolean outer);
+	@Override
+	public BlockMaterial pickMaterial(boolean outer) {
+		return outer ? this.outer : inner;
+	}
 
-	public String getName() {
-		return name;
+	@Override
+	public String toString() {
+		return "Inner: " + inner.getDisplayName() + ", outer: " + outer.getDisplayName();
 	}
 }

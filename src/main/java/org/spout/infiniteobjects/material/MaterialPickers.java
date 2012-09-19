@@ -26,21 +26,24 @@
  */
 package org.spout.infiniteobjects.material;
 
-import org.spout.api.material.BlockMaterial;
-import org.spout.api.util.config.ConfigurationNode;
+import java.util.HashMap;
+import java.util.Map;
 
-public abstract class MaterialPicker {
-	private final String name;
+public class MaterialPickers {
+	private static final Map<String, Class<? extends MaterialPicker>> PICKERS = new HashMap<String, Class<? extends MaterialPicker>>();
 
-	public MaterialPicker(String name) {
-		this.name = name;
+	static {
+		PICKERS.put("innerouter", InnerOuterPicker.class);
+		PICKERS.put("randominnerouter", RandomInnerOuterPicker.class);
+		PICKERS.put("randomuniform", RandomUniformPicker.class);
 	}
 
-	public abstract void load(ConfigurationNode config);
-
-	public abstract BlockMaterial pickMaterial(boolean outer);
-
-	public String getName() {
-		return name;
+	public static MaterialPicker get(String name, String type) {
+		try {
+			final Class<? extends MaterialPicker> pickerClass = PICKERS.get(type.toLowerCase());
+			return pickerClass.getConstructor(String.class).newInstance(name);
+		} catch (Exception ex) {
+			return null;
+		}
 	}
 }

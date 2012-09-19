@@ -27,18 +27,25 @@
 package org.spout.infiniteobjects;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.Test;
 import org.junit.Assert;
 
+import org.spout.api.material.BlockMaterial;
+
+import org.spout.infiniteobjects.material.MaterialPicker;
 import org.spout.infiniteobjects.variable.Variable;
 import org.spout.infiniteobjects.variable.VariableList;
 
 public class IFOWorldGeneratorObjectTest {
 	@Test
 	public void testIFOWGO() {
+		initTestMaterials();
 		final IFOManager manager = new IFOManager(new File("src/test/resources"));
 		manager.loadIFOs();
 		final IFOWorldGeneratorObject ifowgo = manager.getIFO("test");
@@ -46,6 +53,7 @@ public class IFOWorldGeneratorObjectTest {
 		printInfo(ifowgo);
 		testVariables(ifowgo);
 		testLists(ifowgo);
+		testPickers(ifowgo);
 		long start = System.nanoTime();
 		ifowgo.randomize();
 		System.out.println("Estimated time for randomization: " + ((System.nanoTime() - start) / 1000000d) + "ms");
@@ -53,12 +61,12 @@ public class IFOWorldGeneratorObjectTest {
 	}
 
 	private void testVariables(IFOWorldGeneratorObject ifowgo) {
-		Assert.assertTrue(ifowgo.getVariable("test1").getValue() == 6);
+		Assert.assertTrue(ifowgo.getVariable("vtest1").getValue() == 6);
 	}
 
 	private void testLists(IFOWorldGeneratorObject ifowgo) {
-		final double test1Value = ifowgo.getVariable("test1").getValue();
-		final double t4estValue = ifowgo.getVariable("t4est").getValue();
+		final double test1Value = ifowgo.getVariable("vtest1").getValue();
+		final double t4estValue = ifowgo.getVariable("vtest4").getValue();
 		final VariableList ltest3 = ifowgo.getList("ltest3");
 		final VariableList ltest4 = ifowgo.getList("ltest4");
 		Assert.assertTrue(ltest4.getSize() == test1Value);
@@ -68,6 +76,13 @@ public class IFOWorldGeneratorObjectTest {
 		}
 		final VariableList ltest2 = ifowgo.getList("ltest2");
 		Assert.assertTrue(ltest2.getSize() == 12);
+	}
+
+	private void testPickers(IFOWorldGeneratorObject ifowgo) {
+		final MaterialPicker picker = ifowgo.getPicker("ptest1");
+		Assert.assertTrue(picker != null);
+		final String materialName = picker.pickMaterial(false).getDisplayName();
+		Assert.assertTrue(materialName.equals("Stone") || materialName.equals("Air"));
 	}
 
 	private void printInfo(IFOWorldGeneratorObject ifowgo) {
@@ -85,6 +100,35 @@ public class IFOWorldGeneratorObjectTest {
 			}
 			System.out.println("\t" + list.getName() + ": " + values);
 		}
+		System.out.println("Pickers:");
+		for (MaterialPicker picker : ifowgo.getPickers()) {
+			System.out.println("\t" + picker.getName() + ": " + picker);
+		}
 		System.out.println();
+	}
+
+	private void initTestMaterials() {
+		final String[] testMaterials = new String[]{
+			"Stone",
+			"Dirt",
+			"Log",
+			"Wood",
+			"Cobblestone"
+		};
+		for (String testMaterial : testMaterials) {
+			try {
+				final Constructor constructor = TestMaterial.class.getDeclaredConstructor(String.class);
+				constructor.setAccessible(true);
+				constructor.newInstance(testMaterial);
+			} catch (Exception ex) {
+				Logger.getLogger(IFOWorldGeneratorObjectTest.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	private static class TestMaterial extends BlockMaterial {
+		private TestMaterial(String name) {
+			super(name);
+		}
 	}
 }

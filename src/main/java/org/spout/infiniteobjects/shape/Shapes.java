@@ -24,23 +24,27 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infiniteobjects.material;
+package org.spout.infiniteobjects.shape;
 
-import org.spout.api.material.BlockMaterial;
-import org.spout.api.util.config.ConfigurationNode;
+import java.util.HashMap;
+import java.util.Map;
 
-public abstract class MaterialPicker {
-	private final String name;
+import org.spout.infiniteobjects.IFOWorldGeneratorObject;
 
-	public MaterialPicker(String name) {
-		this.name = name;
+public class Shapes {
+	private static final Map<String, Class<? extends Shape>> SHAPES = new HashMap<String, Class<? extends Shape>>();
+
+	static {
+		SHAPES.put("sphere", Sphere.class);
+		SHAPES.put("cuboid", Cuboid.class);
 	}
 
-	public abstract void load(ConfigurationNode config);
-
-	public abstract BlockMaterial pickMaterial(boolean outer);
-
-	public String getName() {
-		return name;
+	public static Shape get(String name, IFOWorldGeneratorObject owner, String type) {
+		try {
+			final Class<? extends Shape> shapeClass = SHAPES.get(type.toLowerCase());
+			return shapeClass.getConstructor(IFOWorldGeneratorObject.class, String.class).newInstance(owner, name);
+		} catch (Exception ex) {
+			return null;
+		}
 	}
 }

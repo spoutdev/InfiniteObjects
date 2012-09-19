@@ -26,5 +26,48 @@
  */
 package org.spout.infiniteobjects.material;
 
-public class SimpleMaterialPicker {
+import java.util.Random;
+
+import org.spout.api.material.BlockMaterial;
+import org.spout.api.util.config.ConfigurationNode;
+
+import org.spout.infiniteobjects.util.IFOUtils;
+
+public class RandomInnerOuterPicker extends MaterialPicker {
+	private Random random = new Random();
+	private BlockMaterial inner;
+	private int innerOdd;
+	private BlockMaterial outer;
+	private int outerOdd;
+
+	public RandomInnerOuterPicker(String name) {
+		super(name);
+	}
+
+	@Override
+	public void load(ConfigurationNode config) {
+		inner = IFOUtils.getBlockMaterial(config.getNode("innerMaterial").getString());
+		innerOdd = config.getNode("innerOdd").getInt();
+		outer = IFOUtils.getBlockMaterial(config.getNode("outerMaterial").getString());
+		outerOdd = config.getNode("outerOdd").getInt();
+	}
+
+	@Override
+	public BlockMaterial pickMaterial(boolean outer) {
+		if (outer) {
+			return random.nextInt(100) < outerOdd ? this.outer : BlockMaterial.AIR;
+		} else {
+			return random.nextInt(100) < innerOdd ? inner : BlockMaterial.AIR;
+		}
+	}
+
+	public void setRandom(Random random) {
+		this.random = random;
+	}
+
+	@Override
+	public String toString() {
+		return "Inner: " + inner.getDisplayName() + " with odd: " + innerOdd
+				+ ", outer: " + outer.getDisplayName() + " with odd: " + outerOdd;
+	}
 }

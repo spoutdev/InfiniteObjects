@@ -26,6 +26,33 @@
  */
 package org.spout.infiniteobjects.shape;
 
-public interface Shape {
-	public void draw();
+import java.util.Random;
+
+import org.spout.api.math.Vector3;
+
+import org.spout.infiniteobjects.IFOWorldGeneratorObject;
+import org.spout.infiniteobjects.material.MaterialPicker;
+import org.spout.infiniteobjects.variable.Variable;
+
+public abstract class Shape {
+	protected IFOWorldGeneratorObject owner;
+	private final String name;
+	protected Random random = new Random();
+	private Vector3 position;
+	protected MaterialPicker picker;
+
+	public Shape(IFOWorldGeneratorObject owner, String name) {
+		this.owner = owner;
+		this.name = name;
+	}
+
+	public abstract void load(Variable... variables);
+
+	public abstract void draw(int x, int y, int z);
+
+	public abstract void calculate();
+
+	public String getName() {
+		return name;
+	}
 }

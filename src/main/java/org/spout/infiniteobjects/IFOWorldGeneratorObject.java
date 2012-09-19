@@ -34,7 +34,9 @@ import java.util.Set;
 
 import org.spout.api.generator.WorldGeneratorObject;
 import org.spout.api.geo.World;
+import org.spout.api.material.BlockMaterial;
 
+import org.spout.infiniteobjects.material.MaterialPicker;
 import org.spout.infiniteobjects.variable.VariableList;
 import org.spout.infiniteobjects.variable.Variable;
 
@@ -42,6 +44,7 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 	private final String name;
 	private final Map<String, Variable> variables = new HashMap<String, Variable>();
 	private final Map<String, VariableList> lists = new HashMap<String, VariableList>();
+	private final Map<String, MaterialPicker> pickers = new HashMap<String, MaterialPicker>();
 
 	public IFOWorldGeneratorObject(String name) {
 		this.name = name;
@@ -60,6 +63,9 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 	@Override
 	public void placeObject(World w, int x, int y, int z) {
 		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	public void setMaterial(BlockMaterial material, int xx, int yy, int zz) {
 	}
 
 	public String getName() {
@@ -95,7 +101,7 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 			for (Variable variable : variables.values()) {
 				if (!calculated.contains(variable)
 						&& calculated.containsAll(variable.getReferencedVariables())) {
-					variable.calculateValue();
+					variable.calculate();
 					calculated.add(variable);
 				}
 			}
@@ -131,10 +137,22 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 			for (VariableList list : lists.values()) {
 				if (!calculated.contains(list)
 						&& calculated.containsAll(list.getReferencedLists())) {
-					list.calculateValues();
+					list.calculate();
 					calculated.add(list);
 				}
 			}
 		}
+	}
+
+	public void addPicker(MaterialPicker picker) {
+		pickers.put(picker.getName(), picker);
+	}
+
+	public MaterialPicker getPicker(String name) {
+		return pickers.get(name.toLowerCase());
+	}
+
+	public Collection<MaterialPicker> getPickers() {
+		return pickers.values();
 	}
 }

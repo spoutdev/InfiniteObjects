@@ -26,5 +26,51 @@
  */
 package org.spout.infiniteobjects.shape;
 
-public class Cuboid {
+import org.spout.infiniteobjects.IFOWorldGeneratorObject;
+import org.spout.infiniteobjects.variable.Variable;
+
+public class Cuboid extends Shape {
+	private Variable width;
+	private Variable height;
+	private Variable depth;
+	private int xSize;
+	private int ySize;
+	private int zSize;
+
+	public Cuboid(IFOWorldGeneratorObject owner, String name) {
+		super(owner, name);
+	}
+
+	@Override
+	public void load(Variable... variables) {
+		if (variables.length < 3) {
+			throw new IllegalArgumentException("Expected at least 3 variables.");
+		}
+		width = variables[0];
+		height = variables[1];
+		depth = variables[2];
+	}
+
+	@Override
+	public void draw(int x, int y, int z) {
+		for (int xx = 0; xx < xSize; xx++) {
+			for (int yy = 0; yy < ySize; yy++) {
+				for (int zz = 0; zz < zSize; zz++) {
+					boolean outer = xx == 0 || yy == 0 || zz == 0
+							|| xx + 1 == xSize || yy + 1 == ySize || zz + 1 == zSize;
+					owner.setMaterial(picker.pickMaterial(outer), x + xx, y + yy, z + zz);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void calculate() {
+		width.calculate();
+		xSize = (int) width.getValue();
+		height.calculate();
+		ySize = (int) height.getValue();
+		depth.calculate();
+		zSize = (int) depth.getValue();
+	}
 }
