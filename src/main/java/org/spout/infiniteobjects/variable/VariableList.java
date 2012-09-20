@@ -13,14 +13,14 @@ public class VariableList {
 	private final String name;
 	// the expression used to calculate the value
 	private final Calculable rawValue;
-	private final Variable size;
+	private final NormalVariable size;
 	// the cached values
 	protected double[] values;
 	// referenced variables and variables to obtain values for calculation
 	private final Set<Variable> referencedVariables = new HashSet<Variable>();
 	private final Set<VariableList> referencedLists = new HashSet<VariableList>();
 
-	public VariableList(IFOWorldGeneratorObject owner, String name, Calculable rawValue, Variable size) {
+	public VariableList(IFOWorldGeneratorObject owner, String name, Calculable rawValue, NormalVariable size) {
 		this.owner = owner;
 		this.name = name;
 		this.rawValue = rawValue;

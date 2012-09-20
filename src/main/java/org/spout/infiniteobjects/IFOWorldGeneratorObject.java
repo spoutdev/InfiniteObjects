@@ -26,18 +26,25 @@
  */
 package org.spout.infiniteobjects;
 
+import de.congrace.exp4j.CustomFunction;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.spout.api.generator.WorldGeneratorObject;
 import org.spout.api.geo.World;
 import org.spout.api.material.BlockMaterial;
+import org.spout.infiniteobjects.function.RandomFunction;
 
 import org.spout.infiniteobjects.material.MaterialPicker;
+import org.spout.infiniteobjects.util.IFOUtils;
+import org.spout.infiniteobjects.variable.NormalVariable;
 import org.spout.infiniteobjects.variable.VariableList;
+import org.spout.infiniteobjects.variable.StaticVariable;
 import org.spout.infiniteobjects.variable.Variable;
 
 public class IFOWorldGeneratorObject extends WorldGeneratorObject {
@@ -91,7 +98,7 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		return variables.values();
 	}
 
-	public void addVariable(Variable variable) {
+	public void addVariable(NormalVariable variable) {
 		variables.put(variable.getName(), variable);
 	}
 
@@ -100,7 +107,7 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		while (calculated.size() < variables.size()) {
 			for (Variable variable : variables.values()) {
 				if (!calculated.contains(variable)
-						&& calculated.containsAll(variable.getReferencedVariables())) {
+						&& calculated.containsAll(variable.getReferences())) {
 					variable.calculate();
 					calculated.add(variable);
 				}
@@ -154,5 +161,57 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 
 	public Collection<MaterialPicker> getPickers() {
 		return pickers.values();
+	}
+
+	public void optimizeVariables() {
+		boolean hadChanges = true;
+		while (hadChanges) {
+			final Map<String, StaticVariable> optimizedVariables = new HashMap<String, StaticVariable>();
+			final Set<NormalVariable> discardedVariables = new HashSet<NormalVariable>();
+			for (Variable variable : variables.values()) {
+				if (!(variable instanceof NormalVariable)) {
+					continue;
+				}
+				final NormalVariable normalVariable = (NormalVariable) variable;
+				if (!canOptimize(normalVariable)) {
+					continue;
+				}
+				final StaticVariable staticVariable =
+						new StaticVariable(normalVariable.getName(), normalVariable.getValue());
+				optimizedVariables.put(staticVariable.getName(), staticVariable);
+				discardedVariables.add(normalVariable);
+				for (Variable var : variables.values()) {
+					if (!(var instanceof NormalVariable)) {
+						continue;
+					}
+					final NormalVariable normalVar = (NormalVariable) var;
+					if (normalVar.hasReference(normalVariable)) {
+						normalVar.removeReference(normalVariable);
+						normalVar.addReference(optimizedVariables.get(staticVariable.getName()));
+					}
+				}
+			}
+			for (NormalVariable discardedVariable : discardedVariables) {
+				variables.remove(discardedVariable.getName());
+			}
+			variables.putAll(optimizedVariables);
+			hadChanges = !optimizedVariables.isEmpty();
+		}
+	}
+
+	private boolean canOptimize(NormalVariable variable) {
+		for (Variable ref : variable.getReferences()) {
+			if (!(ref instanceof StaticVariable)) {
+				return false;
+			}
+		}
+		for (Entry<String, CustomFunction> entry : IFOManager.getFunctions().entrySet()) {
+			if (IFOUtils.hasMatch("\\b\\Q" + entry.getKey() + "\\E\\b", variable.getRawValue().getExpression())) {
+				if (entry.getValue() instanceof RandomFunction) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }

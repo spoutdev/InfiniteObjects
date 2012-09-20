@@ -32,7 +32,7 @@ import org.spout.api.math.Vector3;
 
 import org.spout.infiniteobjects.IFOWorldGeneratorObject;
 import org.spout.infiniteobjects.material.MaterialPicker;
-import org.spout.infiniteobjects.variable.Variable;
+import org.spout.infiniteobjects.variable.NormalVariable;
 
 public abstract class Shape {
 	protected IFOWorldGeneratorObject owner;
@@ -46,7 +46,7 @@ public abstract class Shape {
 		this.name = name;
 	}
 
-	public abstract void load(Variable... variables);
+	public abstract void load(NormalVariable... variables);
 
 	public abstract void draw(int x, int y, int z);
 

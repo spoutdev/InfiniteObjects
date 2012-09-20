@@ -27,12 +27,12 @@
 package org.spout.infiniteobjects.shape;
 
 import org.spout.infiniteobjects.IFOWorldGeneratorObject;
-import org.spout.infiniteobjects.variable.Variable;
+import org.spout.infiniteobjects.variable.NormalVariable;
 
 public class Cuboid extends Shape {
-	private Variable width;
-	private Variable height;
-	private Variable depth;
+	private NormalVariable width;
+	private NormalVariable height;
+	private NormalVariable depth;
 	private int xSize;
 	private int ySize;
 	private int zSize;
@@ -42,7 +42,7 @@ public class Cuboid extends Shape {
 	}
 
 	@Override
-	public void load(Variable... variables) {
+	public void load(NormalVariable... variables) {
 		if (variables.length < 3) {
 			throw new IllegalArgumentException("Expected at least 3 variables.");
 		}

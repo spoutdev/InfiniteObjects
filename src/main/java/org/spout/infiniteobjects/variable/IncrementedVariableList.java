@@ -31,10 +31,10 @@ import de.congrace.exp4j.Calculable;
 import org.spout.infiniteobjects.IFOWorldGeneratorObject;
 
 public class IncrementedVariableList extends VariableList {
-	private final Variable increment;
+	private final NormalVariable increment;
 
 	public IncrementedVariableList(IFOWorldGeneratorObject owner, String name,
-			Calculable rawValue, Variable size, Variable increment) {
+			Calculable rawValue, NormalVariable size, NormalVariable increment) {
 		super(owner, name, rawValue, size);
 		this.increment = increment;
 	}

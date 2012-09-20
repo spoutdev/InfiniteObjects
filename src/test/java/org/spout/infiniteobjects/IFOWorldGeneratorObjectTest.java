@@ -39,6 +39,7 @@ import org.junit.Assert;
 import org.spout.api.material.BlockMaterial;
 
 import org.spout.infiniteobjects.material.MaterialPicker;
+import org.spout.infiniteobjects.variable.StaticVariable;
 import org.spout.infiniteobjects.variable.Variable;
 import org.spout.infiniteobjects.variable.VariableList;
 
@@ -50,12 +51,13 @@ public class IFOWorldGeneratorObjectTest {
 		manager.loadIFOs();
 		final IFOWorldGeneratorObject ifowgo = manager.getIFO("test");
 		Assert.assertTrue(ifowgo != null);
+		ifowgo.optimizeVariables();
 		printInfo(ifowgo);
 		testVariables(ifowgo);
 		testLists(ifowgo);
 		testPickers(ifowgo);
 		long start = System.nanoTime();
-		ifowgo.randomize();
+		ifowgo.calculateVariables();
 		System.out.println("Estimated time for randomization: " + ((System.nanoTime() - start) / 1000000d) + "ms");
 		System.out.println();
 	}
@@ -90,7 +92,8 @@ public class IFOWorldGeneratorObjectTest {
 		System.out.println("\t" + ifowgo.getName());
 		System.out.println("Variables:");
 		for (Variable variable : ifowgo.getVariables()) {
-			System.out.println("\t" + variable.getName() + ": " + variable.getValue());
+			String type = variable instanceof StaticVariable ? "{STATIC}" : "{NORMAL}";
+			System.out.println("\t" + type + " " + variable.getName() + ": " + variable.getValue());
 		}
 		System.out.println("Lists:");
 		for (VariableList list : ifowgo.getLists()) {

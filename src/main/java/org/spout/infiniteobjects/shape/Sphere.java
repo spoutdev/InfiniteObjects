@@ -27,12 +27,12 @@
 package org.spout.infiniteobjects.shape;
 
 import org.spout.infiniteobjects.IFOWorldGeneratorObject;
-import org.spout.infiniteobjects.variable.Variable;
+import org.spout.infiniteobjects.variable.NormalVariable;
 
 public class Sphere extends Shape {
-	private Variable halfWidth;
-	private Variable halfHeight;
-	private Variable halfDepth;
+	private NormalVariable halfWidth;
+	private NormalVariable halfHeight;
+	private NormalVariable halfDepth;
 	private double radiusX;
 	private double radiusY;
 	private double radiusZ;
@@ -42,7 +42,7 @@ public class Sphere extends Shape {
 	}
 
 	@Override
-	public void load(Variable... variables) {
+	public void load(NormalVariable... variables) {
 		if (variables.length < 3) {
 			throw new IllegalArgumentException("Expected at least 3 variables.");
 		}
@@ -79,7 +79,7 @@ public class Sphere extends Shape {
 					final double zn = nextZn;
 					nextZn = (zz + 1) * invRadiusZ;
 
-					if (lengthSqrt(xn, yn, zn) > 1) {
+					if (lengthSquare(xn, yn, zn) > 1) {
 						if (zz == 0) {
 							if (yy == 0) {
 								break forX;
@@ -89,9 +89,9 @@ public class Sphere extends Shape {
 						break forZ;
 					}
 
-					boolean outer = lengthSqrt(nextXn, yn, zn) > 1
-							|| lengthSqrt(xn, nextYn, zn) > 1
-							|| lengthSqrt(xn, yn, nextZn) > 1;
+					boolean outer = lengthSquare(nextXn, yn, zn) > 1
+							|| lengthSquare(xn, nextYn, zn) > 1
+							|| lengthSquare(xn, yn, nextZn) > 1;
 
 					owner.setMaterial(picker.pickMaterial(outer), x + xx, y + yy, z + zz);
 					owner.setMaterial(picker.pickMaterial(outer), x - xx, y + yy, z + zz);
@@ -106,7 +106,7 @@ public class Sphere extends Shape {
 		}
 	}
 
-	private double lengthSqrt(double x, double y, double z) {
+	private double lengthSquare(double x, double y, double z) {
 		return (x * x) + (y * y) + (z * z);
 	}
 
