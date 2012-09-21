@@ -41,6 +41,10 @@ import de.congrace.exp4j.CustomFunction;
 import de.congrace.exp4j.ExpressionBuilder;
 import de.congrace.exp4j.InvalidCustomFunctionException;
 
+import gnu.trove.iterator.TObjectDoubleIterator;
+import gnu.trove.map.TObjectDoubleMap;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
+
 import org.spout.api.exception.ConfigurationException;
 import org.spout.api.util.config.ConfigurationNode;
 import org.spout.api.util.config.yaml.YamlConfiguration;
@@ -50,14 +54,14 @@ import org.spout.infobjects.function.RandomIntFunction;
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.material.MaterialPickers;
 import org.spout.infobjects.util.IFOUtils;
-import org.spout.infobjects.variable.IncrementedVariableList;
+import org.spout.infobjects.list.IncrementedList;
 import org.spout.infobjects.variable.NormalVariable;
 import org.spout.infobjects.variable.Variable;
-import org.spout.infobjects.variable.VariableList;
+import org.spout.infobjects.list.NormalList;
 
 public class IFOManager {
 	private static final Map<String, CustomFunction> FUNCTIONS = new HashMap<String, CustomFunction>();
-	private static final Map<String, Double> CONSTANTS = new HashMap<String, Double>();
+	private static final TObjectDoubleMap<String> CONSTANTS = new TObjectDoubleHashMap<String>();
 	private final File folder;
 	private static final Map<String, IFOWorldGeneratorObject> ifowgos = new HashMap<String, IFOWorldGeneratorObject>();
 
@@ -123,7 +127,7 @@ public class IFOManager {
 				final Calculable rawValue = getExpressionBuilder(expression).
 						withVariableNames(referencedVariableNames.toArray(new String[referencedVariableNames.size()])).
 						build();
-				final NormalVariable variable = new NormalVariable(ifowgo, variableName, rawValue);
+				final NormalVariable variable = new NormalVariable(variableName, rawValue);
 				ifowgo.addVariable(variable);
 				references.put(variable, referencedVariableNames);
 			} catch (Exception ex) {
@@ -148,7 +152,7 @@ public class IFOManager {
 		}
 		try {
 			final Calculable rawValue = builder.build();
-			final NormalVariable variable = new NormalVariable(ifowgo, name, rawValue);
+			final NormalVariable variable = new NormalVariable(name, rawValue);
 			variable.addReferences(referencedVariables);
 			return variable;
 		} catch (Exception ex) {
@@ -159,7 +163,7 @@ public class IFOManager {
 
 	private void buildLists(IFOWorldGeneratorObject ifowgo, ConfigurationNode listsNode) {
 		final Set<String> listNames = listsNode.getKeys(false);
-		final Map<VariableList, Set<String>> references = new HashMap<VariableList, Set<String>>();
+		final Map<NormalList, Set<String>> references = new HashMap<NormalList, Set<String>>();
 		for (String listName : listNames) {
 			final ConfigurationNode listNode = listsNode.getNode(listName);
 			final NormalVariable size = buildVariable(ifowgo, "size", listNode.getNode("size").getString());
@@ -191,11 +195,11 @@ public class IFOManager {
 				}
 				builder.withVariableNames(referencedListNames.toArray(new String[referencedListNames.size()]));
 				final Calculable rawValue = builder.build();
-				final VariableList list;
+				final NormalList list;
 				if (increment == null) {
-					list = new VariableList(ifowgo, listName, rawValue, size);
+					list = new NormalList(listName, rawValue, size);
 				} else {
-					list = new IncrementedVariableList(ifowgo, listName, rawValue, size, increment);
+					list = new IncrementedList(listName, rawValue, size, increment);
 				}
 				ifowgo.addList(listName, list);
 				list.addVariableReferences(referencedVariables);
@@ -204,7 +208,7 @@ public class IFOManager {
 				Logger.getLogger(IFOManager.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
-		for (Entry<VariableList, Set<String>> entry : references.entrySet()) {
+		for (Entry<NormalList, Set<String>> entry : references.entrySet()) {
 			entry.getKey().addListReferences(ifowgo.getLists(entry.getValue()));
 		}
 	}
@@ -234,7 +238,7 @@ public class IFOManager {
 		FUNCTIONS.put(name, function);
 	}
 
-	public static Map<String, Double> getConstants() {
+	public static TObjectDoubleMap<String> getConstants() {
 		return CONSTANTS;
 	}
 
@@ -243,8 +247,10 @@ public class IFOManager {
 	}
 
 	private static String replaceConstants(String expression) {
-		for (Entry<String, Double> entry : CONSTANTS.entrySet()) {
-			expression = expression.replaceAll("\\Q" + entry.getKey() + "\\E", entry.getValue().toString());
+		final TObjectDoubleIterator<String> iterator = CONSTANTS.iterator();
+		while (iterator.hasNext()) {
+			iterator.advance();
+			expression = expression.replaceAll("\\Q" + iterator.key() + "\\E", Double.toString(iterator.value()));
 		}
 		return expression;
 	}

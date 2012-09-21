@@ -43,12 +43,12 @@ pickers:
     leavesPicker:
         type: RandomInnerOuter
         properties:
-            innerMaterial: LEAVES.3
+            innerMaterial: Leaves.3
             innerOdd: 100
-            outerMaterial: LEAVES.3
+            outerMaterial: Leaves.3
             outerOdd: 50
 
 build:
-    - place(trunk, LOG.3, 0, 0, 0)
+    - place(trunk, Log.3, 0, 0, 0)
     - place(leaves, leavesPicker, leafGroupsX, leafGroupsY, leafGroupsZ)
-    - trace(0, branchBaseY, 0, leafGroupsX, leafGroupsY, leafGroupsZ, LOG.3)
+    - trace(0, branchBaseY, 0, leafGroupsX, leafGroupsY, leafGroupsZ, Log.3)

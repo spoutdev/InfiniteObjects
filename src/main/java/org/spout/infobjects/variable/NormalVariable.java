@@ -32,10 +32,7 @@ import java.util.List;
 
 import de.congrace.exp4j.Calculable;
 
-import org.spout.infobjects.IFOWorldGeneratorObject;
-
 public class NormalVariable implements Variable {
-	private final IFOWorldGeneratorObject owner;
 	private final String name;
 	// The expression used to calculate the value
 	private final Calculable rawValue;
@@ -44,8 +41,7 @@ public class NormalVariable implements Variable {
 	// Referenced variables to obtain values for calculation
 	private final List<Variable> referenced = new ArrayList<Variable>();
 
-	public NormalVariable(IFOWorldGeneratorObject owner, String name, Calculable rawValue) {
-		this.owner = owner;
+	public NormalVariable(String name, Calculable rawValue) {
 		this.name = name;
 		this.rawValue = rawValue;
 	}
@@ -106,9 +102,6 @@ public class NormalVariable implements Variable {
 			return false;
 		}
 		final NormalVariable other = (NormalVariable) obj;
-		if (owner != other.owner && (owner == null || !owner.equals(other.owner))) {
-			return false;
-		}
 		if ((name == null) ? (other.name != null) : !name.equals(other.name)) {
 			return false;
 		}
@@ -118,7 +111,6 @@ public class NormalVariable implements Variable {
 	@Override
 	public int hashCode() {
 		int hash = 3;
-		hash = 97 * hash + (this.owner != null ? this.owner.hashCode() : 0);
 		hash = 97 * hash + (this.name != null ? this.name.hashCode() : 0);
 		return hash;
 	}

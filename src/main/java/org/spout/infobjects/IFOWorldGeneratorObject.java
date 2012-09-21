@@ -29,7 +29,6 @@ package org.spout.infobjects;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -44,14 +43,14 @@ import org.spout.infobjects.function.RandomFunction;
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.util.IFOUtils;
 import org.spout.infobjects.variable.NormalVariable;
-import org.spout.infobjects.variable.VariableList;
+import org.spout.infobjects.list.NormalList;
 import org.spout.infobjects.variable.StaticVariable;
 import org.spout.infobjects.variable.Variable;
 
 public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 	private final String name;
 	private final Map<String, Variable> variables = new HashMap<String, Variable>();
-	private final Map<String, VariableList> lists = new HashMap<String, VariableList>();
+	private final Map<String, NormalList> lists = new HashMap<String, NormalList>();
 	private final Map<String, MaterialPicker> pickers = new HashMap<String, MaterialPicker>();
 
 	public IFOWorldGeneratorObject(String name) {
@@ -99,7 +98,7 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		return variables.values();
 	}
 
-	public void addVariable(NormalVariable variable) {
+	public void addVariable(Variable variable) {
 		variables.put(variable.getName(), variable);
 	}
 
@@ -107,6 +106,10 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		final Set<Variable> calculated = new HashSet<Variable>();
 		while (calculated.size() < variables.size()) {
 			for (Variable variable : variables.values()) {
+				if (variable instanceof StaticVariable) {
+					calculated.add(variable);
+					continue;
+				}
 				if (!calculated.contains(variable)
 						&& calculated.containsAll(variable.getReferences())) {
 					variable.calculate();
@@ -116,14 +119,14 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		}
 	}
 
-	public VariableList getList(String name) {
+	public NormalList getList(String name) {
 		return lists.get(name);
 	}
 
-	public Set<VariableList> getLists(Collection<String> listNames) {
-		final Set<VariableList> variableLists = new HashSet<VariableList>();
+	public Set<NormalList> getLists(Collection<String> listNames) {
+		final Set<NormalList> variableLists = new HashSet<NormalList>();
 		for (String listName : listNames) {
-			final VariableList list = lists.get(listName);
+			final NormalList list = lists.get(listName);
 			if (list != null) {
 				variableLists.add(list);
 			}
@@ -131,18 +134,18 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		return variableLists;
 	}
 
-	public Collection<VariableList> getLists() {
+	public Collection<NormalList> getLists() {
 		return lists.values();
 	}
 
-	public void addList(String name, VariableList list) {
+	public void addList(String name, NormalList list) {
 		lists.put(name, list);
 	}
 
 	public void calculateLists() {
-		final Set<VariableList> calculated = new HashSet<VariableList>();
+		final Set<NormalList> calculated = new HashSet<NormalList>();
 		while (calculated.size() < lists.size()) {
-			for (VariableList list : lists.values()) {
+			for (NormalList list : lists.values()) {
 				if (!calculated.contains(list)
 						&& calculated.containsAll(list.getReferencedLists())) {
 					list.calculate();
@@ -167,7 +170,7 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 	public void optimizeVariables() {
 		boolean hadChanges = true;
 		while (hadChanges) {
-			final Map<String, StaticVariable> optimizedVariables = new HashMap<String, StaticVariable>();
+			final Set< StaticVariable> optimizedVariables = new HashSet< StaticVariable>();
 			final Set<NormalVariable> discardedVariables = new HashSet<NormalVariable>();
 			for (Variable variable : variables.values()) {
 				if (!(variable instanceof NormalVariable)) {
@@ -179,24 +182,30 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 				}
 				final StaticVariable staticVariable =
 						new StaticVariable(normalVariable.getName(), normalVariable.getValue());
-				optimizedVariables.put(staticVariable.getName(), staticVariable);
+				optimizedVariables.add(staticVariable);
 				discardedVariables.add(normalVariable);
-				for (Variable var : variables.values()) {
-					if (!(var instanceof NormalVariable)) {
-						continue;
-					}
-					final NormalVariable normalVar = (NormalVariable) var;
-					if (normalVar.hasReference(normalVariable)) {
-						normalVar.removeReference(normalVariable);
-						normalVar.addReference(optimizedVariables.get(staticVariable.getName()));
-					}
-				}
+				replaceVariable(normalVariable, staticVariable);
 			}
 			for (NormalVariable discardedVariable : discardedVariables) {
 				variables.remove(discardedVariable.getName());
 			}
-			variables.putAll(optimizedVariables);
+			for (StaticVariable optimizedVariable : optimizedVariables) {
+				addVariable(optimizedVariable);
+			}
 			hadChanges = !optimizedVariables.isEmpty();
+		}
+	}
+
+	private void replaceVariable(Variable oldVar, Variable newVar) {
+		for (Variable var : variables.values()) {
+			if (!(var instanceof NormalVariable)) {
+				continue;
+			}
+			final NormalVariable normalVar = (NormalVariable) var;
+			if (normalVar.hasReference(oldVar)) {
+				normalVar.removeReference(oldVar);
+				normalVar.addReference(newVar);
+			}
 		}
 	}
 

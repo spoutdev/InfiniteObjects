@@ -38,10 +38,10 @@ import org.junit.Assert;
 
 import org.spout.api.material.BlockMaterial;
 
+import org.spout.infobjects.list.NormalList;
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.variable.StaticVariable;
 import org.spout.infobjects.variable.Variable;
-import org.spout.infobjects.variable.VariableList;
 
 public class IFOWorldGeneratorObjectTest {
 	@Test
@@ -69,14 +69,14 @@ public class IFOWorldGeneratorObjectTest {
 	private void testLists(IFOWorldGeneratorObject ifowgo) {
 		final double test1Value = ifowgo.getVariable("vtest1").getValue();
 		final double t4estValue = ifowgo.getVariable("vtest4").getValue();
-		final VariableList ltest3 = ifowgo.getList("ltest3");
-		final VariableList ltest4 = ifowgo.getList("ltest4");
+		final NormalList ltest3 = ifowgo.getList("ltest3");
+		final NormalList ltest4 = ifowgo.getList("ltest4");
 		Assert.assertTrue(ltest4.getSize() == test1Value);
 		Assert.assertTrue(ltest4.getSize() == ltest3.getSize());
 		for (int i = 0; i < ltest4.getSize(); i++) {
 			Assert.assertTrue(ltest3.getValue(i) + t4estValue == ltest4.getValue(i));
 		}
-		final VariableList ltest2 = ifowgo.getList("ltest2");
+		final NormalList ltest2 = ifowgo.getList("ltest2");
 		Assert.assertTrue(ltest2.getSize() == 12);
 	}
 
@@ -96,7 +96,7 @@ public class IFOWorldGeneratorObjectTest {
 			System.out.println("\t" + type + " " + variable.getName() + ": " + variable.getValue());
 		}
 		System.out.println("Lists:");
-		for (VariableList list : ifowgo.getLists()) {
+		for (NormalList list : ifowgo.getLists()) {
 			final List<Double> values = new ArrayList<Double>();
 			for (int i = 0; i < list.getSize(); i++) {
 				values.add(list.getValue(i));
@@ -124,9 +124,6 @@ public class IFOWorldGeneratorObjectTest {
 			constructor.setAccessible(true);
 		} catch (Exception ex) {
 			Logger.getLogger(IFOWorldGeneratorObjectTest.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		if (constructor == null) {
-			throw new IllegalStateException("Failed to initialize test materials");
 		}
 		for (String testMaterial : testMaterials) {
 			try {

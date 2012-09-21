@@ -24,7 +24,28 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.shape;
+package org.spout.infobjects.list;
 
-public class Line {
+import de.congrace.exp4j.Calculable;
+
+import org.spout.infobjects.variable.Variable;
+
+public class IncrementedList extends NormalList {
+	private final Variable increment;
+
+	public IncrementedList(String name, Calculable rawValue, Variable size, Variable increment) {
+		super(name, rawValue, size);
+		this.increment = increment;
+	}
+
+	@Override
+	public void calculate() {
+		super.calculate();
+		double incr = 0;
+		for (int i = 0; i < values.length; i++) {
+			values[i] += incr;
+			increment.calculate();
+			incr += increment.getValue();
+		}
+	}
 }

@@ -24,7 +24,7 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.variable;
+package org.spout.infobjects.list;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,22 +32,20 @@ import java.util.Set;
 
 import de.congrace.exp4j.Calculable;
 
-import org.spout.infobjects.IFOWorldGeneratorObject;
+import org.spout.infobjects.variable.Variable;
 
-public class VariableList {
-	private final IFOWorldGeneratorObject owner;
+public class NormalList {
 	private final String name;
 	// The expression used to calculate the value
 	private final Calculable rawValue;
-	private final NormalVariable size;
+	private final Variable size;
 	// The cached values
 	protected double[] values;
 	// Referenced variables and variables to obtain values for calculation
 	private final Set<Variable> referencedVariables = new HashSet<Variable>();
-	private final Set<VariableList> referencedLists = new HashSet<VariableList>();
+	private final Set<NormalList> referencedLists = new HashSet<NormalList>();
 
-	public VariableList(IFOWorldGeneratorObject owner, String name, Calculable rawValue, NormalVariable size) {
-		this.owner = owner;
+	public NormalList(String name, Calculable rawValue, Variable size) {
 		this.name = name;
 		this.rawValue = rawValue;
 		this.size = size;
@@ -61,15 +59,15 @@ public class VariableList {
 		referencedVariables.addAll(variables);
 	}
 
-	public void addListReference(VariableList variable) {
+	public void addListReference(NormalList variable) {
 		referencedLists.add(variable);
 	}
 
-	public void addListReferences(Collection<VariableList> variables) {
+	public void addListReferences(Collection<NormalList> variables) {
 		referencedLists.addAll(variables);
 	}
 
-	public Set<VariableList> getReferencedLists() {
+	public Set<NormalList> getReferencedLists() {
 		return referencedLists;
 	}
 
@@ -84,7 +82,7 @@ public class VariableList {
 			rawValue.setVariable(ref.getName(), ref.getValue());
 		}
 		for (int i = 0; i < values.length; i++) {
-			for (VariableList ref : referencedLists) {
+			for (NormalList ref : referencedLists) {
 				rawValue.setVariable(ref.getName(), ref.getValue(i));
 			}
 			values[i] = rawValue.calculate();
