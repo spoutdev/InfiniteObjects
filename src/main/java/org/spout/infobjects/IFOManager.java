@@ -36,14 +36,14 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import gnu.trove.iterator.TObjectDoubleIterator;
+import gnu.trove.map.TObjectDoubleMap;
+import gnu.trove.map.hash.TObjectDoubleHashMap;
+
 import de.congrace.exp4j.Calculable;
 import de.congrace.exp4j.CustomFunction;
 import de.congrace.exp4j.ExpressionBuilder;
 import de.congrace.exp4j.InvalidCustomFunctionException;
-
-import gnu.trove.iterator.TObjectDoubleIterator;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
 
 import org.spout.api.exception.ConfigurationException;
 import org.spout.api.util.config.ConfigurationNode;
@@ -51,13 +51,13 @@ import org.spout.api.util.config.yaml.YamlConfiguration;
 
 import org.spout.infobjects.function.RandomFloatFunction;
 import org.spout.infobjects.function.RandomIntFunction;
+import org.spout.infobjects.list.IncrementedList;
+import org.spout.infobjects.list.NormalList;
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.material.MaterialPickers;
 import org.spout.infobjects.util.IFOUtils;
-import org.spout.infobjects.list.IncrementedList;
 import org.spout.infobjects.variable.NormalVariable;
 import org.spout.infobjects.variable.Variable;
-import org.spout.infobjects.list.NormalList;
 
 public class IFOManager {
 	private static final Map<String, CustomFunction> FUNCTIONS = new HashMap<String, CustomFunction>();

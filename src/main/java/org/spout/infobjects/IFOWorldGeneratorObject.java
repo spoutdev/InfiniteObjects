@@ -40,10 +40,10 @@ import org.spout.api.geo.World;
 import org.spout.api.material.BlockMaterial;
 
 import org.spout.infobjects.function.RandomFunction;
+import org.spout.infobjects.list.NormalList;
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.util.IFOUtils;
 import org.spout.infobjects.variable.NormalVariable;
-import org.spout.infobjects.list.NormalList;
 import org.spout.infobjects.variable.StaticVariable;
 import org.spout.infobjects.variable.Variable;
 
@@ -170,7 +170,7 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 	public void optimizeVariables() {
 		boolean hadChanges = true;
 		while (hadChanges) {
-			final Set< StaticVariable> optimizedVariables = new HashSet< StaticVariable>();
+			final Set<StaticVariable> optimizedVariables = new HashSet<StaticVariable>();
 			final Set<NormalVariable> discardedVariables = new HashSet<NormalVariable>();
 			for (Variable variable : variables.values()) {
 				if (!(variable instanceof NormalVariable)) {
