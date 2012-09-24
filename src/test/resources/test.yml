@@ -30,11 +30,14 @@ lists:
         increment: -3
     ltest6:
         size: 10
-        value: vtest1
-        increment: randomInt(1, 2)
+        value: 20
     ltest7:
         size: vtest2
         value: randomInt(3, 34)
+        increment: randomFloat(0, 2)
+    ltest8:
+        size: 10
+        value: 2 * ltest5 + ltest6
 
 pickers:
     ptest1:

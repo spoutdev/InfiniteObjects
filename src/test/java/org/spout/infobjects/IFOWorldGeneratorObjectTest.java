@@ -38,7 +38,8 @@ import org.junit.Assert;
 
 import org.spout.api.material.BlockMaterial;
 
-import org.spout.infobjects.list.NormalList;
+import org.spout.infobjects.list.IFOList;
+import org.spout.infobjects.list.StaticList;
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.variable.StaticVariable;
 import org.spout.infobjects.variable.Variable;
@@ -51,13 +52,12 @@ public class IFOWorldGeneratorObjectTest {
 		manager.loadIFOs();
 		final IFOWorldGeneratorObject ifowgo = manager.getIFO("test");
 		Assert.assertTrue(ifowgo != null);
-		ifowgo.optimizeVariables();
 		printInfo(ifowgo);
 		testVariables(ifowgo);
 		testLists(ifowgo);
 		testPickers(ifowgo);
 		long start = System.nanoTime();
-		ifowgo.calculateVariables();
+		ifowgo.randomize();
 		System.out.println("Estimated time for randomization: " + ((System.nanoTime() - start) / 1000000d) + "ms");
 		System.out.println();
 	}
@@ -69,14 +69,14 @@ public class IFOWorldGeneratorObjectTest {
 	private void testLists(IFOWorldGeneratorObject ifowgo) {
 		final double test1Value = ifowgo.getVariable("vtest1").getValue();
 		final double t4estValue = ifowgo.getVariable("vtest4").getValue();
-		final NormalList ltest3 = ifowgo.getList("ltest3");
-		final NormalList ltest4 = ifowgo.getList("ltest4");
+		final IFOList ltest3 = ifowgo.getList("ltest3");
+		final IFOList ltest4 = ifowgo.getList("ltest4");
 		Assert.assertTrue(ltest4.getSize() == test1Value);
 		Assert.assertTrue(ltest4.getSize() == ltest3.getSize());
 		for (int i = 0; i < ltest4.getSize(); i++) {
 			Assert.assertTrue(ltest3.getValue(i) + t4estValue == ltest4.getValue(i));
 		}
-		final NormalList ltest2 = ifowgo.getList("ltest2");
+		final IFOList ltest2 = ifowgo.getList("ltest2");
 		Assert.assertTrue(ltest2.getSize() == 12);
 	}
 
@@ -96,12 +96,13 @@ public class IFOWorldGeneratorObjectTest {
 			System.out.println("\t" + type + " " + variable.getName() + ": " + variable.getValue());
 		}
 		System.out.println("Lists:");
-		for (NormalList list : ifowgo.getLists()) {
+		for (IFOList list : ifowgo.getLists()) {
+			String type = list instanceof StaticList ? "{STATIC}" : "{NORMAL}";
 			final List<Double> values = new ArrayList<Double>();
 			for (int i = 0; i < list.getSize(); i++) {
 				values.add(list.getValue(i));
 			}
-			System.out.println("\t" + list.getName() + ": " + values);
+			System.out.println("\t" + type + " " + list.getName() + ": " + values);
 		}
 		System.out.println("Pickers:");
 		for (MaterialPicker picker : ifowgo.getPickers()) {
@@ -116,7 +117,8 @@ public class IFOWorldGeneratorObjectTest {
 			"Dirt",
 			"Log",
 			"Wood",
-			"Cobblestone"
+			"Cobblestone",
+			"Leaves"
 		};
 		Constructor constructor = null;
 		try {

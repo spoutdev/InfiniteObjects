@@ -57,6 +57,7 @@ import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.material.MaterialPickers;
 import org.spout.infobjects.util.IFOUtils;
 import org.spout.infobjects.variable.NormalVariable;
+import org.spout.infobjects.variable.StaticVariable;
 import org.spout.infobjects.variable.Variable;
 
 public class IFOManager {
@@ -106,8 +107,10 @@ public class IFOManager {
 		final IFOWorldGeneratorObject ifowgo = new IFOWorldGeneratorObject(config.getNode("name").getString());
 		buildInitVariables(ifowgo, config.getNode("variables"));
 		ifowgo.calculateVariables();
+		ifowgo.optimizeVariables();
 		buildLists(ifowgo, config.getNode("lists"));
 		ifowgo.calculateLists();
+		ifowgo.optimizeLists();
 		buildPickers(ifowgo, config.getNode("pickers"));
 		return ifowgo;
 	}
@@ -139,7 +142,7 @@ public class IFOManager {
 		}
 	}
 
-	private NormalVariable buildVariable(IFOWorldGeneratorObject ifowgo, String name, String expression) {
+	private Variable buildVariable(IFOWorldGeneratorObject ifowgo, String name, String expression) {
 		final Set<Variable> referencedVariables = new HashSet<Variable>();
 		for (Variable variable : ifowgo.getVariables()) {
 			if (IFOUtils.hasMatch("\\b\\Q" + variable.getName() + "\\E\\b", expression)) {
@@ -152,8 +155,17 @@ public class IFOManager {
 		}
 		try {
 			final Calculable rawValue = builder.build();
-			final NormalVariable variable = new NormalVariable(name, rawValue);
-			variable.addReferences(referencedVariables);
+			final Variable variable;
+			if (IFOUtils.containsOnly(referencedVariables, StaticVariable.class)
+					&& !IFOUtils.isRandom(rawValue.getExpression())) {
+				for (Variable ref : referencedVariables) {
+					rawValue.setVariable(ref.getName(), ref.getValue());
+				}
+				variable = new StaticVariable(name, rawValue);
+			} else {
+				variable = new NormalVariable(name, rawValue);
+				((NormalVariable) variable).addReferences(referencedVariables);
+			}
 			return variable;
 		} catch (Exception ex) {
 			Logger.getLogger(IFOManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -166,9 +178,9 @@ public class IFOManager {
 		final Map<NormalList, Set<String>> references = new HashMap<NormalList, Set<String>>();
 		for (String listName : listNames) {
 			final ConfigurationNode listNode = listsNode.getNode(listName);
-			final NormalVariable size = buildVariable(ifowgo, "size", listNode.getNode("size").getString());
+			final Variable size = buildVariable(ifowgo, "size", listNode.getNode("size").getString());
 			final String incrementExpression = listNode.getNode("increment").getString();
-			final NormalVariable increment;
+			final Variable increment;
 			if (incrementExpression != null) {
 				increment = buildVariable(ifowgo, "increment", incrementExpression);
 			} else {
@@ -201,7 +213,7 @@ public class IFOManager {
 				} else {
 					list = new IncrementedList(listName, rawValue, size, increment);
 				}
-				ifowgo.addList(listName, list);
+				ifowgo.addList(list);
 				list.addVariableReferences(referencedVariables);
 				references.put(list, referencedListNames);
 			} catch (Exception ex) {

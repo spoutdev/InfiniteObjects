@@ -26,7 +26,7 @@
  */
 package org.spout.infobjects.variable;
 
-import java.util.List;
+import java.util.Set;
 
 import org.spout.api.util.Named;
 
@@ -35,5 +35,5 @@ public interface Variable extends Named {
 
 	public double getValue();
 
-	public List<Variable> getReferences();
+	public Set<Variable> getReferences();
 }

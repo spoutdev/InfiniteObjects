@@ -34,7 +34,7 @@ import de.congrace.exp4j.Calculable;
 
 import org.spout.infobjects.variable.Variable;
 
-public class NormalList {
+public class NormalList implements IFOList {
 	private final String name;
 	// The expression used to calculate the value
 	private final Calculable rawValue;
@@ -43,12 +43,16 @@ public class NormalList {
 	protected double[] values;
 	// Referenced variables and variables to obtain values for calculation
 	private final Set<Variable> referencedVariables = new HashSet<Variable>();
-	private final Set<NormalList> referencedLists = new HashSet<NormalList>();
+	private final Set<IFOList> referencedLists = new HashSet<IFOList>();
 
 	public NormalList(String name, Calculable rawValue, Variable size) {
 		this.name = name;
 		this.rawValue = rawValue;
 		this.size = size;
+	}
+
+	public boolean hasVariableReference(Variable variable) {
+		return referencedVariables.contains(variable);
 	}
 
 	public void addVariableReference(Variable variable) {
@@ -59,15 +63,36 @@ public class NormalList {
 		referencedVariables.addAll(variables);
 	}
 
-	public void addListReference(NormalList variable) {
-		referencedLists.add(variable);
+	public void removeVariableReference(Variable variable) {
+		referencedVariables.remove(variable);
 	}
 
-	public void addListReferences(Collection<NormalList> variables) {
-		referencedLists.addAll(variables);
+	public void removeVariableReferences(Collection<Variable> variables) {
+		referencedVariables.removeAll(variables);
 	}
 
-	public Set<NormalList> getReferencedLists() {
+	public boolean hasListReference(IFOList list) {
+		return referencedLists.contains(list);
+	}
+
+	public void addListReference(IFOList list) {
+		referencedLists.add(list);
+	}
+
+	public void addListReferences(Collection<IFOList> lists) {
+		referencedLists.addAll(lists);
+	}
+
+	public void removeListReference(IFOList list) {
+		referencedLists.remove(list);
+	}
+
+	public void removeListReferences(Collection<IFOList> lists) {
+		referencedLists.removeAll(lists);
+	}
+
+	@Override
+	public Set<IFOList> getReferencedLists() {
 		return referencedLists;
 	}
 
@@ -75,6 +100,7 @@ public class NormalList {
 		return referencedVariables;
 	}
 
+	@Override
 	public void calculate() {
 		size.calculate();
 		values = new double[(int) size.getValue()];
@@ -82,22 +108,37 @@ public class NormalList {
 			rawValue.setVariable(ref.getName(), ref.getValue());
 		}
 		for (int i = 0; i < values.length; i++) {
-			for (NormalList ref : referencedLists) {
+			for (IFOList ref : referencedLists) {
 				rawValue.setVariable(ref.getName(), ref.getValue(i));
 			}
 			values[i] = rawValue.calculate();
 		}
 	}
 
+	@Override
 	public double getValue(int index) {
 		return values[index];
 	}
 
+	public Calculable getRawValue() {
+		return rawValue;
+	}
+
+	public double[] getValues() {
+		return values;
+	}
+
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public int getSize() {
 		return values.length;
+	}
+
+	public Variable getSizeVariable() {
+		return size;
 	}
 }

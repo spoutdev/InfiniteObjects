@@ -26,9 +26,9 @@
  */
 package org.spout.infobjects.variable;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.congrace.exp4j.Calculable;
 
@@ -39,7 +39,7 @@ public class NormalVariable implements Variable {
 	// A cached value
 	private double value;
 	// Referenced variables to obtain values for calculation
-	private final List<Variable> referenced = new ArrayList<Variable>();
+	private final Set<Variable> referenced = new HashSet<Variable>();
 
 	public NormalVariable(String name, Calculable rawValue) {
 		this.name = name;
@@ -89,7 +89,7 @@ public class NormalVariable implements Variable {
 	}
 
 	@Override
-	public List<Variable> getReferences() {
+	public Set<Variable> getReferences() {
 		return referenced;
 	}
 

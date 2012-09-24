@@ -26,30 +26,16 @@
  */
 package org.spout.infobjects.list;
 
-import de.congrace.exp4j.Calculable;
+import java.util.Set;
 
-import org.spout.infobjects.variable.Variable;
+import org.spout.api.util.Named;
 
-public class IncrementedList extends NormalList {
-	private final Variable increment;
+public interface IFOList extends Named {
+	public void calculate();
 
-	public IncrementedList(String name, Calculable rawValue, Variable size, Variable increment) {
-		super(name, rawValue, size);
-		this.increment = increment;
-	}
+	public double getValue(int index);
 
-	@Override
-	public void calculate() {
-		super.calculate();
-		double incr = 0;
-		for (int i = 0; i < values.length; i++) {
-			values[i] += incr;
-			increment.calculate();
-			incr += increment.getValue();
-		}
-	}
+	public int getSize();
 
-	public Variable getIncrement() {
-		return increment;
-	}
+	public Set<IFOList> getReferencedLists();
 }

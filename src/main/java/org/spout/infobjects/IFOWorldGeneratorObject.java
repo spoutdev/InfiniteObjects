@@ -30,17 +30,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-
-import de.congrace.exp4j.CustomFunction;
 
 import org.spout.api.generator.WorldGeneratorObject;
 import org.spout.api.geo.World;
 import org.spout.api.material.BlockMaterial;
 
-import org.spout.infobjects.function.RandomFunction;
+import org.spout.infobjects.list.IFOList;
+import org.spout.infobjects.list.IncrementedList;
 import org.spout.infobjects.list.NormalList;
+import org.spout.infobjects.list.StaticList;
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.util.IFOUtils;
 import org.spout.infobjects.variable.NormalVariable;
@@ -50,7 +49,7 @@ import org.spout.infobjects.variable.Variable;
 public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 	private final String name;
 	private final Map<String, Variable> variables = new HashMap<String, Variable>();
-	private final Map<String, NormalList> lists = new HashMap<String, NormalList>();
+	private final Map<String, IFOList> lists = new HashMap<String, IFOList>();
 	private final Map<String, MaterialPicker> pickers = new HashMap<String, MaterialPicker>();
 
 	public IFOWorldGeneratorObject(String name) {
@@ -119,14 +118,14 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		}
 	}
 
-	public NormalList getList(String name) {
+	public IFOList getList(String name) {
 		return lists.get(name);
 	}
 
-	public Set<NormalList> getLists(Collection<String> listNames) {
-		final Set<NormalList> variableLists = new HashSet<NormalList>();
+	public Set<IFOList> getLists(Collection<String> listNames) {
+		final Set<IFOList> variableLists = new HashSet<IFOList>();
 		for (String listName : listNames) {
-			final NormalList list = lists.get(listName);
+			final IFOList list = lists.get(listName);
 			if (list != null) {
 				variableLists.add(list);
 			}
@@ -134,18 +133,22 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		return variableLists;
 	}
 
-	public Collection<NormalList> getLists() {
+	public Collection<IFOList> getLists() {
 		return lists.values();
 	}
 
-	public void addList(String name, NormalList list) {
-		lists.put(name, list);
+	public void addList(IFOList list) {
+		lists.put(list.getName(), list);
 	}
 
 	public void calculateLists() {
-		final Set<NormalList> calculated = new HashSet<NormalList>();
+		final Set<IFOList> calculated = new HashSet<IFOList>();
 		while (calculated.size() < lists.size()) {
-			for (NormalList list : lists.values()) {
+			for (IFOList list : lists.values()) {
+				if (list instanceof StaticList) {
+					calculated.add(list);
+					continue;
+				}
 				if (!calculated.contains(list)
 						&& calculated.containsAll(list.getReferencedLists())) {
 					list.calculate();
@@ -196,32 +199,75 @@ public class IFOWorldGeneratorObject extends WorldGeneratorObject {
 		}
 	}
 
-	private void replaceVariable(Variable oldVar, Variable newVar) {
-		for (Variable var : variables.values()) {
-			if (!(var instanceof NormalVariable)) {
+	public void optimizeLists() {
+		boolean hadChanges = true;
+		while (hadChanges) {
+			final Set<StaticList> optimizedLists = new HashSet<StaticList>();
+			final Set<NormalList> discardedLists = new HashSet<NormalList>();
+			for (IFOList list : lists.values()) {
+				if (!(list instanceof NormalList)) {
+					continue;
+				}
+				final NormalList normalList = (NormalList) list;
+				if (!canOptimize(normalList)) {
+					continue;
+				}
+				final StaticList staticList =
+						new StaticList(normalList.getName(), normalList.getValues());
+				optimizedLists.add(staticList);
+				discardedLists.add(normalList);
+				replaceList(normalList, staticList);
+			}
+			for (NormalList discardedList : discardedLists) {
+				lists.remove(discardedList.getName());
+			}
+			for (StaticList optimizedList : optimizedLists) {
+				addList(optimizedList);
+			}
+			hadChanges = !optimizedLists.isEmpty();
+		}
+	}
+
+	private void replaceVariable(Variable oldVariable, Variable newVariable) {
+		for (Variable variable : variables.values()) {
+			if (!(variable instanceof NormalVariable)) {
 				continue;
 			}
-			final NormalVariable normalVar = (NormalVariable) var;
-			if (normalVar.hasReference(oldVar)) {
-				normalVar.removeReference(oldVar);
-				normalVar.addReference(newVar);
+			final NormalVariable normalVariable = (NormalVariable) variable;
+			if (normalVariable.hasReference(oldVariable)) {
+				normalVariable.removeReference(oldVariable);
+				normalVariable.addReference(newVariable);
+			}
+		}
+	}
+
+	private void replaceList(IFOList oldList, IFOList newList) {
+		for (IFOList list : lists.values()) {
+			if (!(list instanceof NormalList)) {
+				continue;
+			}
+			final NormalList normalList = (NormalList) list;
+			if (normalList.hasListReference(oldList)) {
+				normalList.removeListReference(oldList);
+				normalList.addListReference(newList);
 			}
 		}
 	}
 
 	private boolean canOptimize(NormalVariable variable) {
-		for (Variable ref : variable.getReferences()) {
-			if (!(ref instanceof StaticVariable)) {
+		return IFOUtils.containsOnly(variable.getReferences(), StaticVariable.class)
+				&& !IFOUtils.isRandom(variable.getRawValue().getExpression());
+	}
+
+	private boolean canOptimize(NormalList list) {
+		if (list instanceof IncrementedList) {
+			if (!(((IncrementedList) list).getIncrement() instanceof StaticVariable)) {
 				return false;
 			}
 		}
-		for (Entry<String, CustomFunction> entry : IFOManager.getFunctions().entrySet()) {
-			if (IFOUtils.hasMatch("\\b\\Q" + entry.getKey() + "\\E\\b", variable.getRawValue().getExpression())) {
-				if (entry.getValue() instanceof RandomFunction) {
-					return false;
-				}
-			}
-		}
-		return true;
+		return IFOUtils.containsOnly(list.getReferencedLists(), StaticList.class)
+				&& IFOUtils.containsOnly(list.getReferencedVariables(), StaticVariable.class)
+				&& !IFOUtils.isRandom(list.getRawValue().getExpression())
+				&& list.getSizeVariable() instanceof StaticVariable;
 	}
 }

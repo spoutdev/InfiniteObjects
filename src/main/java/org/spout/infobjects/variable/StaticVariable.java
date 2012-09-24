@@ -27,7 +27,9 @@
 package org.spout.infobjects.variable;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
+
+import de.congrace.exp4j.Calculable;
 
 public class StaticVariable implements Variable {
 	private final String name;
@@ -36,6 +38,10 @@ public class StaticVariable implements Variable {
 	public StaticVariable(String name, double value) {
 		this.name = name;
 		this.value = value;
+	}
+
+	public StaticVariable(String name, Calculable rawValue) {
+		this(name, rawValue.calculate());
 	}
 
 	@Override
@@ -53,8 +59,8 @@ public class StaticVariable implements Variable {
 	}
 
 	@Override
-	public List<Variable> getReferences() {
-		return Collections.emptyList();
+	public Set<Variable> getReferences() {
+		return Collections.emptySet();
 	}
 
 	@Override

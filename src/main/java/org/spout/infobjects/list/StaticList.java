@@ -26,30 +26,39 @@
  */
 package org.spout.infobjects.list;
 
-import de.congrace.exp4j.Calculable;
+import java.util.Collections;
+import java.util.Set;
 
-import org.spout.infobjects.variable.Variable;
+public class StaticList implements IFOList {
+	private final String name;
+	private final double[] values;
 
-public class IncrementedList extends NormalList {
-	private final Variable increment;
-
-	public IncrementedList(String name, Calculable rawValue, Variable size, Variable increment) {
-		super(name, rawValue, size);
-		this.increment = increment;
+	public StaticList(String name, double[] values) {
+		this.name = name;
+		this.values = values;
 	}
 
 	@Override
 	public void calculate() {
-		super.calculate();
-		double incr = 0;
-		for (int i = 0; i < values.length; i++) {
-			values[i] += incr;
-			increment.calculate();
-			incr += increment.getValue();
-		}
 	}
 
-	public Variable getIncrement() {
-		return increment;
+	@Override
+	public double getValue(int index) {
+		return values[index];
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public int getSize() {
+		return values.length;
+	}
+
+	@Override
+	public Set<IFOList> getReferencedLists() {
+		return Collections.emptySet();
 	}
 }

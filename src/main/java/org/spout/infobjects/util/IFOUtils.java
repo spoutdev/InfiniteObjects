@@ -26,13 +26,20 @@
  */
 package org.spout.infobjects.util;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.congrace.exp4j.CustomFunction;
+
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.material.Material;
 import org.spout.api.material.MaterialRegistry;
+
+import org.spout.infobjects.IFOManager;
+import org.spout.infobjects.function.RandomFunction;
 
 public class IFOUtils {
 	public static int nextInt(Random random, int min, int max) {
@@ -66,5 +73,25 @@ public class IFOUtils {
 			}
 		}
 		return ((BlockMaterial) material);
+	}
+
+	public static boolean isRandom(String expression) {
+		for (Map.Entry<String, CustomFunction> entry : IFOManager.getFunctions().entrySet()) {
+			if (entry.getValue() instanceof RandomFunction) {
+				if (IFOUtils.hasMatch("\\b\\Q" + entry.getKey() + "\\E\\b", expression)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean containsOnly(Collection<?> collection, Class<?> type) {
+		for (Object value : collection) {
+			if (!type.isAssignableFrom(value.getClass())) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
