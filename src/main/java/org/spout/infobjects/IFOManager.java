@@ -40,10 +40,10 @@ import gnu.trove.iterator.TObjectDoubleIterator;
 import gnu.trove.map.TObjectDoubleMap;
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 
-import de.congrace.exp4j.Calculable;
-import de.congrace.exp4j.CustomFunction;
-import de.congrace.exp4j.ExpressionBuilder;
-import de.congrace.exp4j.InvalidCustomFunctionException;
+import de.congrace.exp4j.exception.InvalidCustomFunctionException;
+import de.congrace.exp4j.expression.Calculable;
+import de.congrace.exp4j.expression.ExpressionBuilder;
+import de.congrace.exp4j.function.Function;
 
 import org.spout.api.exception.ConfigurationException;
 import org.spout.api.util.config.ConfigurationNode;
@@ -61,7 +61,7 @@ import org.spout.infobjects.variable.StaticVariable;
 import org.spout.infobjects.variable.Variable;
 
 public class IFOManager {
-	private static final Map<String, CustomFunction> FUNCTIONS = new HashMap<String, CustomFunction>();
+	private static final Map<String, Function> FUNCTIONS = new HashMap<String, Function>();
 	private static final TObjectDoubleMap<String> CONSTANTS = new TObjectDoubleHashMap<String>();
 	private final File folder;
 	private static final Map<String, IFOWorldGeneratorObject> ifowgos = new HashMap<String, IFOWorldGeneratorObject>();
@@ -246,7 +246,7 @@ public class IFOManager {
 		CONSTANTS.put(name.toUpperCase(), value);
 	}
 
-	public static void addFunction(String name, CustomFunction function) {
+	public static void addFunction(String name, Function function) {
 		FUNCTIONS.put(name, function);
 	}
 
@@ -254,7 +254,7 @@ public class IFOManager {
 		return CONSTANTS;
 	}
 
-	public static Map<String, CustomFunction> getFunctions() {
+	public static Map<String, Function> getFunctions() {
 		return FUNCTIONS;
 	}
 
@@ -268,8 +268,8 @@ public class IFOManager {
 	}
 
 	public static ExpressionBuilder getExpressionBuilder(String expression) {
-		final Set<CustomFunction> usedFunctions = new HashSet<CustomFunction>();
-		for (Entry<String, CustomFunction> entry : FUNCTIONS.entrySet()) {
+		final Set<Function> usedFunctions = new HashSet<Function>();
+		for (Entry<String, Function> entry : FUNCTIONS.entrySet()) {
 			if (IFOUtils.hasMatch("\\b\\Q" + entry.getKey() + "\\E\\b", expression)) {
 				usedFunctions.add(entry.getValue());
 			}

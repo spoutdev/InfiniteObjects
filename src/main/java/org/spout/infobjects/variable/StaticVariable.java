@@ -29,7 +29,7 @@ package org.spout.infobjects.variable;
 import java.util.Collections;
 import java.util.Set;
 
-import de.congrace.exp4j.Calculable;
+import de.congrace.exp4j.expression.Calculable;
 
 public class StaticVariable implements Variable {
 	private final String name;

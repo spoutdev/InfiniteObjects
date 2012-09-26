@@ -32,7 +32,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.congrace.exp4j.CustomFunction;
+import de.congrace.exp4j.function.Function;
 
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.material.Material;
@@ -76,7 +76,7 @@ public class IFOUtils {
 	}
 
 	public static boolean isRandom(String expression) {
-		for (Map.Entry<String, CustomFunction> entry : IFOManager.getFunctions().entrySet()) {
+		for (Map.Entry<String, Function> entry : IFOManager.getFunctions().entrySet()) {
 			if (entry.getValue() instanceof RandomFunction) {
 				if (IFOUtils.hasMatch("\\b\\Q" + entry.getKey() + "\\E\\b", expression)) {
 					return true;

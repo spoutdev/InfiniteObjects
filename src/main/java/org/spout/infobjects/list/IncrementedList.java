@@ -26,7 +26,7 @@
  */
 package org.spout.infobjects.list;
 
-import de.congrace.exp4j.Calculable;
+import de.congrace.exp4j.expression.Calculable;
 
 import org.spout.infobjects.variable.Variable;
 

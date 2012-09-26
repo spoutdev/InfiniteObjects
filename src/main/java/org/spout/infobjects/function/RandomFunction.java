@@ -28,10 +28,10 @@ package org.spout.infobjects.function;
 
 import java.util.Random;
 
-import de.congrace.exp4j.CustomFunction;
-import de.congrace.exp4j.InvalidCustomFunctionException;
+import de.congrace.exp4j.exception.InvalidCustomFunctionException;
+import de.congrace.exp4j.function.Function;
 
-public abstract class RandomFunction extends CustomFunction {
+public abstract class RandomFunction extends Function {
 	protected Random random = new Random();
 
 	public RandomFunction(String name, int argumentCount) throws InvalidCustomFunctionException {

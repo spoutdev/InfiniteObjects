@@ -26,7 +26,7 @@
  */
 package org.spout.infobjects.function;
 
-import de.congrace.exp4j.InvalidCustomFunctionException;
+import de.congrace.exp4j.exception.InvalidCustomFunctionException;
 
 import org.spout.infobjects.util.IFOUtils;
 
