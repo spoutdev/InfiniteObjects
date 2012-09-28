@@ -7,7 +7,7 @@ variables:
     vtest4: vtest3
     vtest5: sin(vtest1 * PI) * 5 + vtest2
     vtest6: 1 / vtest1
-    vtest7: sin(2 * PI)
+    vtest7: sin(PI / 2)
     vtest8: vtest7 * 10
     vtest9: vtest6 + vtest8
 

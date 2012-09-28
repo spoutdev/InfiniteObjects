@@ -26,12 +26,11 @@
  */
 package org.spout.infobjects.function;
 
-import de.congrace.exp4j.exception.InvalidCustomFunctionException;
 
 import org.spout.infobjects.util.IFOUtils;
 
 public class RandomFloatFunction extends RandomFunction {
-	public RandomFloatFunction() throws InvalidCustomFunctionException {
+	public RandomFloatFunction() {
 		super("randomFloat", 2);
 	}
 

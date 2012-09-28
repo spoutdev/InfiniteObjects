@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 
 import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Before;
 
 import org.spout.api.material.BlockMaterial;
 
@@ -45,9 +46,18 @@ import org.spout.infobjects.variable.StaticVariable;
 import org.spout.infobjects.variable.Variable;
 
 public class IFOWorldGeneratorObjectTest {
+	@Before
+	public void initResources() {
+		initTestMaterials();
+		try {
+			Class.forName("org.spout.infobjects.function.RandomFunction");
+		} catch (ClassNotFoundException ex) {
+			Logger.getLogger(IFOWorldGeneratorObjectTest.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
 	@Test
 	public void testIFOWGO() {
-		initTestMaterials();
 		final IFOManager manager = new IFOManager(new File("src/test/resources"));
 		manager.loadIFOs();
 		final IFOWorldGeneratorObject ifowgo = manager.getIFO("test");

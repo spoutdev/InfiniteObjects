@@ -36,21 +36,13 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import gnu.trove.iterator.TObjectDoubleIterator;
-import gnu.trove.map.TObjectDoubleMap;
-import gnu.trove.map.hash.TObjectDoubleHashMap;
-
-import de.congrace.exp4j.exception.InvalidCustomFunctionException;
 import de.congrace.exp4j.expression.Calculable;
 import de.congrace.exp4j.expression.ExpressionBuilder;
-import de.congrace.exp4j.function.Function;
 
 import org.spout.api.exception.ConfigurationException;
 import org.spout.api.util.config.ConfigurationNode;
 import org.spout.api.util.config.yaml.YamlConfiguration;
 
-import org.spout.infobjects.function.RandomFloatFunction;
-import org.spout.infobjects.function.RandomIntFunction;
 import org.spout.infobjects.list.IncrementedList;
 import org.spout.infobjects.list.NormalList;
 import org.spout.infobjects.material.MaterialPicker;
@@ -61,21 +53,8 @@ import org.spout.infobjects.variable.StaticVariable;
 import org.spout.infobjects.variable.Variable;
 
 public class IFOManager {
-	private static final Map<String, Function> FUNCTIONS = new HashMap<String, Function>();
-	private static final TObjectDoubleMap<String> CONSTANTS = new TObjectDoubleHashMap<String>();
 	private final File folder;
 	private static final Map<String, IFOWorldGeneratorObject> ifowgos = new HashMap<String, IFOWorldGeneratorObject>();
-
-	static {
-		try {
-			FUNCTIONS.put("randomInt", new RandomIntFunction());
-			FUNCTIONS.put("randomFloat", new RandomFloatFunction());
-		} catch (InvalidCustomFunctionException ex) {
-			Logger.getLogger(IFOManager.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		CONSTANTS.put("PI", Math.PI);
-		CONSTANTS.put("E", Math.E);
-	}
 
 	public IFOManager(File folder) {
 		this.folder = folder;
@@ -127,8 +106,7 @@ public class IFOManager {
 				}
 			}
 			try {
-				final Calculable rawValue = getExpressionBuilder(expression).
-						withVariableNames(referencedVariableNames.toArray(new String[referencedVariableNames.size()])).
+				final Calculable rawValue = new ExpressionBuilder(expression).withVariableNames(referencedVariableNames.toArray(new String[referencedVariableNames.size()])).
 						build();
 				final NormalVariable variable = new NormalVariable(variableName, rawValue);
 				ifowgo.addVariable(variable);
@@ -149,7 +127,7 @@ public class IFOManager {
 				referencedVariables.add(variable);
 			}
 		}
-		final ExpressionBuilder builder = getExpressionBuilder(expression);
+		final ExpressionBuilder builder = new ExpressionBuilder(expression);
 		for (Variable variable : ifowgo.getVariables()) {
 			builder.withVariableNames(variable.getName());
 		}
@@ -201,7 +179,7 @@ public class IFOManager {
 				}
 			}
 			try {
-				final ExpressionBuilder builder = getExpressionBuilder(expression);
+				final ExpressionBuilder builder = new ExpressionBuilder(expression);
 				for (Variable referencedVariable : referencedVariables) {
 					builder.withVariableNames(referencedVariable.getName());
 				}
@@ -240,40 +218,5 @@ public class IFOManager {
 
 	public IFOWorldGeneratorObject getIFO(String name) {
 		return ifowgos.get(name);
-	}
-
-	public static void addConstant(String name, double value) {
-		CONSTANTS.put(name.toUpperCase(), value);
-	}
-
-	public static void addFunction(String name, Function function) {
-		FUNCTIONS.put(name, function);
-	}
-
-	public static TObjectDoubleMap<String> getConstants() {
-		return CONSTANTS;
-	}
-
-	public static Map<String, Function> getFunctions() {
-		return FUNCTIONS;
-	}
-
-	private static String replaceConstants(String expression) {
-		final TObjectDoubleIterator<String> iterator = CONSTANTS.iterator();
-		while (iterator.hasNext()) {
-			iterator.advance();
-			expression = expression.replaceAll("\\Q" + iterator.key() + "\\E", Double.toString(iterator.value()));
-		}
-		return expression;
-	}
-
-	public static ExpressionBuilder getExpressionBuilder(String expression) {
-		final Set<Function> usedFunctions = new HashSet<Function>();
-		for (Entry<String, Function> entry : FUNCTIONS.entrySet()) {
-			if (IFOUtils.hasMatch("\\b\\Q" + entry.getKey() + "\\E\\b", expression)) {
-				usedFunctions.add(entry.getValue());
-			}
-		}
-		return new ExpressionBuilder(replaceConstants(expression)).withCustomFunctions(usedFunctions);
 	}
 }

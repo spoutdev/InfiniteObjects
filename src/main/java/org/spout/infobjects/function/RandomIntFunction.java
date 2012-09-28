@@ -26,12 +26,10 @@
  */
 package org.spout.infobjects.function;
 
-import de.congrace.exp4j.exception.InvalidCustomFunctionException;
-
 import org.spout.infobjects.util.IFOUtils;
 
 public class RandomIntFunction extends RandomFunction {
-	public RandomIntFunction() throws InvalidCustomFunctionException {
+	public RandomIntFunction() {
 		super("randomInt", 2);
 	}
 
