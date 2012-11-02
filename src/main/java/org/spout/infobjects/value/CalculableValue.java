@@ -24,7 +24,8 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.shape;
+package org.spout.infobjects.value;
 
-public class Plane {
+public interface CalculableValue extends Value {
+	public void calculate();
 }

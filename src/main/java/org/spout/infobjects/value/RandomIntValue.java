@@ -24,7 +24,35 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.shape;
+package org.spout.infobjects.value;
 
-public class Cylinder {
+import java.util.Random;
+import org.spout.infobjects.util.IWGOUtils;
+
+public class RandomIntValue implements CalculableValue {
+	private Random random = new Random();
+	private final int min;
+	private final int max;
+	private int value;
+
+	public RandomIntValue(int min, int max) {
+		this.min = min;
+		this.max = max;
+	}
+
+	public RandomIntValue(String exp) {
+		final String[] minMax = exp.split("=")[1].split("-");
+		min = Integer.parseInt(minMax[0]);
+		max = Integer.parseInt(minMax[1]);
+	}
+
+	@Override
+	public double getValue() {
+		return value;
+	}
+
+	@Override
+	public void calculate() {
+		value = IWGOUtils.nextInt(random, min, max);
+	}
 }

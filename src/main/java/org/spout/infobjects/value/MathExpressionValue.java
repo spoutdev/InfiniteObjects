@@ -24,32 +24,33 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.list;
+package org.spout.infobjects.value;
 
+import de.congrace.exp4j.exception.UnknownFunctionException;
+import de.congrace.exp4j.exception.UnparsableExpressionException;
 import de.congrace.exp4j.expression.Calculable;
+import de.congrace.exp4j.expression.ExpressionBuilder;
 
-import org.spout.infobjects.variable.Variable;
+public class MathExpressionValue implements CalculableValue {
+	protected final Calculable calculable;
+	private double value;
 
-public class IncrementedList extends NormalList {
-	private final Variable increment;
+	public MathExpressionValue(String expression)
+			throws UnknownFunctionException, UnparsableExpressionException {
+		calculable = new ExpressionBuilder(expression).build();
+	}
 
-	public IncrementedList(String name, Calculable rawValue, Variable size, Variable increment) {
-		super(name, rawValue, size);
-		this.increment = increment;
+	public MathExpressionValue(Calculable value) {
+		this.calculable = value;
+	}
+
+	@Override
+	public double getValue() {
+		return value;
 	}
 
 	@Override
 	public void calculate() {
-		super.calculate();
-		double incr = 0;
-		for (int i = 0; i < values.length; i++) {
-			values[i] += incr;
-			increment.calculate();
-			incr += increment.getValue();
-		}
-	}
-
-	public Variable getIncrement() {
-		return increment;
+		value = calculable.calculate();
 	}
 }

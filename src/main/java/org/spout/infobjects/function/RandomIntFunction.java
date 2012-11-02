@@ -26,15 +26,15 @@
  */
 package org.spout.infobjects.function;
 
-import org.spout.infobjects.util.IFOUtils;
+import org.spout.infobjects.util.IWGOUtils;
 
 public class RandomIntFunction extends RandomFunction {
 	public RandomIntFunction() {
-		super("randomInt", 2);
+		super("ranI", 2);
 	}
 
 	@Override
 	public double applyFunction(double... doubles) {
-		return IFOUtils.nextInt(random, (int) doubles[0], (int) doubles[1]);
+		return IWGOUtils.nextInt(random, (int) doubles[0], (int) doubles[1]);
 	}
 }

@@ -27,9 +27,10 @@
 package org.spout.infobjects.material;
 
 import org.spout.api.material.BlockMaterial;
+import org.spout.api.util.Named;
 import org.spout.api.util.config.ConfigurationNode;
 
-public abstract class MaterialPicker {
+public abstract class MaterialPicker implements Named {
 	private final String name;
 
 	public MaterialPicker(String name) {
@@ -40,6 +41,7 @@ public abstract class MaterialPicker {
 
 	public abstract BlockMaterial pickMaterial(boolean outer);
 
+	@Override
 	public String getName() {
 		return name;
 	}

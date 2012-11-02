@@ -24,53 +24,38 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.shape;
+package org.spout.infobjects;
 
-import org.spout.infobjects.IFOWorldGeneratorObject;
-import org.spout.infobjects.variable.NormalVariable;
+import java.io.File;
+import org.junit.Before;
+import org.junit.Test;
+import org.spout.api.exception.ConfigurationException;
+import org.spout.api.util.config.yaml.YamlConfiguration;
+import org.spout.infobjects.value.CalculableValue;
+import org.spout.infobjects.value.Value;
+import org.spout.infobjects.value.ValueParser;
 
-public class Cuboid extends Shape {
-	private NormalVariable width;
-	private NormalVariable height;
-	private NormalVariable depth;
-	private int xSize;
-	private int ySize;
-	private int zSize;
-
-	public Cuboid(IFOWorldGeneratorObject owner, String name) {
-		super(owner, name);
+public class ValueParserTest {
+	@Before
+	public void before() throws ClassNotFoundException {
+		Class.forName("org.spout.infobjects.function.RandomFunction");
 	}
 
-	@Override
-	public void load(NormalVariable... variables) {
-		if (variables.length < 3) {
-			throw new IllegalArgumentException("Expected at least 3 variables.");
-		}
-		width = variables[0];
-		height = variables[1];
-		depth = variables[2];
-	}
-
-	@Override
-	public void draw(int x, int y, int z) {
-		for (int xx = 0; xx < xSize; xx++) {
-			for (int yy = 0; yy < ySize; yy++) {
-				for (int zz = 0; zz < zSize; zz++) {
-					boolean outer = xx == 0 || yy == 0 || zz == 0
-							|| xx + 1 == xSize || yy + 1 == ySize || zz + 1 == zSize;
-					owner.setMaterial(picker.pickMaterial(outer), x + xx, y + yy, z + zz);
+	@Test
+	public void test() throws ConfigurationException {
+		final YamlConfiguration config = new YamlConfiguration(new File("src/test/resources/ValueParserTest.yml"));
+		config.load();
+		for (String key : config.getKeys(false)) {
+			Value value = ValueParser.parse(config.getNode(key).getString());
+			if (value == null) {
+				System.out.println("INVALID");
+			} else {
+				System.out.print(value.getClass().getSimpleName() + ": ");
+				if (value instanceof CalculableValue) {
+					((CalculableValue) value).calculate();
 				}
+				System.out.println(value.getValue());
 			}
 		}
-	}
-
-	@Override
-	public void calculate() {
-		width.calculate();
-		xSize = (int) width.getValue();
-		height.calculate();
-		ySize = (int) height.getValue();
-		depth.calculate();
-		zSize = (int) depth.getValue();
 	}
 }

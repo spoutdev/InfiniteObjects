@@ -29,7 +29,7 @@ package org.spout.infobjects.material;
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.util.config.ConfigurationNode;
 
-import org.spout.infobjects.util.IFOUtils;
+import org.spout.infobjects.util.IWGOUtils;
 
 public class InnerOuterPicker extends MaterialPicker {
 	private BlockMaterial inner;
@@ -41,8 +41,8 @@ public class InnerOuterPicker extends MaterialPicker {
 
 	@Override
 	public void load(ConfigurationNode config) {
-		inner = IFOUtils.getBlockMaterial(config.getNode("innerMaterial").getString());
-		outer = IFOUtils.getBlockMaterial(config.getNode("outerMaterial").getString());
+		inner = IWGOUtils.getBlockMaterial(config.getNode("innerMaterial").getString());
+		outer = IWGOUtils.getBlockMaterial(config.getNode("outerMaterial").getString());
 	}
 
 	@Override
@@ -52,6 +52,6 @@ public class InnerOuterPicker extends MaterialPicker {
 
 	@Override
 	public String toString() {
-		return "Inner: " + inner.getDisplayName() + ", outer: " + outer.getDisplayName();
+		return "InnerOuterPicker{inner=" + inner.getDisplayName() + ", outer=" + outer.getDisplayName() + '}';
 	}
 }

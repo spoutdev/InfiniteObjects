@@ -24,41 +24,18 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.list;
+package org.spout.infobjects.function;
 
-import java.util.Collections;
-import java.util.Set;
 
-public class StaticList implements IFOList {
-	private final String name;
-	private final double[] values;
+import org.spout.infobjects.util.IWGOUtils;
 
-	public StaticList(String name, double[] values) {
-		this.name = name;
-		this.values = values;
+public class RandomDoubleFunction extends RandomFunction {
+	public RandomDoubleFunction() {
+		super("ranF", 2);
 	}
 
 	@Override
-	public void calculate() {
-	}
-
-	@Override
-	public double getValue(int index) {
-		return values[index];
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public int getSize() {
-		return values.length;
-	}
-
-	@Override
-	public Set<IFOList> getReferencedLists() {
-		return Collections.emptySet();
+	public double applyFunction(double... doubles) {
+		return IWGOUtils.nextDouble(random, doubles[0], doubles[1]);
 	}
 }

@@ -24,38 +24,30 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.shape;
+package org.spout.infobject.variable;
 
-import java.lang.reflect.Constructor;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.spout.api.util.Named;
+import org.spout.infobjects.value.Value;
 
-import org.spout.infobjects.IFOWorldGeneratorObject;
-import org.spout.infobjects.material.MaterialPickers;
+public class Variable implements Named {
+	private final Value value;
+	private final String name;
 
-public class Shapes {
-	private static final Map<String, Constructor<? extends Shape>> SHAPES = new HashMap<String, Constructor<? extends Shape>>();
-
-	static {
-		register("sphere", Sphere.class);
-		register("cuboid", Cuboid.class);
+	public Variable(Value value, String name) {
+		this.value = value;
+		this.name = name;
 	}
 
-	public static Shape get(String name, IFOWorldGeneratorObject owner, String type) {
-		try {
-			return SHAPES.get(type.toLowerCase()).newInstance(owner, name);
-		} catch (Exception ex) {
-			return null;
-		}
+	public Value getRawValue() {
+		return value;
 	}
 
-	public static void register(String type, Class<? extends Shape> shape) {
-		try {
-			SHAPES.put(type, shape.getConstructor(IFOWorldGeneratorObject.class, String.class));
-		} catch (Exception ex) {
-			Logger.getLogger(MaterialPickers.class.getName()).log(Level.SEVERE, null, ex);
-		}
+	public double getValue() {
+		return value.getValue();
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 }

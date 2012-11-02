@@ -31,7 +31,7 @@ import java.util.Random;
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.util.config.ConfigurationNode;
 
-import org.spout.infobjects.util.IFOUtils;
+import org.spout.infobjects.util.IWGOUtils;
 
 public class RandomInnerOuterPicker extends MaterialPicker {
 	private Random random = new Random();
@@ -46,9 +46,9 @@ public class RandomInnerOuterPicker extends MaterialPicker {
 
 	@Override
 	public void load(ConfigurationNode config) {
-		inner = IFOUtils.getBlockMaterial(config.getNode("innerMaterial").getString());
+		inner = IWGOUtils.getBlockMaterial(config.getNode("innerMaterial").getString());
 		innerOdd = config.getNode("innerOdd").getInt();
-		outer = IFOUtils.getBlockMaterial(config.getNode("outerMaterial").getString());
+		outer = IWGOUtils.getBlockMaterial(config.getNode("outerMaterial").getString());
 		outerOdd = config.getNode("outerOdd").getInt();
 	}
 
@@ -67,7 +67,7 @@ public class RandomInnerOuterPicker extends MaterialPicker {
 
 	@Override
 	public String toString() {
-		return "Inner: " + inner.getDisplayName() + " with odd: " + innerOdd
-				+ ", outer: " + outer.getDisplayName() + " with odd: " + outerOdd;
+		return "RandomInnerOuterPicker{inner=" + inner.getDisplayName() + ", innerOdd="
+				+ innerOdd + ", outer=" + outer.getDisplayName() + ", outerOdd=" + outerOdd + '}';
 	}
 }

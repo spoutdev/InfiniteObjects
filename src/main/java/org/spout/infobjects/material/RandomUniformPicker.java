@@ -31,7 +31,7 @@ import java.util.Random;
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.util.config.ConfigurationNode;
 
-import org.spout.infobjects.util.IFOUtils;
+import org.spout.infobjects.util.IWGOUtils;
 
 public class RandomUniformPicker extends MaterialPicker {
 	private Random random = new Random();
@@ -44,7 +44,7 @@ public class RandomUniformPicker extends MaterialPicker {
 
 	@Override
 	public void load(ConfigurationNode config) {
-		material = IFOUtils.getBlockMaterial(config.getNode("material").getString());
+		material = IWGOUtils.getBlockMaterial(config.getNode("material").getString());
 		odd = config.getNode("odd").getInt();
 	}
 
@@ -59,6 +59,6 @@ public class RandomUniformPicker extends MaterialPicker {
 
 	@Override
 	public String toString() {
-		return "Material: " + material.getDisplayName() + " with odd: " + odd;
+		return "RandomUniformPicker{material=" + material.getDisplayName() + ", odd=" + odd + '}';
 	}
 }

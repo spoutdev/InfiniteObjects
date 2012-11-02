@@ -39,16 +39,15 @@ import org.spout.api.material.BlockMaterial;
 import org.spout.api.material.Material;
 import org.spout.api.material.MaterialRegistry;
 
-import org.spout.infobjects.IFOManager;
 import org.spout.infobjects.function.RandomFunction;
 
-public class IFOUtils {
+public class IWGOUtils {
 	public static int nextInt(Random random, int min, int max) {
 		return random.nextInt(max - min + 1) + min;
 	}
 
-	public static float nextFloat(Random random, float min, float max) {
-		return random.nextFloat() * (min - max) + min;
+	public static double nextDouble(Random random, double min, double max) {
+		return random.nextDouble() * (max - min) + min;
 	}
 
 	public static boolean hasMatch(String match, String string) {
@@ -79,7 +78,7 @@ public class IFOUtils {
 	public static boolean isRandom(String expression) {
 		for (Map.Entry<String, Function> entry : Functions.getFunctionMap().entrySet()) {
 			if (entry.getValue() instanceof RandomFunction) {
-				if (IFOUtils.hasMatch("\\b\\Q" + entry.getKey() + "\\E\\b", expression)) {
+				if (IWGOUtils.hasMatch("\\b\\Q" + entry.getKey() + "\\E\\b", expression)) {
 					return true;
 				}
 			}

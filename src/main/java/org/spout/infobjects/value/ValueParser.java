@@ -24,36 +24,42 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.material;
+package org.spout.infobjects.value;
 
-import java.lang.reflect.Constructor;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+public class ValueParser {
+	private static final String RANDOM_INT_VALUE_REGEX = "ranI\\=.*";
+	private static final String RANDOM_DOUBLE_VALUE_REGEX = "ranF\\=.*";
+	private static final String RANDOM_MATH_EXP_VALUE_REGEX = ".*ran[IF]\\(.*";
+	private static final String VARIABLE_MATH_EXP_VALUE_REGEX = ".*[a-zA-Z_][.&&[^\\(]]*";
 
-public class MaterialPickers {
-	private static final Map<String, Constructor<? extends MaterialPicker>> PICKERS = new HashMap<String, Constructor<? extends MaterialPicker>>();
-
-	static {
-		register("innerouter", InnerOuterPicker.class);
-		register("randominnerouter", RandomInnerOuterPicker.class);
-		register("randomuniform", RandomUniformPicker.class);
-	}
-
-	public static MaterialPicker get(String name, String type) {
-		try {
-			return PICKERS.get(type.toLowerCase()).newInstance(name);
-		} catch (Exception ex) {
-			return null;
+	public static Value parse(String exp) {
+		exp = exp.trim();
+		if (exp.matches(RANDOM_INT_VALUE_REGEX)) {
+			return new RandomIntValue(exp);
+		} else if (exp.matches(RANDOM_DOUBLE_VALUE_REGEX)) {
+			return new RandomDoubleValue(exp);
+		} else if (exp.matches(RANDOM_MATH_EXP_VALUE_REGEX)) {
+			if (exp.matches(VARIABLE_MATH_EXP_VALUE_REGEX)) {
+				try {
+					return new VariableMathExpressionValue(exp);
+				} catch (Exception ex) {
+					return null;
+				}
+			}
+			try {
+				return new MathExpressionValue(exp);
+			} catch (Exception ex) {
+				return null;
+			}
 		}
-	}
-
-	public static void register(String type, Class<? extends MaterialPicker> picker) {
 		try {
-			PICKERS.put(type, picker.getConstructor(String.class));
-		} catch (Exception ex) {
-			Logger.getLogger(MaterialPickers.class.getName()).log(Level.SEVERE, null, ex);
+			return new DoubleValue(Double.parseDouble(exp));
+		} catch (NumberFormatException nfe) {
+			try {
+				return new DoubleValue(exp);
+			} catch (Exception ex) {
+				return null;
+			}
 		}
 	}
 }

@@ -24,18 +24,8 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.function;
+package org.spout.infobjects.value;
 
-
-import org.spout.infobjects.util.IFOUtils;
-
-public class RandomFloatFunction extends RandomFunction {
-	public RandomFloatFunction() {
-		super("randomFloat", 2);
-	}
-
-	@Override
-	public double applyFunction(double... doubles) {
-		return IFOUtils.nextFloat(random, (float) doubles[0], (float) doubles[1]);
-	}
+public interface Value {
+	public double getValue();
 }

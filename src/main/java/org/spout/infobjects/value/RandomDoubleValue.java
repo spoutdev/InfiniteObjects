@@ -24,7 +24,35 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.shape;
+package org.spout.infobjects.value;
 
-public class Cone {
+import java.util.Random;
+import org.spout.infobjects.util.IWGOUtils;
+
+public class RandomDoubleValue implements CalculableValue {
+	private final Random random = new Random();
+	private final double min;
+	private final double max;
+	private double value;
+
+	public RandomDoubleValue(double min, double max) {
+		this.min = min;
+		this.max = max;
+	}
+
+	public RandomDoubleValue(String exp) {
+		final String[] minMax = exp.split("=")[1].split("-");
+		min = Double.parseDouble(minMax[0]);
+		max = Double.parseDouble(minMax[1]);
+	}
+
+	@Override
+	public double getValue() {
+		return value;
+	}
+
+	@Override
+	public void calculate() {
+		value = IWGOUtils.nextDouble(random, min, max);
+	}
 }

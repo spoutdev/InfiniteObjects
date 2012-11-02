@@ -24,18 +24,27 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.list;
+package org.spout.infobjects.value;
 
-import java.util.Set;
+import de.congrace.exp4j.exception.UnknownFunctionException;
+import de.congrace.exp4j.exception.UnparsableExpressionException;
+import de.congrace.exp4j.expression.ExpressionBuilder;
 
-import org.spout.api.util.Named;
+public class DoubleValue implements Value {
+	private final double value;
 
-public interface IFOList extends Named {
-	public void calculate();
+	public DoubleValue(double value) {
+		this.value = value;
+	}
 
-	public double getValue(int index);
+	public DoubleValue(String exp)
+			throws UnknownFunctionException, UnparsableExpressionException {
+		final ExpressionBuilder builder = new ExpressionBuilder(exp);
+		value = builder.build().calculate();
+	}
 
-	public int getSize();
-
-	public Set<IFOList> getReferencedLists();
+	@Override
+	public double getValue() {
+		return value;
+	}
 }

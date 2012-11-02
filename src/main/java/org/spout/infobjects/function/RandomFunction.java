@@ -36,7 +36,7 @@ public abstract class RandomFunction extends Function {
 
 	static {
 		Functions.register(new RandomIntFunction());
-		Functions.register(new RandomFloatFunction());
+		Functions.register(new RandomDoubleFunction());
 	}
 
 	public RandomFunction(String name, int argumentCount) {

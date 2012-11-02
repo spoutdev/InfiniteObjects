@@ -1,0 +1,50 @@
+variables:
+  height: ranI=20-30
+  minLeafHeight: ranI=10-15
+  
+instructions:
+  place:
+    shapes:
+      cuboid:
+        width: 2
+        height: height
+        depth: 2
+      position:
+        x: 0
+        y: 0
+        z: 0
+    material:
+      material:
+        name: log
+        metadata: 3
+  place:
+    label: leaves
+    variables:
+      offset: ranF(0, 2 * PI) * 4
+    shapes:
+      sphere:
+        sizeX: ranI=2-4
+        sizeY: ranI=2-4
+        sizeZ: ranI=2-4
+        position:
+          x: offset
+          y: minLeafHeight
+          z: offset
+      line:
+        from:
+          x: 0
+          y: minLeafHeight
+          x: 0
+        to:
+          x: offset
+          y: minLeafHeight + ranI(0, 3)
+          z: offset
+    material:
+      material:
+        name: leaf
+        metadata: 3
+  repeat:
+    label: leaves
+    times: ranI=1-3
+    increment:
+      minLeafHeight: ranI=1-3

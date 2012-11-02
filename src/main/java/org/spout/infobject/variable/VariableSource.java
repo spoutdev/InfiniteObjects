@@ -24,35 +24,15 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.shape;
+package org.spout.infobject.variable;
 
-import java.util.Random;
+import java.util.Collection;
+import java.util.Map;
 
-import org.spout.api.math.Vector3;
+public interface VariableSource {
+	public Variable getVariable(String name);
 
-import org.spout.infobjects.IFOWorldGeneratorObject;
-import org.spout.infobjects.material.MaterialPicker;
-import org.spout.infobjects.variable.NormalVariable;
-
-public abstract class Shape {
-	protected IFOWorldGeneratorObject owner;
-	private final String name;
-	protected Random random = new Random();
-	private Vector3 position;
-	protected MaterialPicker picker;
-
-	public Shape(IFOWorldGeneratorObject owner, String name) {
-		this.owner = owner;
-		this.name = name;
-	}
-
-	public abstract void load(NormalVariable... variables);
-
-	public abstract void draw(int x, int y, int z);
-
-	public abstract void calculate();
-
-	public String getName() {
-		return name;
-	}
+	public Collection<Variable> getVariables();
+	
+	public Map<String, Variable> getVariableMap();
 }
