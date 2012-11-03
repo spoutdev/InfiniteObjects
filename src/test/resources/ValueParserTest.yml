@@ -1,7 +1,0 @@
-double: 42
-double2: sin(3/4 * PI) * 10 + 2
-randomI: ranI=3-10
-randomF: ranF=30-56
-randomF2: ranF=18.9-36.4
-randomMathExpression: 3 * ranF(3, 54) + 10
-variableMathExpression: ranI(0, 5) + double * PI

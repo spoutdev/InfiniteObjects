@@ -28,11 +28,11 @@ package org.spout.infobject.variable;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public class SimpleVariableSource implements VariableSource {
-	private final Map<String, Variable> variables = new LinkedHashMap<String, Variable>();
+	private final Map<String, Variable> variables = new HashMap<String, Variable>();
 
 	public SimpleVariableSource(Variable... variables) {
 		addVariables(variables);
