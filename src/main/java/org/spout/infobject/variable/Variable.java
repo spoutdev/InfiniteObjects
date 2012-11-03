@@ -27,15 +27,16 @@
 package org.spout.infobject.variable;
 
 import org.spout.api.util.Named;
+
 import org.spout.infobjects.value.Value;
 
 public class Variable implements Named {
-	private final Value value;
 	private final String name;
+	private final Value value;
 
-	public Variable(Value value, String name) {
-		this.value = value;
+	public Variable(String name, Value value) {
 		this.name = name;
+		this.value = value;
 	}
 
 	public Value getRawValue() {

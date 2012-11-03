@@ -28,46 +28,10 @@ package org.spout.infobjects.value;
 
 import java.util.Random;
 
-import de.congrace.exp4j.exception.UnknownFunctionException;
-import de.congrace.exp4j.exception.UnparsableExpressionException;
-import de.congrace.exp4j.expression.Calculable;
-import de.congrace.exp4j.expression.ExpressionBuilder;
-
-import org.spout.infobjects.function.RandomDoubleFunction;
-import org.spout.infobjects.function.RandomIntFunction;
-
-public class MathExpressionValue implements CalculableValue {
-	private final RandomIntFunction randomIntFunction = new RandomIntFunction();
-	private final RandomDoubleFunction randomFloatFunction = new RandomDoubleFunction();
-	protected final Calculable calculable;
-	private double value;
-
-	public MathExpressionValue(String expression)
-			throws UnknownFunctionException, UnparsableExpressionException {
-		this(new ExpressionBuilder(expression));
-	}
-
-	public MathExpressionValue(ExpressionBuilder expressionBuilder)
-			throws UnknownFunctionException, UnparsableExpressionException {
-		calculable = expressionBuilder.withCustomFunctions(randomIntFunction, randomFloatFunction).build();
-	}
-
-	public MathExpressionValue(Calculable value) {
-		this.calculable = value;
-	}
-
-	@Override
-	public double getValue() {
-		return value;
-	}
-
-	@Override
-	public void calculate() {
-		value = calculable.calculate();
-	}
+public abstract class RandomValue implements CalculableValue {
+	protected Random random = new Random();
 
 	public void setRandom(Random random) {
-		randomIntFunction.setRandom(random);
-		randomFloatFunction.setRandom(random);
+		this.random = random;
 	}
 }

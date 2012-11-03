@@ -74,24 +74,4 @@ public class IWGOUtils {
 		}
 		return ((BlockMaterial) material);
 	}
-
-	public static boolean isRandom(String expression) {
-		for (Map.Entry<String, Function> entry : Functions.getFunctionMap().entrySet()) {
-			if (entry.getValue() instanceof RandomFunction) {
-				if (IWGOUtils.hasMatch("\\b\\Q" + entry.getKey() + "\\E\\b", expression)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	public static boolean containsOnly(Collection<?> collection, Class<?> type) {
-		for (Object value : collection) {
-			if (!type.isAssignableFrom(value.getClass())) {
-				return false;
-			}
-		}
-		return true;
-	}
 }

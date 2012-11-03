@@ -26,7 +26,6 @@
  */
 package org.spout.infobjects.function;
 
-
 import org.spout.infobjects.util.IWGOUtils;
 
 public class RandomDoubleFunction extends RandomFunction {

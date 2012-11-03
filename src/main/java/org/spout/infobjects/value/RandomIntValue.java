@@ -26,11 +26,9 @@
  */
 package org.spout.infobjects.value;
 
-import java.util.Random;
 import org.spout.infobjects.util.IWGOUtils;
 
-public class RandomIntValue implements CalculableValue {
-	private Random random = new Random();
+public class RandomIntValue extends RandomValue {
 	private final int min;
 	private final int max;
 	private int value;

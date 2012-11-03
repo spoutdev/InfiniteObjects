@@ -33,6 +33,6 @@ public interface VariableSource {
 	public Variable getVariable(String name);
 
 	public Collection<Variable> getVariables();
-	
+
 	public Map<String, Variable> getVariableMap();
 }

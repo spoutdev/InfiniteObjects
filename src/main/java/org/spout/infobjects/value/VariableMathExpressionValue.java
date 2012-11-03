@@ -50,14 +50,18 @@ public class VariableMathExpressionValue extends MathExpressionValue {
 
 	public VariableMathExpressionValue(String expression)
 			throws UnknownFunctionException, UnparsableExpressionException {
-		super(new ExpressionBuilder(expression).withVariableNames(findVariables(expression)).build());
+		this(new ExpressionBuilder(expression));
+	}
+
+	public VariableMathExpressionValue(ExpressionBuilder expressionBuilder)
+			throws UnknownFunctionException, UnparsableExpressionException {
+		super(expressionBuilder.withVariableNames(findVariables(expressionBuilder.getExpression())));
 	}
 
 	@Override
 	public void calculate() {
 		if (variableSource == null) {
-			//throw new IllegalStateException("No variable source set");
-			return;
+			throw new IllegalStateException("No variable source set");
 		}
 		for (String variableName : calculable.getVariableNames()) {
 			calculable.setVariable(variableName, variableSource.getVariable(variableName).getValue());

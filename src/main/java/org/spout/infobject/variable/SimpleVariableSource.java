@@ -24,33 +24,48 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.value;
+package org.spout.infobject.variable;
 
-import org.spout.infobjects.util.IWGOUtils;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class RandomDoubleValue extends RandomValue {
-	private final double min;
-	private final double max;
-	private double value;
+public class SimpleVariableSource implements VariableSource {
+	private final Map<String, Variable> variables = new LinkedHashMap<String, Variable>();
 
-	public RandomDoubleValue(double min, double max) {
-		this.min = min;
-		this.max = max;
+	public SimpleVariableSource(Variable... variables) {
+		addVariables(variables);
 	}
 
-	public RandomDoubleValue(String exp) {
-		final String[] minMax = exp.split("=")[1].split("-");
-		min = Double.parseDouble(minMax[0]);
-		max = Double.parseDouble(minMax[1]);
+	public SimpleVariableSource(Collection<Variable> variables) {
+		addVariables(variables);
+	}
+
+	public final void addVariables(Variable... variables) {
+		for (Variable variable : variables) {
+			this.variables.put(variable.getName(), variable);
+		}
+	}
+
+	public final void addVariables(Collection<Variable> variables) {
+		for (Variable variable : variables) {
+			this.variables.put(variable.getName(), variable);
+		}
 	}
 
 	@Override
-	public double getValue() {
-		return value;
+	public Variable getVariable(String name) {
+		return variables.get(name);
 	}
 
 	@Override
-	public void calculate() {
-		value = IWGOUtils.nextDouble(random, min, max);
+	public Collection<Variable> getVariables() {
+		return variables.values();
+	}
+
+	@Override
+	public Map<String, Variable> getVariableMap() {
+		return Collections.unmodifiableMap(variables);
 	}
 }
