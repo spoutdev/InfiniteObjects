@@ -26,40 +26,61 @@
  */
 package org.spout.infobjects.value;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import de.congrace.exp4j.constant.Constants;
+import de.congrace.exp4j.function.Functions;
+
 public class ValueParser {
 	private static final String RANDOM_INT_VALUE_REGEX = "ranI\\=.*";
 	private static final String RANDOM_DOUBLE_VALUE_REGEX = "ranF\\=.*";
 	private static final String RANDOM_MATH_EXP_VALUE_REGEX = ".*ran[IF]\\(.*";
-	private static final String VARIABLE_MATH_EXP_VALUE_REGEX = ".*[a-zA-Z_][.&&[^\\(]]*";
 
-	public static Value parse(String exp) {
-		exp = exp.trim();
-		if (exp.matches(RANDOM_INT_VALUE_REGEX)) {
-			return new RandomIntValue(exp);
-		} else if (exp.matches(RANDOM_DOUBLE_VALUE_REGEX)) {
-			return new RandomDoubleValue(exp);
-		} else if (exp.matches(RANDOM_MATH_EXP_VALUE_REGEX)) {
-			if (exp.matches(VARIABLE_MATH_EXP_VALUE_REGEX)) {
+	public static Value parse(String expression) {
+		expression = expression.trim();
+		if (expression.matches(RANDOM_INT_VALUE_REGEX)) {
+			return new RandomIntValue(expression);
+		} else if (expression.matches(RANDOM_DOUBLE_VALUE_REGEX)) {
+			return new RandomDoubleValue(expression);
+		} else if (expression.matches(RANDOM_MATH_EXP_VALUE_REGEX)) {
+			if (hasVariable(expression)) {
 				try {
-					return new VariableMathExpressionValue(exp);
+					return new VariableMathExpressionValue(expression);
 				} catch (Exception ex) {
+					ex.printStackTrace();
 					return null;
 				}
 			}
 			try {
-				return new MathExpressionValue(exp);
+				return new MathExpressionValue(expression);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 				return null;
 			}
 		}
 		try {
-			return new DoubleValue(Double.parseDouble(exp));
+			return new DoubleValue(Double.parseDouble(expression));
 		} catch (NumberFormatException nfe) {
 			try {
-				return new DoubleValue(exp);
+				return new DoubleValue(expression);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 				return null;
 			}
 		}
+	}
+
+	private static boolean hasVariable(String expression) {
+		final Matcher matcher =
+				VariableMathExpressionValue.VARIABLE_PATTERN.matcher(expression);
+		while (matcher.find()) {
+			final String find = matcher.group();
+			if (!Functions.isFunction(find)
+					&& !Constants.isConstant(find)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

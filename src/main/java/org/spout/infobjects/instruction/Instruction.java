@@ -24,31 +24,45 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.util;
+package org.spout.infobjects.instruction;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
-import org.spout.api.util.config.ConfigurationNode;
+import org.spout.infobjects.variable.Variable;
+import org.spout.infobjects.variable.VariableSource;
 
-public class IWGOUtils {
-	public static int nextInt(Random random, int min, int max) {
-		return random.nextInt(max - min + 1) + min;
+public class Instruction implements VariableSource {
+	private final String name;
+	private final Map<String, Variable> variables = new HashMap<String, Variable>();
+
+	public Instruction(String name) {
+		this.name = name;
 	}
 
-	public static double nextDouble(Random random, double min, double max) {
-		return random.nextDouble() * (max - min) + min;
+	public String getName() {
+		return name;
 	}
 
-	public static Map<String, String> toStringMap(ConfigurationNode propertiesNode) {
-		final Map<String, String> propertiesMap = new HashMap<String, String>();
-		for (String key : propertiesNode.getKeys(true)) {
-			final ConfigurationNode node = propertiesNode.getNode(key);
-			if (!node.hasChildren()) {
-				propertiesMap.put(key, node.getString());
-			}
-		}
-		return propertiesMap;
+	@Override
+	public Variable getVariable(String name) {
+		return variables.get(name);
+	}
+
+	@Override
+	public Collection<Variable> getVariables() {
+		return variables.values();
+	}
+
+	@Override
+	public Map<String, Variable> getVariableMap() {
+		return Collections.unmodifiableMap(variables);
+	}
+
+	@Override
+	public void addVariable(Variable variable) {
+		variables.put(variable.getName(), variable);
 	}
 }

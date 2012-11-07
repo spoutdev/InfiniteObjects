@@ -38,10 +38,10 @@ import de.congrace.exp4j.expression.Calculable;
 import de.congrace.exp4j.expression.ExpressionBuilder;
 import de.congrace.exp4j.function.Functions;
 
-import org.spout.infobject.variable.VariableSource;
+import org.spout.infobjects.variable.VariableSource;
 
 public class VariableMathExpressionValue extends MathExpressionValue {
-	private static final Pattern VARIABLE_REGEX = Pattern.compile("\\b[a-zA-Z_]\\w*\\b");
+	protected static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zA-Z_]\\w*");
 	private VariableSource variableSource;
 
 	public VariableMathExpressionValue(Calculable value) {
@@ -75,7 +75,7 @@ public class VariableMathExpressionValue extends MathExpressionValue {
 
 	private static List<String> findVariables(String expression) {
 		final List<String> matches = new ArrayList<String>();
-		final Matcher matcher = VARIABLE_REGEX.matcher(expression);
+		final Matcher matcher = VARIABLE_PATTERN.matcher(expression);
 		while (matcher.find()) {
 			final String match = matcher.group();
 			if (!Functions.isFunction(match)

@@ -24,15 +24,30 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobject.variable;
+package org.spout.infobjects.shape;
 
-import java.util.Collection;
 import java.util.Map;
 
-public interface VariableSource {
-	public Variable getVariable(String name);
+import org.spout.api.math.IntVector3;
 
-	public Collection<Variable> getVariables();
+import org.spout.infobjects.IWGO;
+import org.spout.infobjects.material.MaterialPicker;
+import org.spout.infobjects.value.Value;
 
-	public Map<String, Variable> getVariableMap();
+public abstract class Shape {
+	protected final IWGO parent;
+	protected final IntVector3 position = new IntVector3(0, 0, 0);
+	protected final MaterialPicker picker = null;
+
+	public Shape(IWGO parent) {
+		this.parent = parent;
+	}
+
+	public void setPosition(int x, int y, int z) {
+		position.set(x, y, z);
+	}
+
+	public abstract void load(Map<String, Value> properties);
+
+	public abstract void draw();
 }

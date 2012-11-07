@@ -24,55 +24,58 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.material;
+package org.spout.infobjects;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import org.spout.api.material.BlockMaterial;
-import org.spout.api.util.Named;
-import org.spout.api.util.config.ConfigurationNode;
 
-public abstract class MaterialPicker implements Named {
-	private static final Map<String, Constructor<? extends MaterialPicker>> PICKERS =
-			new HashMap<String, Constructor<? extends MaterialPicker>>();
-	private final String name;
+import org.spout.infobjects.material.MaterialPicker;
+import org.spout.infobjects.variable.Variable;
 
-	static {
-		try {
-			register("simple", SimplePicker.class);
-			register("random-simple", RandomSimplePicker.class);
-			register("inner-outer", InnerOuterPicker.class);
-			register("random-inner-outer", RandomInnerOuterPicker.class);
-		} catch (Exception ex) {
-			System.err.println("Failed to register the material pickers");
-			ex.printStackTrace();
+public class IWGOTest {
+	@Before
+	public void before() throws Exception {
+		EngineFaker.setupEngine();
+		initTestMaterials();
+		Class.forName("org.spout.infobjects.function.RandomFunction");
+	}
+
+	@Test
+	public void test() {
+		final IWGOManager manager = new IWGOManager(new File("src/test/resources"));
+		manager.loadIWGOs();
+		final IWGO iwgo = manager.getIWGO("test-tree");
+		iwgo.randomize();
+
+		for (Variable variable : iwgo.getVariables()) {
+			System.out.println(variable.getName() + ": " + variable.getValue());
+		}
+
+		for (MaterialPicker picker : iwgo.getMaterialPickers()) {
+			System.out.println(picker.getName() + ": " + picker);
 		}
 	}
 
-	public MaterialPicker(String name) {
-		this.name = name;
+	private void initTestMaterials() throws Exception {
+		final String[] testMaterials = new String[]{
+			"log",
+			"leaf"
+		};
+		final Constructor constructor = TestMaterial.class.getDeclaredConstructor(String.class);
+		constructor.setAccessible(true);
+		for (String testMaterial : testMaterials) {
+			constructor.newInstance(testMaterial);
+		}
 	}
 
-	public abstract void configure(Map<String, String> properties);
-
-	public abstract BlockMaterial pickMaterial(boolean outer);
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	public static void register(String type, Class<? extends MaterialPicker> picker)
-			throws NoSuchMethodException {
-		PICKERS.put(type, picker.getConstructor(String.class));
-	}
-
-	public static MaterialPicker newPicker(String type, String name) {
-		try {
-			return PICKERS.get(type).newInstance(name);
-		} catch (Exception ex) {
-			return null;
+	private static class TestMaterial extends BlockMaterial {
+		private TestMaterial(String name) {
+			super(name);
 		}
 	}
 }

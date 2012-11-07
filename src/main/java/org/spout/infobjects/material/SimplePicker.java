@@ -27,51 +27,31 @@
 package org.spout.infobjects.material;
 
 import java.util.Map;
-import java.util.Random;
 
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.material.MaterialRegistry;
 
-public class RandomInnerOuterPicker extends MaterialPicker {
-	private Random random = new Random();
-	private BlockMaterial inner;
-	private short innerData;
-	private byte innerOdd;
-	private BlockMaterial outer;
-	private short outerData;
-	private byte outerOdd;
+public class SimplePicker extends MaterialPicker {
+	private BlockMaterial material;
+	private short data;
 
-	public RandomInnerOuterPicker(String name) {
+	public SimplePicker(String name) {
 		super(name);
 	}
 
 	@Override
 	public void configure(Map<String, String> properties) {
-		inner = (BlockMaterial) MaterialRegistry.get(properties.get("inner.material"));
-		innerData = Short.parseShort(properties.get("inner.data"));
-		innerOdd = Byte.parseByte(properties.get("inner.odd"));
-		outer = (BlockMaterial) MaterialRegistry.get(properties.get("outer.material"));
-		outerData = Short.parseShort(properties.get("outer.data"));
-		outerOdd = Byte.parseByte(properties.get("outer.odd"));
+		material = (BlockMaterial) MaterialRegistry.get(properties.get("material"));
+		data = Short.parseShort(properties.get("data"));
 	}
 
 	@Override
 	public BlockMaterial pickMaterial(boolean outer) {
-		if (outer) {
-			return random.nextInt(100) < outerOdd ? this.outer : BlockMaterial.AIR;
-		} else {
-			return random.nextInt(100) < innerOdd ? inner : BlockMaterial.AIR;
-		}
-	}
-
-	public void setRandom(Random random) {
-		this.random = random;
+		return material;
 	}
 
 	@Override
 	public String toString() {
-		return "RandomInnerOuterPicker{inner=" + inner + ", innerData="
-				+ innerData + ", innerOdd=" + innerOdd + ", outer=" + outer + ", outerData="
-				+ outerData + ", outerOdd=" + outerOdd + '}';
+		return "SimplePicker{material=" + material + ", data=" + data + '}';
 	}
 }

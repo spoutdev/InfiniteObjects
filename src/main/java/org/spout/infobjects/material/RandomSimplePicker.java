@@ -24,31 +24,42 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobject.variable;
+package org.spout.infobjects.material;
 
-import org.spout.api.util.Named;
+import java.util.Map;
+import java.util.Random;
 
-import org.spout.infobjects.value.Value;
+import org.spout.api.material.BlockMaterial;
+import org.spout.api.material.MaterialRegistry;
 
-public class Variable implements Named {
-	private final String name;
-	private final Value value;
+public class RandomSimplePicker extends MaterialPicker {
+	private Random random = new Random();
+	private BlockMaterial material;
+	private short data;
+	private byte odd;
 
-	public Variable(String name, Value value) {
-		this.name = name;
-		this.value = value;
-	}
-
-	public Value getRawValue() {
-		return value;
-	}
-
-	public double getValue() {
-		return value.getValue();
+	public RandomSimplePicker(String name) {
+		super(name);
 	}
 
 	@Override
-	public String getName() {
-		return name;
+	public void configure(Map<String, String> properties) {
+		material = (BlockMaterial) MaterialRegistry.get(properties.get("material"));
+		data = Short.parseShort(properties.get("data"));
+		odd = Byte.parseByte(properties.get("odd"));
+	}
+
+	@Override
+	public BlockMaterial pickMaterial(boolean outer) {
+		return random.nextInt(100) < odd ? material : BlockMaterial.AIR;
+	}
+
+	public void setRandom(Random random) {
+		this.random = random;
+	}
+
+	@Override
+	public String toString() {
+		return "RandomSimplePicker{material=" + material + ", data=" + data + ", odd=" + odd + '}';
 	}
 }

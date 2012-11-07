@@ -24,31 +24,53 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.util;
+package org.spout.infobjects.variable;
 
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Random;
 
-import org.spout.api.util.config.ConfigurationNode;
+public class SimpleVariableSource implements VariableSource {
+	private final Map<String, Variable> variables = new LinkedHashMap<String, Variable>();
 
-public class IWGOUtils {
-	public static int nextInt(Random random, int min, int max) {
-		return random.nextInt(max - min + 1) + min;
+	public SimpleVariableSource(Variable... variables) {
+		addVariables(variables);
 	}
 
-	public static double nextDouble(Random random, double min, double max) {
-		return random.nextDouble() * (max - min) + min;
+	public SimpleVariableSource(Collection<Variable> variables) {
+		addVariables(variables);
 	}
 
-	public static Map<String, String> toStringMap(ConfigurationNode propertiesNode) {
-		final Map<String, String> propertiesMap = new HashMap<String, String>();
-		for (String key : propertiesNode.getKeys(true)) {
-			final ConfigurationNode node = propertiesNode.getNode(key);
-			if (!node.hasChildren()) {
-				propertiesMap.put(key, node.getString());
-			}
+	@Override
+	public void addVariable(Variable variable) {
+		variables.put(variable.getName(), variable);
+	}
+
+	public final void addVariables(Variable... variables) {
+		for (Variable variable : variables) {
+			addVariable(variable);
 		}
-		return propertiesMap;
+	}
+
+	public final void addVariables(Collection<Variable> variables) {
+		for (Variable variable : variables) {
+			addVariable(variable);
+		}
+	}
+
+	@Override
+	public Variable getVariable(String name) {
+		return variables.get(name);
+	}
+
+	@Override
+	public Collection<Variable> getVariables() {
+		return variables.values();
+	}
+
+	@Override
+	public Map<String, Variable> getVariableMap() {
+		return Collections.unmodifiableMap(variables);
 	}
 }

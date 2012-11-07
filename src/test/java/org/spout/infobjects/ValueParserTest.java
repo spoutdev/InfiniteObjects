@@ -32,8 +32,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.spout.infobject.variable.SimpleVariableSource;
-import org.spout.infobject.variable.Variable;
 import org.spout.infobjects.util.IWGOUtils;
 import org.spout.infobjects.value.DoubleValue;
 import org.spout.infobjects.value.MathExpressionValue;
@@ -41,6 +39,8 @@ import org.spout.infobjects.value.RandomDoubleValue;
 import org.spout.infobjects.value.RandomIntValue;
 import org.spout.infobjects.value.ValueParser;
 import org.spout.infobjects.value.VariableMathExpressionValue;
+import org.spout.infobjects.variable.SimpleVariableSource;
+import org.spout.infobjects.variable.Variable;
 
 public class ValueParserTest {
 	private static final Random VALUE_RANDOM = new Random();
@@ -59,9 +59,9 @@ public class ValueParserTest {
 	// a random math expression to evaluate
 	private static final String RANDOM_MATH_EXP_VALUE = "3 * ranF(3, 54) + 10";
 	private static final double EXPECTED_RANDOM_MATH_EXP;
-	// a random and variable expression to evaluate
-	private static final String RANDOM_VARIABLE_MATH_EXP_VALUE = "ranI(0, 5) + double * PI";
-	private static final double EXPECTED_RANDOM_VARIABLE_MATH_EXP;
+	// a variable expression to evaluate
+	private static final String VARIABLE_MATH_EXP_VALUE = "ranI(0, 5) + double * PI";
+	private static final double EXPECTED_VARIABLE_MATH_EXP;
 
 	static {
 		final long seed = new Random().nextLong();
@@ -70,7 +70,7 @@ public class ValueParserTest {
 		EXPECTED_RANDOM_INT = IWGOUtils.nextInt(expectedRandom, 3, 10);
 		EXPECTED_RANDOM_FLOAT = IWGOUtils.nextDouble(expectedRandom, 18.9, 36.4);
 		EXPECTED_RANDOM_MATH_EXP = 3 * IWGOUtils.nextDouble(expectedRandom, 3, 54) + 10;
-		EXPECTED_RANDOM_VARIABLE_MATH_EXP = IWGOUtils.nextInt(expectedRandom, 0, 5) + EXPECTED_DOUBLE * Math.PI;
+		EXPECTED_VARIABLE_MATH_EXP = IWGOUtils.nextInt(expectedRandom, 0, 5) + EXPECTED_DOUBLE * Math.PI;
 	}
 
 	@Before
@@ -101,11 +101,11 @@ public class ValueParserTest {
 		mathExpValue.calculate();
 		Assert.assertEquals(mathExpValue.getValue(), EXPECTED_RANDOM_MATH_EXP, 0);
 
-		final VariableMathExpressionValue mathVarExpValue = (VariableMathExpressionValue) ValueParser.parse(RANDOM_VARIABLE_MATH_EXP_VALUE);
+		final VariableMathExpressionValue mathVarExpValue = (VariableMathExpressionValue) ValueParser.parse(VARIABLE_MATH_EXP_VALUE);
 		final SimpleVariableSource source = new SimpleVariableSource(new Variable("double", doubleValue));
 		mathVarExpValue.setVariableSource(source);
 		mathVarExpValue.setRandom(VALUE_RANDOM);
 		mathVarExpValue.calculate();
-		Assert.assertEquals(mathVarExpValue.getValue(), EXPECTED_RANDOM_VARIABLE_MATH_EXP, 0);
+		Assert.assertEquals(mathVarExpValue.getValue(), EXPECTED_VARIABLE_MATH_EXP, 0);
 	}
 }

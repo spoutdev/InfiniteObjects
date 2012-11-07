@@ -24,31 +24,30 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.util;
+package org.spout.infobjects.shape;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
+import org.spout.infobjects.IWGO;
+import org.spout.infobjects.value.Value;
 
-import org.spout.api.util.config.ConfigurationNode;
+public class Line extends Shape {
+	private double lengthX;
+	private double lengthY;
+	private double lengthZ;
 
-public class IWGOUtils {
-	public static int nextInt(Random random, int min, int max) {
-		return random.nextInt(max - min + 1) + min;
+	public Line(IWGO parent) {
+		super(parent);
 	}
 
-	public static double nextDouble(Random random, double min, double max) {
-		return random.nextDouble() * (max - min) + min;
+	@Override
+	public void load(Map<String, Value> properties) {
+		lengthX = properties.get("length.x").getValue();
+		lengthY = properties.get("length.y").getValue();
+		lengthZ = properties.get("length.z").getValue();
 	}
 
-	public static Map<String, String> toStringMap(ConfigurationNode propertiesNode) {
-		final Map<String, String> propertiesMap = new HashMap<String, String>();
-		for (String key : propertiesNode.getKeys(true)) {
-			final ConfigurationNode node = propertiesNode.getNode(key);
-			if (!node.hasChildren()) {
-				propertiesMap.put(key, node.getString());
-			}
-		}
-		return propertiesMap;
+	@Override
+	public void draw() {
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 }

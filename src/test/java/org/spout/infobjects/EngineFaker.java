@@ -24,48 +24,42 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobject.variable;
+package org.spout.infobjects;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import org.powermock.api.mockito.PowerMockito;
 
-public class SimpleVariableSource implements VariableSource {
-	private final Map<String, Variable> variables = new HashMap<String, Variable>();
+import org.spout.api.Engine;
+import org.spout.api.FileSystem;
+import org.spout.api.Spout;
+import org.spout.api.plugin.Platform;
 
-	public SimpleVariableSource(Variable... variables) {
-		addVariables(variables);
-	}
+public class EngineFaker {
+	private static final Engine ENGINE;
 
-	public SimpleVariableSource(Collection<Variable> variables) {
-		addVariables(variables);
-	}
-
-	public final void addVariables(Variable... variables) {
-		for (Variable variable : variables) {
-			this.variables.put(variable.getName(), variable);
+	static {
+		Engine engine = PowerMockito.mock(Engine.class);
+		FileSystem filesystem = PowerMockito.mock(FileSystem.class);
+		try {
+			PowerMockito.when(engine, Engine.class.getMethod("getPlatform", (Class[]) null)).
+					withNoArguments().thenReturn(Platform.SERVER);
+			PowerMockito.stub(Engine.class.getMethod("getFilesystem", (Class[]) null)).
+					toReturn(filesystem);
+			PowerMockito.stub(FileSystem.class.getMethod("getResource", new Class[]{String.class})).
+					toReturn(null);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-	}
-
-	public final void addVariables(Collection<Variable> variables) {
-		for (Variable variable : variables) {
-			this.variables.put(variable.getName(), variable);
+		if (engine == null) {
+			throw new NullPointerException("Engine is null");
 		}
+		if (engine.getPlatform() == null) {
+			throw new NullPointerException("Platform is null");
+		}
+		Spout.setEngine(engine);
+		ENGINE = engine;
 	}
 
-	@Override
-	public Variable getVariable(String name) {
-		return variables.get(name);
-	}
-
-	@Override
-	public Collection<Variable> getVariables() {
-		return variables.values();
-	}
-
-	@Override
-	public Map<String, Variable> getVariableMap() {
-		return Collections.unmodifiableMap(variables);
+	public static Engine setupEngine() {
+		return ENGINE;
 	}
 }

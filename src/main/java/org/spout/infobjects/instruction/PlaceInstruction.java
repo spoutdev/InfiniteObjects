@@ -24,41 +24,20 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.material;
+package org.spout.infobjects.instruction;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
+import org.spout.infobjects.shape.Shape;
 
-import org.spout.api.material.BlockMaterial;
-import org.spout.api.util.config.ConfigurationNode;
+public class PlaceInstruction extends Instruction {
+	private final List<Shape> shapes = new ArrayList<Shape>();
 
-import org.spout.infobjects.util.IWGOUtils;
-
-public class RandomUniformPicker extends MaterialPicker {
-	private Random random = new Random();
-	private BlockMaterial material;
-	private int odd;
-
-	public RandomUniformPicker(String name) {
+	public PlaceInstruction(String name) {
 		super(name);
 	}
 
-	@Override
-	public void load(ConfigurationNode config) {
-		material = IWGOUtils.getBlockMaterial(config.getNode("material").getString());
-		odd = config.getNode("odd").getInt();
-	}
-
-	@Override
-	public BlockMaterial pickMaterial(boolean outer) {
-		return random.nextInt(100) < odd ? material : BlockMaterial.AIR;
-	}
-
-	public void setRandom(Random random) {
-		this.random = random;
-	}
-
-	@Override
-	public String toString() {
-		return "RandomUniformPicker{material=" + material.getDisplayName() + ", odd=" + odd + '}';
+	public void addShape(Shape shape) {
+		shapes.add(shape);
 	}
 }

@@ -24,55 +24,31 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.material;
+package org.spout.infobjects.variable;
 
-import java.lang.reflect.Constructor;
-import java.util.HashMap;
-import java.util.Map;
-import org.spout.api.material.BlockMaterial;
 import org.spout.api.util.Named;
-import org.spout.api.util.config.ConfigurationNode;
 
-public abstract class MaterialPicker implements Named {
-	private static final Map<String, Constructor<? extends MaterialPicker>> PICKERS =
-			new HashMap<String, Constructor<? extends MaterialPicker>>();
+import org.spout.infobjects.value.Value;
+
+public class Variable implements Named {
 	private final String name;
+	private final Value value;
 
-	static {
-		try {
-			register("simple", SimplePicker.class);
-			register("random-simple", RandomSimplePicker.class);
-			register("inner-outer", InnerOuterPicker.class);
-			register("random-inner-outer", RandomInnerOuterPicker.class);
-		} catch (Exception ex) {
-			System.err.println("Failed to register the material pickers");
-			ex.printStackTrace();
-		}
-	}
-
-	public MaterialPicker(String name) {
+	public Variable(String name, Value value) {
 		this.name = name;
+		this.value = value;
 	}
 
-	public abstract void configure(Map<String, String> properties);
+	public Value getRawValue() {
+		return value;
+	}
 
-	public abstract BlockMaterial pickMaterial(boolean outer);
+	public double getValue() {
+		return value.getValue();
+	}
 
 	@Override
 	public String getName() {
 		return name;
-	}
-
-	public static void register(String type, Class<? extends MaterialPicker> picker)
-			throws NoSuchMethodException {
-		PICKERS.put(type, picker.getConstructor(String.class));
-	}
-
-	public static MaterialPicker newPicker(String type, String name) {
-		try {
-			return PICKERS.get(type).newInstance(name);
-		} catch (Exception ex) {
-			return null;
-		}
 	}
 }
