@@ -26,35 +26,26 @@
  */
 package org.spout.infobjects.instruction;
 
-import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.spout.infobjects.IWGO;
 import org.spout.infobjects.util.IWGOUtils;
-import org.spout.infobjects.value.Value;
-import org.spout.infobjects.value.VariableMathExpressionValue;
+import org.spout.infobjects.util.TypeFactory;
 import org.spout.infobjects.variable.Variable;
 import org.spout.infobjects.variable.VariableSource;
 
 public class Instruction implements VariableSource {
-	private static final Map<String, Constructor<? extends Instruction>> INSTRUCTIONS =
-			new HashMap<String, Constructor<? extends Instruction>>();
+	private static final TypeFactory<Instruction> INSTRUCTIONS = new TypeFactory<Instruction>(IWGO.class, String.class);
 	private final IWGO parent;
 	private final String name;
 	private final Map<String, Variable> variables = new LinkedHashMap<String, Variable>();
 
 	static {
-		try {
-			register("place", PlaceInstruction.class);
-			//register("repeat", RepeatInstruction.class);
-		} catch (Exception ex) {
-			System.err.println("Failed to register the instructions");
-			ex.printStackTrace();
-		}
+		register("place", PlaceInstruction.class);
+		register("repeat", RepeatInstruction.class);
 	}
 
 	public Instruction(IWGO parent, String name) {
@@ -96,23 +87,15 @@ public class Instruction implements VariableSource {
 
 	@Override
 	public void addVariable(Variable variable) {
-		final Value value = variable.getRawValue();
-		if (value instanceof VariableMathExpressionValue) {
-			((VariableMathExpressionValue) value).addVariableSources(parent, this);
-		}
 		variables.put(variable.getName(), variable);
 	}
 
-	public static void register(String type, Class<? extends Instruction> instruction)
-			throws NoSuchMethodException {
-		INSTRUCTIONS.put(type, instruction.getConstructor(IWGO.class, String.class));
+	public static void register(String type, Class<? extends Instruction> instruction) {
+		INSTRUCTIONS.register(type, instruction);
 	}
 
 	public static Instruction newInstruction(String type, IWGO parent, String name) {
-		try {
-			return INSTRUCTIONS.get(type).newInstance(parent, name);
-		} catch (Exception ex) {
-			return null;
-		}
+		return INSTRUCTIONS.newInstance(type, parent, name);
+
 	}
 }

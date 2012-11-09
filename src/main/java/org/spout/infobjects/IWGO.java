@@ -42,9 +42,6 @@ import org.spout.api.util.Named;
 import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.util.IWGOUtils;
-import org.spout.infobjects.value.CalculableValue;
-import org.spout.infobjects.value.Value;
-import org.spout.infobjects.value.VariableMathExpressionValue;
 import org.spout.infobjects.variable.Variable;
 import org.spout.infobjects.variable.VariableSource;
 
@@ -105,10 +102,6 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 
 	@Override
 	public void addVariable(Variable variable) {
-		final Value value = variable.getRawValue();
-		if (value instanceof VariableMathExpressionValue) {
-			((VariableMathExpressionValue) value).addVariableSources(this);
-		}
 		variables.put(variable.getName(), variable);
 	}
 

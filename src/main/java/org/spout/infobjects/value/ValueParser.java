@@ -27,16 +27,20 @@
 package org.spout.infobjects.value;
 
 import java.util.regex.Matcher;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.congrace.exp4j.constant.Constants;
 import de.congrace.exp4j.function.Functions;
+
+import org.spout.infobjects.variable.VariableSource;
 
 public class ValueParser {
 	private static final String RANDOM_INT_VALUE_REGEX = "ranI\\=.*";
 	private static final String RANDOM_DOUBLE_VALUE_REGEX = "ranF\\=.*";
 	private static final String RANDOM_MATH_EXP_VALUE_REGEX = ".*ran[IF]\\(.*";
 
-	public static Value parse(String expression) {
+	public static Value parse(String expression, VariableSource... sources) {
 		expression = expression.trim();
 		if (expression.matches(RANDOM_INT_VALUE_REGEX)) {
 			return new RandomIntValue(expression);
@@ -44,7 +48,9 @@ public class ValueParser {
 			return new RandomDoubleValue(expression);
 		} else if (hasVariable(expression)) {
 			try {
-				return new VariableMathExpressionValue(expression);
+				final VariableMathExpressionValue varMathExpValue = new VariableMathExpressionValue(expression);
+				varMathExpValue.addVariableSources(sources);
+				return varMathExpValue;
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				return null;
@@ -63,6 +69,14 @@ public class ValueParser {
 			ex.printStackTrace();
 			return null;
 		}
+	}
+
+	public static Map<String, Value> parse(Map<String, String> expressions, VariableSource... sources) {
+		final Map<String, Value> values = new HashMap<String, Value>();
+		for (Map.Entry<String, String> entry : expressions.entrySet()) {
+			values.put(entry.getKey(), ValueParser.parse(entry.getValue(), sources));
+		}
+		return values;
 	}
 
 	private static boolean hasVariable(String expression) {

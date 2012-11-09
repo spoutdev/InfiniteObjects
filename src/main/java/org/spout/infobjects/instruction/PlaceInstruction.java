@@ -27,7 +27,9 @@
 package org.spout.infobjects.instruction;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
 import org.spout.infobjects.IWGO;
 import org.spout.infobjects.shape.Shape;
 
@@ -40,5 +42,9 @@ public class PlaceInstruction extends Instruction {
 
 	public void addShape(Shape shape) {
 		shapes.add(shape);
+	}
+
+	public List<Shape> getShapes() {
+		return Collections.unmodifiableList(shapes);
 	}
 }

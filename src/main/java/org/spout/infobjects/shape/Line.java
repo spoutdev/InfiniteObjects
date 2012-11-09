@@ -27,27 +27,42 @@
 package org.spout.infobjects.shape;
 
 import java.util.Map;
+
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.value.CalculableValue;
 import org.spout.infobjects.value.Value;
 
 public class Line extends Shape {
-	private double lengthX;
-	private double lengthY;
-	private double lengthZ;
+	private Value lengthX;
+	private Value lengthY;
+	private Value lengthZ;
 
 	public Line(IWGO parent) {
 		super(parent);
 	}
 
 	@Override
-	public void load(Map<String, Value> properties) {
-		lengthX = properties.get("length.x").getValue();
-		lengthY = properties.get("length.y").getValue();
-		lengthZ = properties.get("length.z").getValue();
+	public void configure(Map<String, Value> properties) {
+		lengthX = properties.get("length.x");
+		lengthY = properties.get("length.y");
+		lengthZ = properties.get("length.z");
 	}
 
 	@Override
 	public void draw() {
 		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public void calculate() {
+		if (lengthX instanceof CalculableValue) {
+			((CalculableValue) lengthX).calculate();
+		}
+		if (lengthY instanceof CalculableValue) {
+			((CalculableValue) lengthY).calculate();
+		}
+		if (lengthZ instanceof CalculableValue) {
+			((CalculableValue) lengthZ).calculate();
+		}
 	}
 }

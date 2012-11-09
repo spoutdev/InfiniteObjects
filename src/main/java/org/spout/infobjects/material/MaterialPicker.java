@@ -26,28 +26,22 @@
  */
 package org.spout.infobjects.material;
 
-import java.lang.reflect.Constructor;
-import java.util.HashMap;
 import java.util.Map;
+
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.util.Named;
-import org.spout.api.util.config.ConfigurationNode;
+
+import org.spout.infobjects.util.TypeFactory;
 
 public abstract class MaterialPicker implements Named {
-	private static final Map<String, Constructor<? extends MaterialPicker>> PICKERS =
-			new HashMap<String, Constructor<? extends MaterialPicker>>();
+	private static final TypeFactory<MaterialPicker> PICKERS = new TypeFactory<MaterialPicker>(String.class);
 	private final String name;
 
 	static {
-		try {
-			register("simple", SimplePicker.class);
-			register("random-simple", RandomSimplePicker.class);
-			register("inner-outer", InnerOuterPicker.class);
-			register("random-inner-outer", RandomInnerOuterPicker.class);
-		} catch (Exception ex) {
-			System.err.println("Failed to register the material pickers");
-			ex.printStackTrace();
-		}
+		register("simple", SimplePicker.class);
+		register("random-simple", RandomSimplePicker.class);
+		register("inner-outer", InnerOuterPicker.class);
+		register("random-inner-outer", RandomInnerOuterPicker.class);
 	}
 
 	public MaterialPicker(String name) {
@@ -63,16 +57,12 @@ public abstract class MaterialPicker implements Named {
 		return name;
 	}
 
-	public static void register(String type, Class<? extends MaterialPicker> picker)
-			throws NoSuchMethodException {
-		PICKERS.put(type, picker.getConstructor(String.class));
+	public static void register(String type, Class<? extends MaterialPicker> picker) {
+		PICKERS.register(type, picker);
 	}
 
 	public static MaterialPicker newPicker(String type, String name) {
-		try {
-			return PICKERS.get(type).newInstance(name);
-		} catch (Exception ex) {
-			return null;
-		}
+		return PICKERS.newInstance(type, name);
+
 	}
 }

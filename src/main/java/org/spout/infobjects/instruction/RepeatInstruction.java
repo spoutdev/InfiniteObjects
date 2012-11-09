@@ -24,45 +24,12 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.shape;
-
-import java.util.Map;
+package org.spout.infobjects.instruction;
 
 import org.spout.infobjects.IWGO;
-import org.spout.infobjects.value.CalculableValue;
-import org.spout.infobjects.value.Value;
 
-public class Cuboid extends Shape {
-	private Value length;
-	private Value height;
-	private Value depth;
-
-	public Cuboid(IWGO parent) {
-		super(parent);
-	}
-
-	@Override
-	public void configure(Map<String, Value> properties) {
-		length = properties.get("length");
-		height = properties.get("height");
-		depth = properties.get("depth");
-	}
-
-	@Override
-	public void draw() {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public void calculate() {
-		if (length instanceof CalculableValue) {
-			((CalculableValue) length).calculate();
-		}
-		if (height instanceof CalculableValue) {
-			((CalculableValue) height).calculate();
-		}
-		if (depth instanceof CalculableValue) {
-			((CalculableValue) depth).calculate();
-		}
+public class RepeatInstruction extends Instruction {
+	public RepeatInstruction(IWGO parent, String name) {
+		super(parent, name);
 	}
 }

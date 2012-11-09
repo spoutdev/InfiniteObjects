@@ -33,9 +33,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.spout.api.material.BlockMaterial;
-import org.spout.infobjects.instruction.Instruction;
 
+import org.spout.infobjects.instruction.Instruction;
+import org.spout.infobjects.instruction.PlaceInstruction;
 import org.spout.infobjects.material.MaterialPicker;
+import org.spout.infobjects.shape.Shape;
 import org.spout.infobjects.variable.Variable;
 
 public class IWGOTest {
@@ -52,21 +54,33 @@ public class IWGOTest {
 		manager.loadIWGOs();
 		final IWGO iwgo = manager.getIWGO("test-tree");
 
+		System.out.println("Variables:");
 		for (Variable variable : iwgo.getVariables()) {
-			System.out.println(variable.getName() + ": " + variable.getValue());
+			System.out.println('\t' + variable.getName() + ": " + variable.getValue());
 		}
+		System.out.println();
 
+		System.out.println("Material pickers:");
 		for (MaterialPicker picker : iwgo.getMaterialPickers()) {
-			System.out.println(picker.getName() + ": " + picker);
+			System.out.println('\t' + picker.getName() + ": " + picker);
 		}
-		
+		System.out.println();
+
+		System.out.println("Instructions:");
 		for (Instruction instruction : iwgo.getInstructions()) {
-			System.out.println(instruction.getName());
+			System.out.println("\tName:" + instruction.getName());
+			System.out.println("\tVariables:");
 			for (Variable variable : instruction.getVariables()) {
-				System.out.println("\t" + variable.getName() + ": " + variable.getValue());
+				System.out.println("\t\t" + variable.getName() + ": " + variable.getValue());
 			}
+			if (instruction instanceof PlaceInstruction) {
+				System.out.println("\tShapes:");
+				for (Shape shape : ((PlaceInstruction) instruction).getShapes()) {
+					System.out.println("\t\t" + shape.getClass().getSimpleName());
+				}
+			}
+			System.out.println();
 		}
-		
 		System.out.println();
 	}
 

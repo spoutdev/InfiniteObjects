@@ -29,22 +29,23 @@ package org.spout.infobjects.shape;
 import java.util.Map;
 
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.value.CalculableValue;
 import org.spout.infobjects.value.Value;
 
 public class Sphere extends Shape {
-	private double radiusX;
-	private double radiusY;
-	private double radiusZ;
+	private Value radiusX;
+	private Value radiusY;
+	private Value radiusZ;
 
 	public Sphere(IWGO parent) {
 		super(parent);
 	}
 
 	@Override
-	public void load(Map<String, Value> properties) {
-		radiusX = properties.get("size.x").getValue();
-		radiusY = properties.get("size.y").getValue();
-		radiusZ = properties.get("size.z").getValue();
+	public void configure(Map<String, Value> properties) {
+		radiusX = properties.get("size.x");
+		radiusY = properties.get("size.y");
+		radiusZ = properties.get("size.z");
 	}
 
 	@Override
@@ -52,9 +53,9 @@ public class Sphere extends Shape {
 		final int x = position.getX();
 		final int y = position.getY();
 		final int z = position.getZ();
-		final double rx = radiusX + 0.5;
-		final double ry = radiusY + 0.5;
-		final double rz = radiusZ + 0.5;
+		final double rx = radiusX.getValue() + 0.5;
+		final double ry = radiusY.getValue() + 0.5;
+		final double rz = radiusZ.getValue() + 0.5;
 		final double invRadiusX = 1 / rx;
 		final double invRadiusY = 1 / ry;
 		final double invRadiusZ = 1 / rz;
@@ -101,7 +102,20 @@ public class Sphere extends Shape {
 		}
 	}
 
-	private double lengthSq(double x, double y, double z) {
+	@Override
+	public void calculate() {
+		if (radiusX instanceof CalculableValue) {
+			((CalculableValue) radiusX).calculate();
+		}
+		if (radiusY instanceof CalculableValue) {
+			((CalculableValue) radiusY).calculate();
+		}
+		if (radiusZ instanceof CalculableValue) {
+			((CalculableValue) radiusZ).calculate();
+		}
+	}
+
+	private static double lengthSq(double x, double y, double z) {
 		return x * x + y * y + z * z;
 	}
 }

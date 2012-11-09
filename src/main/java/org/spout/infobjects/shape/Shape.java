@@ -32,12 +32,20 @@ import org.spout.api.math.IntVector3;
 
 import org.spout.infobjects.IWGO;
 import org.spout.infobjects.material.MaterialPicker;
+import org.spout.infobjects.util.TypeFactory;
 import org.spout.infobjects.value.Value;
 
 public abstract class Shape {
+	private static final TypeFactory<Shape> SHAPES = new TypeFactory<Shape>(IWGO.class);
 	protected final IWGO parent;
 	protected final IntVector3 position = new IntVector3(0, 0, 0);
 	protected final MaterialPicker picker = null;
+
+	static {
+		register("cuboid", Cuboid.class);
+		register("line", Line.class);
+		register("sphere", Sphere.class);
+	}
 
 	public Shape(IWGO parent) {
 		this.parent = parent;
@@ -47,7 +55,17 @@ public abstract class Shape {
 		position.set(x, y, z);
 	}
 
-	public abstract void load(Map<String, Value> properties);
+	public abstract void configure(Map<String, Value> properties);
+
+	public abstract void calculate();
 
 	public abstract void draw();
+
+	public static void register(String type, Class<? extends Shape> shape) {
+		SHAPES.register(type, shape);
+	}
+
+	public static Shape newShape(String type, IWGO parent) {
+		return SHAPES.newInstance(type, parent);
+	}
 }

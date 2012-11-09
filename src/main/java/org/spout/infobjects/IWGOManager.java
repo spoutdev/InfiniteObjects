@@ -38,9 +38,11 @@ import org.spout.api.exception.ConfigurationException;
 import org.spout.api.util.config.Configuration;
 import org.spout.api.util.config.ConfigurationNode;
 import org.spout.api.util.config.yaml.YamlConfiguration;
-import org.spout.infobjects.instruction.Instruction;
 
+import org.spout.infobjects.instruction.Instruction;
+import org.spout.infobjects.instruction.PlaceInstruction;
 import org.spout.infobjects.material.MaterialPicker;
+import org.spout.infobjects.shape.Shape;
 import org.spout.infobjects.util.IWGOUtils;
 import org.spout.infobjects.variable.Variable;
 import org.spout.infobjects.value.ValueParser;
@@ -88,22 +90,23 @@ public class IWGOManager {
 		return Collections.unmodifiableMap(iwgos);
 	}
 
-	private IWGO buildIWGO(Configuration config) {
+	private static IWGO buildIWGO(Configuration config) {
 		final IWGO iwgo = new IWGO(config.getNode("name").getString());
-		loadVariables(iwgo, config.getNode("variables"));
+		loadVariables(iwgo, config.getNode("variables"), iwgo);
 		loadMaterialPickers(iwgo, config.getNode("materials"));
 		loadInstructions(iwgo, config.getNode("instructions"));
 		iwgo.randomize();
 		return iwgo;
 	}
 
-	private void loadVariables(VariableSource source, ConfigurationNode variableNode) {
+	private static void loadVariables(VariableSource destination, ConfigurationNode variableNode,
+			VariableSource... sources) {
 		for (String key : variableNode.getKeys(false)) {
-			source.addVariable(new Variable(key, ValueParser.parse(variableNode.getNode(key).getString())));
+			destination.addVariable(new Variable(key, ValueParser.parse(variableNode.getNode(key).getString(), sources)));
 		}
 	}
 
-	private void loadMaterialPickers(IWGO iwgo, ConfigurationNode materialsNode) {
+	private static void loadMaterialPickers(IWGO iwgo, ConfigurationNode materialsNode) {
 		for (String key : materialsNode.getKeys(false)) {
 			final ConfigurationNode pickerNode = materialsNode.getNode(key);
 			final MaterialPicker picker =
@@ -115,14 +118,29 @@ public class IWGOManager {
 		}
 	}
 
-	private void loadInstructions(IWGO iwgo, ConfigurationNode instructionsNode) {
+	private static void loadInstructions(IWGO iwgo, ConfigurationNode instructionsNode) {
 		for (String key : instructionsNode.getKeys(false)) {
 			final ConfigurationNode instructionNode = instructionsNode.getNode(key);
 			final Instruction instruction =
 					Instruction.newInstruction(instructionNode.getNode("type").getString(), iwgo, key);
 			if (instruction != null) {
-				loadVariables(instruction, instructionNode.getNode("variables"));
+				loadVariables(instruction, instructionNode.getNode("variables"), iwgo, instruction);
+				if (instruction instanceof PlaceInstruction) {
+					loadShapes((PlaceInstruction) instruction, instructionNode.getNode("shapes"));
+				}
 				iwgo.addInstruction(instruction);
+			}
+		}
+	}
+
+	private static void loadShapes(PlaceInstruction instruction, ConfigurationNode shapesNode) {
+		final IWGO iwgo = instruction.getParent();
+		for (String key : shapesNode.getKeys(false)) {
+			final ConfigurationNode shapeNode = shapesNode.getNode(key);
+			final Shape shape = Shape.newShape(shapeNode.getNode("type").getString(), iwgo);
+			if (shape != null) {
+				shape.configure(ValueParser.parse(IWGOUtils.toStringMap(shapeNode.getNode("properties")), iwgo, instruction));
+				instruction.addShape(shape);
 			}
 		}
 	}

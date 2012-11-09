@@ -24,45 +24,37 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.shape;
+package org.spout.infobjects.util;
 
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.spout.infobjects.IWGO;
-import org.spout.infobjects.value.CalculableValue;
-import org.spout.infobjects.value.Value;
+public class TypeFactory<T> {
+	private final Map<String, Constructor<? extends T>> TYPES =
+			new HashMap<String, Constructor<? extends T>>();
+	private final Class<?>[] constructorParams;
 
-public class Cuboid extends Shape {
-	private Value length;
-	private Value height;
-	private Value depth;
-
-	public Cuboid(IWGO parent) {
-		super(parent);
+	public TypeFactory(Class<?>... constructorParams) {
+		this.constructorParams = constructorParams;
 	}
 
-	@Override
-	public void configure(Map<String, Value> properties) {
-		length = properties.get("length");
-		height = properties.get("height");
-		depth = properties.get("depth");
-	}
-
-	@Override
-	public void draw() {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public void calculate() {
-		if (length instanceof CalculableValue) {
-			((CalculableValue) length).calculate();
+	public void register(String name, Class<? extends T> type) {
+		try {
+			TYPES.put(name, type.getConstructor(constructorParams));
+		} catch (NoSuchMethodException ex) {
+			throw new IllegalArgumentException("Type \"" + type + "\" doesn't have the required constructor");
 		}
-		if (height instanceof CalculableValue) {
-			((CalculableValue) height).calculate();
+	}
+
+	public T newInstance(String type, Object... constructorParams) {
+		if (!TYPES.containsKey(type)) {
+			throw new IllegalArgumentException("Type \"" + type + "\" is not a registered type");
 		}
-		if (depth instanceof CalculableValue) {
-			((CalculableValue) depth).calculate();
+		try {
+			return TYPES.get(type).newInstance(constructorParams);
+		} catch (Exception ex) {
+			return null;
 		}
 	}
 }
