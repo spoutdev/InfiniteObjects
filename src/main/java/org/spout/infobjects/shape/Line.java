@@ -29,7 +29,6 @@ package org.spout.infobjects.shape;
 import java.util.Map;
 
 import org.spout.infobjects.IWGO;
-import org.spout.infobjects.value.CalculableValue;
 import org.spout.infobjects.value.Value;
 
 public class Line extends Shape {
@@ -50,19 +49,19 @@ public class Line extends Shape {
 
 	@Override
 	public void draw() {
-		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
-	public void calculate() {
-		if (lengthX instanceof CalculableValue) {
-			((CalculableValue) lengthX).calculate();
-		}
-		if (lengthY instanceof CalculableValue) {
-			((CalculableValue) lengthY).calculate();
-		}
-		if (lengthZ instanceof CalculableValue) {
-			((CalculableValue) lengthZ).calculate();
-		}
+	public void randomize() {
+		super.randomize();
+		lengthX.calculate();
+		lengthY.calculate();
+		lengthZ.calculate();
+	}
+
+	@Override
+	public String toString() {
+		return "Line{x=" + x + ", y=" + y + ", z=" + z + ", picker=" + picker + ", length="
+				+ lengthX + ", height=" + lengthY + ", depth=" + lengthZ + '}';
 	}
 }

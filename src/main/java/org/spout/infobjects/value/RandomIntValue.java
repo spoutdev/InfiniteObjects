@@ -53,4 +53,9 @@ public class RandomIntValue extends RandomValue {
 	public void calculate() {
 		value = IWGOUtils.nextInt(random, min, max);
 	}
+
+	@Override
+	public String toString() {
+		return "RandomIntValue{" + "value=" + value + '}';
+	}
 }

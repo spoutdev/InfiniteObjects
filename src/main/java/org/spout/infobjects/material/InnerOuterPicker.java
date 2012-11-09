@@ -56,7 +56,7 @@ public class InnerOuterPicker extends MaterialPicker {
 
 	@Override
 	public String toString() {
-		return "InnerOuterPicker{inner=" + inner + ", innerData=" + innerData + ", outer=" + outer
-				+ ", outerData=" + outerData + '}';
+		return "InnerOuterPicker{name=" + getName() + ", inner=" + inner + ", innerData="
+				+ innerData + ", outer=" + outer + ", outerData=" + outerData + '}';
 	}
 }

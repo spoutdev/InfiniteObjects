@@ -30,7 +30,7 @@ import org.spout.api.util.Named;
 
 import org.spout.infobjects.value.Value;
 
-public class Variable implements Named {
+public class Variable implements Value, Named {
 	private final String name;
 	private final Value value;
 
@@ -43,12 +43,23 @@ public class Variable implements Named {
 		return value;
 	}
 
+	@Override
 	public double getValue() {
 		return value.getValue();
 	}
 
 	@Override
+	public void calculate() {
+		value.calculate();
+	}
+
+	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public String toString() {
+		return "Variable{name=" + name + ", value=" + value + '}';
 	}
 }

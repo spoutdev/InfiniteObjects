@@ -61,8 +61,10 @@ public class Instruction implements VariableSource {
 		return name;
 	}
 
-	public void calculateVariables() {
-		IWGOUtils.calculateVariables(variables.values());
+	public void randomize() {
+		for (Variable variable : variables.values()) {
+			variable.calculate();
+		}
 	}
 
 	@Override

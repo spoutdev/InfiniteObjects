@@ -29,7 +29,6 @@ package org.spout.infobjects.shape;
 import java.util.Map;
 
 import org.spout.infobjects.IWGO;
-import org.spout.infobjects.value.CalculableValue;
 import org.spout.infobjects.value.Value;
 
 public class Cuboid extends Shape {
@@ -43,26 +42,26 @@ public class Cuboid extends Shape {
 
 	@Override
 	public void configure(Map<String, Value> properties) {
-		length = properties.get("length");
+		length = properties.get("width");
 		height = properties.get("height");
 		depth = properties.get("depth");
 	}
 
 	@Override
 	public void draw() {
-		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
-	public void calculate() {
-		if (length instanceof CalculableValue) {
-			((CalculableValue) length).calculate();
-		}
-		if (height instanceof CalculableValue) {
-			((CalculableValue) height).calculate();
-		}
-		if (depth instanceof CalculableValue) {
-			((CalculableValue) depth).calculate();
-		}
+	public void randomize() {
+		super.randomize();
+		length.calculate();
+		height.calculate();
+		depth.calculate();
+	}
+
+	@Override
+	public String toString() {
+		return "Cuboid{x=" + x + ", y=" + y + ", z=" + z + ", picker=" + picker + ", length="
+				+ length + ", height=" + height + ", depth=" + depth + '}';
 	}
 }

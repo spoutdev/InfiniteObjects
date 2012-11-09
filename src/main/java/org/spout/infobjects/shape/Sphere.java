@@ -29,7 +29,6 @@ package org.spout.infobjects.shape;
 import java.util.Map;
 
 import org.spout.infobjects.IWGO;
-import org.spout.infobjects.value.CalculableValue;
 import org.spout.infobjects.value.Value;
 
 public class Sphere extends Shape {
@@ -50,9 +49,9 @@ public class Sphere extends Shape {
 
 	@Override
 	public void draw() {
-		final int x = position.getX();
-		final int y = position.getY();
-		final int z = position.getZ();
+		final int px = (int) this.x.getValue();
+		final int py = (int) this.y.getValue();
+		final int pz = (int) this.z.getValue();
 		final double rx = radiusX.getValue() + 0.5;
 		final double ry = radiusY.getValue() + 0.5;
 		final double rz = radiusZ.getValue() + 0.5;
@@ -89,30 +88,31 @@ public class Sphere extends Shape {
 					boolean outer = lengthSq(nextXn, yn, zn) > 1
 							|| lengthSq(xn, nextYn, zn) > 1
 							|| lengthSq(xn, yn, nextZn) > 1;
-					parent.setMaterial(x + xx, y + yy, z + zz, picker.pickMaterial(outer));
-					parent.setMaterial(x - xx, y + yy, z + zz, picker.pickMaterial(outer));
-					parent.setMaterial(x + xx, y - yy, z + zz, picker.pickMaterial(outer));
-					parent.setMaterial(x + xx, y + yy, z - zz, picker.pickMaterial(outer));
-					parent.setMaterial(x - xx, y - yy, z + zz, picker.pickMaterial(outer));
-					parent.setMaterial(x + xx, y - yy, z - zz, picker.pickMaterial(outer));
-					parent.setMaterial(x - xx, y + yy, z - zz, picker.pickMaterial(outer));
-					parent.setMaterial(x - xx, y - yy, z - zz, picker.pickMaterial(outer));
+					parent.setMaterial(px + xx, py + yy, pz + zz, picker.pickMaterial(outer));
+					parent.setMaterial(px - xx, py + yy, pz + zz, picker.pickMaterial(outer));
+					parent.setMaterial(px + xx, py - yy, pz + zz, picker.pickMaterial(outer));
+					parent.setMaterial(px + xx, py + yy, pz - zz, picker.pickMaterial(outer));
+					parent.setMaterial(px - xx, py - yy, pz + zz, picker.pickMaterial(outer));
+					parent.setMaterial(px + xx, py - yy, pz - zz, picker.pickMaterial(outer));
+					parent.setMaterial(px - xx, py + yy, pz - zz, picker.pickMaterial(outer));
+					parent.setMaterial(px - xx, py - yy, pz - zz, picker.pickMaterial(outer));
 				}
 			}
 		}
 	}
 
 	@Override
-	public void calculate() {
-		if (radiusX instanceof CalculableValue) {
-			((CalculableValue) radiusX).calculate();
-		}
-		if (radiusY instanceof CalculableValue) {
-			((CalculableValue) radiusY).calculate();
-		}
-		if (radiusZ instanceof CalculableValue) {
-			((CalculableValue) radiusZ).calculate();
-		}
+	public void randomize() {
+		super.randomize();
+		radiusX.calculate();
+		radiusY.calculate();
+		radiusZ.calculate();
+	}
+
+	@Override
+	public String toString() {
+		return "Sphere{x=" + x + ", y=" + y + ", z=" + z + ", picker=" + picker + ", length="
+				+ radiusZ + ", height=" + radiusY + ", depth=" + radiusZ + '}';
 	}
 
 	private static double lengthSq(double x, double y, double z) {

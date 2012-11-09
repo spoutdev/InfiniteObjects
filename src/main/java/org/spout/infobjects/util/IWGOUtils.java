@@ -26,16 +26,11 @@
  */
 package org.spout.infobjects.util;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import org.spout.api.util.config.ConfigurationNode;
-import org.spout.infobjects.value.CalculableValue;
-import org.spout.infobjects.value.Value;
-
-import org.spout.infobjects.variable.Variable;
 
 public class IWGOUtils {
 	public static int nextInt(Random random, int min, int max) {
@@ -55,14 +50,5 @@ public class IWGOUtils {
 			}
 		}
 		return propertiesMap;
-	}
-
-	public static void calculateVariables(Collection<Variable> variables) {
-		for (Variable variable : variables) {
-			final Value value = variable.getRawValue();
-			if (value instanceof CalculableValue) {
-				((CalculableValue) value).calculate();
-			}
-		}
 	}
 }

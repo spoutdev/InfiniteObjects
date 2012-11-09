@@ -47,4 +47,13 @@ public class DoubleValue implements Value {
 	public double getValue() {
 		return value;
 	}
+
+	@Override
+	public void calculate() {
+	}
+
+	@Override
+	public String toString() {
+		return "DoubleValue{" + "value=" + value + '}';
+	}
 }

@@ -56,13 +56,13 @@ public class IWGOTest {
 
 		System.out.println("Variables:");
 		for (Variable variable : iwgo.getVariables()) {
-			System.out.println('\t' + variable.getName() + ": " + variable.getValue());
+			System.out.println('\t' + variable.toString());
 		}
 		System.out.println();
 
 		System.out.println("Material pickers:");
 		for (MaterialPicker picker : iwgo.getMaterialPickers()) {
-			System.out.println('\t' + picker.getName() + ": " + picker);
+			System.out.println('\t' + picker.toString());
 		}
 		System.out.println();
 
@@ -76,7 +76,7 @@ public class IWGOTest {
 			if (instruction instanceof PlaceInstruction) {
 				System.out.println("\tShapes:");
 				for (Shape shape : ((PlaceInstruction) instruction).getShapes()) {
-					System.out.println("\t\t" + shape.getClass().getSimpleName());
+					System.out.println("\t\t" + shape);
 				}
 			}
 			System.out.println();

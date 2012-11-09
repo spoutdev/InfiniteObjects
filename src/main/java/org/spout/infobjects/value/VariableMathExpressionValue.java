@@ -80,6 +80,11 @@ public class VariableMathExpressionValue extends MathExpressionValue {
 	public void addVariableSources(VariableSource... sources) {
 		variableSources.addAll(Arrays.asList(sources));
 	}
+	
+	@Override
+	public String toString() {
+		return "VariableMathExpressionValue{" + "value=" + getValue() + '}';
+	}
 
 	private static List<String> findVariables(String expression) {
 		final List<String> matches = new ArrayList<String>();

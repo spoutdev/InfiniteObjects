@@ -27,5 +27,7 @@
 package org.spout.infobjects.value;
 
 public interface Value {
+	public void calculate();
+
 	public double getValue();
 }

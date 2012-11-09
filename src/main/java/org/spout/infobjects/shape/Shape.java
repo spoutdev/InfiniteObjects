@@ -28,8 +28,6 @@ package org.spout.infobjects.shape;
 
 import java.util.Map;
 
-import org.spout.api.math.IntVector3;
-
 import org.spout.infobjects.IWGO;
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.util.TypeFactory;
@@ -38,8 +36,10 @@ import org.spout.infobjects.value.Value;
 public abstract class Shape {
 	private static final TypeFactory<Shape> SHAPES = new TypeFactory<Shape>(IWGO.class);
 	protected final IWGO parent;
-	protected final IntVector3 position = new IntVector3(0, 0, 0);
-	protected final MaterialPicker picker = null;
+	protected Value x;
+	protected Value y;
+	protected Value z;
+	protected MaterialPicker picker;
 
 	static {
 		register("cuboid", Cuboid.class);
@@ -51,13 +51,57 @@ public abstract class Shape {
 		this.parent = parent;
 	}
 
-	public void setPosition(int x, int y, int z) {
-		position.set(x, y, z);
+	public MaterialPicker getMaterialPicker() {
+		return picker;
+	}
+
+	public void setMaterialPicker(MaterialPicker picker) {
+		this.picker = picker;
+	}
+
+	public Value getX() {
+		return x;
+	}
+
+	public void setX(Value x) {
+		this.x = x;
+	}
+
+	public Value getY() {
+		return y;
+	}
+
+	public void setY(Value y) {
+		this.y = y;
+	}
+
+	public Value getZ() {
+		return z;
+	}
+
+	public void setZ(Value z) {
+		this.z = z;
+	}
+
+	public void setPosition(Value x, Value y, Value z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	public void setPosition(Map<String, Value> position) {
+		x = position.get("x");
+		y = position.get("y");
+		z = position.get("z");
 	}
 
 	public abstract void configure(Map<String, Value> properties);
 
-	public abstract void calculate();
+	public void randomize() {
+		x.calculate();
+		y.calculate();
+		z.calculate();
+	}
 
 	public abstract void draw();
 

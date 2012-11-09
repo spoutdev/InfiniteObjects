@@ -140,6 +140,8 @@ public class IWGOManager {
 			final Shape shape = Shape.newShape(shapeNode.getNode("type").getString(), iwgo);
 			if (shape != null) {
 				shape.configure(ValueParser.parse(IWGOUtils.toStringMap(shapeNode.getNode("properties")), iwgo, instruction));
+				shape.setPosition(ValueParser.parse(IWGOUtils.toStringMap(shapeNode.getNode("position")), iwgo, instruction));
+				shape.setMaterialPicker(iwgo.getMaterialPicker(shapeNode.getNode("material").getString()));
 				instruction.addShape(shape);
 			}
 		}

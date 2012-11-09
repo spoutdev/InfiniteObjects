@@ -41,7 +41,6 @@ import org.spout.api.util.Named;
 
 import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.material.MaterialPicker;
-import org.spout.infobjects.util.IWGOUtils;
 import org.spout.infobjects.variable.Variable;
 import org.spout.infobjects.variable.VariableSource;
 
@@ -78,14 +77,12 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 	}
 
 	public void randomize() {
-		calculateVariables();
-		for (Instruction instruction : instructions.values()) {
-			instruction.calculateVariables();
+		for (Variable variable : variables.values()) {
+			variable.calculate();
 		}
-	}
-
-	private void calculateVariables() {
-		IWGOUtils.calculateVariables(variables.values());
+		for (Instruction instruction : instructions.values()) {
+			instruction.randomize();
+		}
 	}
 
 	public void setMaterial(int xx, int yy, int zz, BlockMaterial material) {
@@ -127,6 +124,10 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 
 	public void addMaterialPicker(MaterialPicker picker) {
 		pickers.put(picker.getName(), picker);
+	}
+
+	public MaterialPicker getMaterialPicker(String name) {
+		return pickers.get(name);
 	}
 
 	public Collection<MaterialPicker> getMaterialPickers() {

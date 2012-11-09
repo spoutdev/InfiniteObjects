@@ -52,6 +52,6 @@ public class SimplePicker extends MaterialPicker {
 
 	@Override
 	public String toString() {
-		return "SimplePicker{material=" + material + ", data=" + data + '}';
+		return "SimplePicker{name=" + getName() + ", material=" + material + ", data=" + data + '}';
 	}
 }

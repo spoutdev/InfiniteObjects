@@ -28,7 +28,7 @@ package org.spout.infobjects.value;
 
 import java.util.Random;
 
-public abstract class RandomValue implements CalculableValue {
+public abstract class RandomValue implements Value {
 	protected Random random = new Random();
 
 	public void setRandom(Random random) {

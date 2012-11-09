@@ -47,4 +47,12 @@ public class PlaceInstruction extends Instruction {
 	public List<Shape> getShapes() {
 		return Collections.unmodifiableList(shapes);
 	}
+
+	@Override
+	public void randomize() {
+		super.randomize();
+		for (Shape shape : shapes) {
+			shape.randomize();
+		}
+	}
 }

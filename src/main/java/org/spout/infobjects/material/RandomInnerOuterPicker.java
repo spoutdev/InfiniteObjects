@@ -70,7 +70,7 @@ public class RandomInnerOuterPicker extends MaterialPicker {
 
 	@Override
 	public String toString() {
-		return "RandomInnerOuterPicker{inner=" + inner + ", innerData="
+		return "RandomInnerOuterPicker{name=" + getName() + ", inner=" + inner + ", innerData="
 				+ innerData + ", innerOdd=" + innerOdd + ", outer=" + outer + ", outerData="
 				+ outerData + ", outerOdd=" + outerOdd + '}';
 	}

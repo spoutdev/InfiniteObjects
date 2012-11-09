@@ -53,4 +53,9 @@ public class RandomDoubleValue extends RandomValue {
 	public void calculate() {
 		value = IWGOUtils.nextDouble(random, min, max);
 	}
+
+	@Override
+	public String toString() {
+		return "RandomDoubleValue{" + "value=" + value + '}';
+	}
 }

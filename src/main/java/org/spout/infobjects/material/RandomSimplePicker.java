@@ -60,6 +60,7 @@ public class RandomSimplePicker extends MaterialPicker {
 
 	@Override
 	public String toString() {
-		return "RandomSimplePicker{material=" + material + ", data=" + data + ", odd=" + odd + '}';
+		return "RandomSimplePicker{name=" + getName() + ", material=" + material + ", data=" + data
+				+ ", odd=" + odd + '}';
 	}
 }
