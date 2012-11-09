@@ -73,4 +73,9 @@ public class SimpleVariableSource implements VariableSource {
 	public Map<String, Variable> getVariableMap() {
 		return Collections.unmodifiableMap(variables);
 	}
+
+	@Override
+	public boolean hasVariable(String name) {
+		return variables.containsKey(name);
+	}
 }

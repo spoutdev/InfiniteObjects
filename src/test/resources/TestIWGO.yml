@@ -15,15 +15,6 @@ materials:
     properties:
       material: log
       data: 3
-  test:
-    type: inner-outer
-    properties:
-      inner:
-        material: log
-        data: 2
-      outer:
-        material: leaf
-        data: 4
   
 instructions:
   trunk:
@@ -43,7 +34,7 @@ instructions:
   leafPod:
     type: place
     variables:
-      angle: ranF(0, 2 * PI);
+      angle: ranF(0, 2) * PI
       offsetX: sin(angle) * 4
       offsetZ: cos(angle) * 4
     shapes:

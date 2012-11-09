@@ -26,24 +26,52 @@
  */
 package org.spout.infobjects.instruction;
 
+import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.spout.infobjects.IWGO;
+import org.spout.infobjects.util.IWGOUtils;
+import org.spout.infobjects.value.Value;
+import org.spout.infobjects.value.VariableMathExpressionValue;
 import org.spout.infobjects.variable.Variable;
 import org.spout.infobjects.variable.VariableSource;
 
 public class Instruction implements VariableSource {
+	private static final Map<String, Constructor<? extends Instruction>> INSTRUCTIONS =
+			new HashMap<String, Constructor<? extends Instruction>>();
+	private final IWGO parent;
 	private final String name;
-	private final Map<String, Variable> variables = new HashMap<String, Variable>();
+	private final Map<String, Variable> variables = new LinkedHashMap<String, Variable>();
 
-	public Instruction(String name) {
+	static {
+		try {
+			register("place", PlaceInstruction.class);
+			//register("repeat", RepeatInstruction.class);
+		} catch (Exception ex) {
+			System.err.println("Failed to register the instructions");
+			ex.printStackTrace();
+		}
+	}
+
+	public Instruction(IWGO parent, String name) {
+		this.parent = parent;
 		this.name = name;
+	}
+
+	public IWGO getParent() {
+		return parent;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public void calculateVariables() {
+		IWGOUtils.calculateVariables(variables.values());
 	}
 
 	@Override
@@ -62,7 +90,29 @@ public class Instruction implements VariableSource {
 	}
 
 	@Override
+	public boolean hasVariable(String name) {
+		return variables.containsKey(name);
+	}
+
+	@Override
 	public void addVariable(Variable variable) {
+		final Value value = variable.getRawValue();
+		if (value instanceof VariableMathExpressionValue) {
+			((VariableMathExpressionValue) value).addVariableSources(parent, this);
+		}
 		variables.put(variable.getName(), variable);
+	}
+
+	public static void register(String type, Class<? extends Instruction> instruction)
+			throws NoSuchMethodException {
+		INSTRUCTIONS.put(type, instruction.getConstructor(IWGO.class, String.class));
+	}
+
+	public static Instruction newInstruction(String type, IWGO parent, String name) {
+		try {
+			return INSTRUCTIONS.get(type).newInstance(parent, name);
+		} catch (Exception ex) {
+			return null;
+		}
 	}
 }

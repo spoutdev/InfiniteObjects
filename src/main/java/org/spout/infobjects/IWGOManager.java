@@ -38,6 +38,7 @@ import org.spout.api.exception.ConfigurationException;
 import org.spout.api.util.config.Configuration;
 import org.spout.api.util.config.ConfigurationNode;
 import org.spout.api.util.config.yaml.YamlConfiguration;
+import org.spout.infobjects.instruction.Instruction;
 
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.util.IWGOUtils;
@@ -91,6 +92,8 @@ public class IWGOManager {
 		final IWGO iwgo = new IWGO(config.getNode("name").getString());
 		loadVariables(iwgo, config.getNode("variables"));
 		loadMaterialPickers(iwgo, config.getNode("materials"));
+		loadInstructions(iwgo, config.getNode("instructions"));
+		iwgo.randomize();
 		return iwgo;
 	}
 
@@ -103,9 +106,24 @@ public class IWGOManager {
 	private void loadMaterialPickers(IWGO iwgo, ConfigurationNode materialsNode) {
 		for (String key : materialsNode.getKeys(false)) {
 			final ConfigurationNode pickerNode = materialsNode.getNode(key);
-			final MaterialPicker picker = MaterialPicker.newPicker(pickerNode.getNode("type").getString(), key);
-			picker.configure(IWGOUtils.toStringMap(pickerNode.getNode("properties")));
-			iwgo.addMaterialPicker(picker);
+			final MaterialPicker picker =
+					MaterialPicker.newPicker(pickerNode.getNode("type").getString(), key);
+			if (picker != null) {
+				picker.configure(IWGOUtils.toStringMap(pickerNode.getNode("properties")));
+				iwgo.addMaterialPicker(picker);
+			}
+		}
+	}
+
+	private void loadInstructions(IWGO iwgo, ConfigurationNode instructionsNode) {
+		for (String key : instructionsNode.getKeys(false)) {
+			final ConfigurationNode instructionNode = instructionsNode.getNode(key);
+			final Instruction instruction =
+					Instruction.newInstruction(instructionNode.getNode("type").getString(), iwgo, key);
+			if (instruction != null) {
+				loadVariables(instruction, instructionNode.getNode("variables"));
+				iwgo.addInstruction(instruction);
+			}
 		}
 	}
 }

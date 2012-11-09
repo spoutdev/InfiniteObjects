@@ -27,7 +27,6 @@
 package org.spout.infobjects.value;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import de.congrace.exp4j.constant.Constants;
 import de.congrace.exp4j.function.Functions;
@@ -43,15 +42,14 @@ public class ValueParser {
 			return new RandomIntValue(expression);
 		} else if (expression.matches(RANDOM_DOUBLE_VALUE_REGEX)) {
 			return new RandomDoubleValue(expression);
-		} else if (expression.matches(RANDOM_MATH_EXP_VALUE_REGEX)) {
-			if (hasVariable(expression)) {
-				try {
-					return new VariableMathExpressionValue(expression);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-					return null;
-				}
+		} else if (hasVariable(expression)) {
+			try {
+				return new VariableMathExpressionValue(expression);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
 			}
+		} else if (expression.matches(RANDOM_MATH_EXP_VALUE_REGEX)) {
 			try {
 				return new MathExpressionValue(expression);
 			} catch (Exception ex) {
@@ -60,14 +58,10 @@ public class ValueParser {
 			}
 		}
 		try {
-			return new DoubleValue(Double.parseDouble(expression));
-		} catch (NumberFormatException nfe) {
-			try {
-				return new DoubleValue(expression);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
-			}
+			return new DoubleValue(expression);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
 		}
 	}
 

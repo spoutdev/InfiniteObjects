@@ -28,13 +28,14 @@ package org.spout.infobjects.instruction;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.spout.infobjects.IWGO;
 import org.spout.infobjects.shape.Shape;
 
 public class PlaceInstruction extends Instruction {
 	private final List<Shape> shapes = new ArrayList<Shape>();
 
-	public PlaceInstruction(String name) {
-		super(name);
+	public PlaceInstruction(IWGO parent, String name) {
+		super(parent, name);
 	}
 
 	public void addShape(Shape shape) {

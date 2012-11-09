@@ -37,4 +37,6 @@ public interface VariableSource {
 	public Map<String, Variable> getVariableMap();
 
 	public void addVariable(Variable variable);
+
+	public boolean hasVariable(String name);
 }

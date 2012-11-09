@@ -103,7 +103,7 @@ public class ValueParserTest {
 
 		final VariableMathExpressionValue mathVarExpValue = (VariableMathExpressionValue) ValueParser.parse(VARIABLE_MATH_EXP_VALUE);
 		final SimpleVariableSource source = new SimpleVariableSource(new Variable("double", doubleValue));
-		mathVarExpValue.setVariableSource(source);
+		mathVarExpValue.addVariableSources(source);
 		mathVarExpValue.setRandom(VALUE_RANDOM);
 		mathVarExpValue.calculate();
 		Assert.assertEquals(mathVarExpValue.getValue(), EXPECTED_VARIABLE_MATH_EXP, 0);

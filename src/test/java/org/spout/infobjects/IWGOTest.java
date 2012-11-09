@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.spout.api.material.BlockMaterial;
+import org.spout.infobjects.instruction.Instruction;
 
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.variable.Variable;
@@ -50,7 +51,6 @@ public class IWGOTest {
 		final IWGOManager manager = new IWGOManager(new File("src/test/resources"));
 		manager.loadIWGOs();
 		final IWGO iwgo = manager.getIWGO("test-tree");
-		iwgo.randomize();
 
 		for (Variable variable : iwgo.getVariables()) {
 			System.out.println(variable.getName() + ": " + variable.getValue());
@@ -59,6 +59,15 @@ public class IWGOTest {
 		for (MaterialPicker picker : iwgo.getMaterialPickers()) {
 			System.out.println(picker.getName() + ": " + picker);
 		}
+		
+		for (Instruction instruction : iwgo.getInstructions()) {
+			System.out.println(instruction.getName());
+			for (Variable variable : instruction.getVariables()) {
+				System.out.println("\t" + variable.getName() + ": " + variable.getValue());
+			}
+		}
+		
+		System.out.println();
 	}
 
 	private void initTestMaterials() throws Exception {

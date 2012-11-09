@@ -39,7 +39,9 @@ import org.spout.api.material.BlockMaterial;
 import org.spout.api.math.IntVector3;
 import org.spout.api.util.Named;
 
+import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.material.MaterialPicker;
+import org.spout.infobjects.util.IWGOUtils;
 import org.spout.infobjects.value.CalculableValue;
 import org.spout.infobjects.value.Value;
 import org.spout.infobjects.value.VariableMathExpressionValue;
@@ -52,6 +54,7 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 	private final IntVector3 position = new IntVector3(0, 0, 0);
 	private final Map<String, Variable> variables = new LinkedHashMap<String, Variable>();
 	private final Map<String, MaterialPicker> pickers = new HashMap<String, MaterialPicker>();
+	private final Map<String, Instruction> instructions = new HashMap<String, Instruction>();
 
 	public IWGO(String name) {
 		this.name = name;
@@ -79,18 +82,13 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 
 	public void randomize() {
 		calculateVariables();
+		for (Instruction instruction : instructions.values()) {
+			instruction.calculateVariables();
+		}
 	}
 
 	private void calculateVariables() {
-		for (Variable variable : variables.values()) {
-			final Value value = variable.getRawValue();
-			if (value instanceof VariableMathExpressionValue) {
-				((VariableMathExpressionValue) value).setVariableSource(this);
-			}
-			if (value instanceof CalculableValue) {
-				((CalculableValue) value).calculate();
-			}
-		}
+		IWGOUtils.calculateVariables(variables.values());
 	}
 
 	public void setMaterial(int xx, int yy, int zz, BlockMaterial material) {
@@ -98,6 +96,7 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 	}
 
 	public void setMaterial(int xx, int yy, int zz, BlockMaterial material, short data) {
+		world.getBlock(transform(xx, yy, zz)).setMaterial(material, data);
 	}
 
 	private Point transform(int xx, int yy, int zz) {
@@ -106,6 +105,10 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 
 	@Override
 	public void addVariable(Variable variable) {
+		final Value value = variable.getRawValue();
+		if (value instanceof VariableMathExpressionValue) {
+			((VariableMathExpressionValue) value).addVariableSources(this);
+		}
 		variables.put(variable.getName(), variable);
 	}
 
@@ -124,6 +127,11 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 		return Collections.unmodifiableMap(variables);
 	}
 
+	@Override
+	public boolean hasVariable(String name) {
+		return variables.containsKey(name);
+	}
+
 	public void addMaterialPicker(MaterialPicker picker) {
 		pickers.put(picker.getName(), picker);
 	}
@@ -134,5 +142,17 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 
 	public Map<String, MaterialPicker> getMaterialPickerMap() {
 		return Collections.unmodifiableMap(pickers);
+	}
+
+	public void addInstruction(Instruction instruction) {
+		instructions.put(instruction.getName(), instruction);
+	}
+
+	public Collection<Instruction> getInstructions() {
+		return instructions.values();
+	}
+
+	public Map<String, Instruction> getInstructionMap() {
+		return Collections.unmodifiableMap(instructions);
 	}
 }

@@ -27,7 +27,10 @@
 package org.spout.infobjects.value;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,7 +45,7 @@ import org.spout.infobjects.variable.VariableSource;
 
 public class VariableMathExpressionValue extends MathExpressionValue {
 	protected static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zA-Z_]\\w*");
-	private VariableSource variableSource;
+	private final Set<VariableSource> variableSources = new HashSet<VariableSource>();
 
 	public VariableMathExpressionValue(Calculable value) {
 		super(value);
@@ -60,17 +63,22 @@ public class VariableMathExpressionValue extends MathExpressionValue {
 
 	@Override
 	public void calculate() {
-		if (variableSource == null) {
-			throw new IllegalStateException("No variable source set");
+		if (variableSources.isEmpty()) {
+			throw new IllegalStateException("No variable sources");
 		}
 		for (String variableName : calculable.getVariableNames()) {
-			calculable.setVariable(variableName, variableSource.getVariable(variableName).getValue());
+			for (VariableSource source : variableSources) {
+				if (source.hasVariable(variableName)) {
+					calculable.setVariable(variableName, source.getVariable(variableName).getValue());
+					break;
+				}
+			}
 		}
 		super.calculate();
 	}
 
-	public void setVariableSource(VariableSource source) {
-		this.variableSource = source;
+	public void addVariableSources(VariableSource... sources) {
+		variableSources.addAll(Arrays.asList(sources));
 	}
 
 	private static List<String> findVariables(String expression) {
