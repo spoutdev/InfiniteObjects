@@ -96,8 +96,8 @@ public class IWGOTest {
 
 	private void initTestMaterials() throws Exception {
 		final String[] testMaterials = new String[]{
-			"log",
-			"leaf"
+			"Leaves",
+			"Wood"
 		};
 		final Constructor constructor = TestMaterial.class.getDeclaredConstructor(String.class);
 		constructor.setAccessible(true);
