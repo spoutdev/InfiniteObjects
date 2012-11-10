@@ -1,0 +1,10 @@
+name: InfObjects
+version: ${releaseVersion} b${buildNumber}
+
+description: User defined WGOs
+author: SpoutDev
+website: http://www.spout.org
+
+main: org.spout.infobjects.InfObjectsPlugin
+platform: BOTH
+reload: true

@@ -36,8 +36,10 @@ import org.spout.api.material.BlockMaterial;
 
 import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.instruction.PlaceInstruction;
+import org.spout.infobjects.instruction.RepeatInstruction;
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.shape.Shape;
+import org.spout.infobjects.value.IncrementableValue;
 import org.spout.infobjects.variable.Variable;
 
 public class IWGOTest {
@@ -50,9 +52,9 @@ public class IWGOTest {
 
 	@Test
 	public void test() {
-		final IWGOManager manager = new IWGOManager(new File("src/test/resources"));
+		final IWGOManager manager = new IWGOManager(new File("src/test/resources"), false);
 		manager.loadIWGOs();
-		final IWGO iwgo = manager.getIWGO("test-tree");
+		final IWGO iwgo = manager.getIWGO("tree");
 
 		System.out.println("Variables:");
 		for (Variable variable : iwgo.getVariables()) {
@@ -68,15 +70,23 @@ public class IWGOTest {
 
 		System.out.println("Instructions:");
 		for (Instruction instruction : iwgo.getInstructions()) {
-			System.out.println("\tName:" + instruction.getName());
+			System.out.println("\tName: " + instruction.getName());
 			System.out.println("\tVariables:");
 			for (Variable variable : instruction.getVariables()) {
-				System.out.println("\t\t" + variable.getName() + ": " + variable.getValue());
+				System.out.println("\t\t" + variable);
 			}
 			if (instruction instanceof PlaceInstruction) {
 				System.out.println("\tShapes:");
 				for (Shape shape : ((PlaceInstruction) instruction).getShapes()) {
 					System.out.println("\t\t" + shape);
+				}
+			} else if (instruction instanceof RepeatInstruction) {
+				final RepeatInstruction repeat = (RepeatInstruction) instruction;
+				System.out.println("\tRepeat: " + repeat.getRepeat());
+				System.out.println("\tTimes: " + repeat.getTimes());
+				System.out.println("\tIncrements:");
+				for (IncrementableValue incrementable : repeat.getIncrementables()) {
+					System.out.println("\t\t" + incrementable);
 				}
 			}
 			System.out.println();

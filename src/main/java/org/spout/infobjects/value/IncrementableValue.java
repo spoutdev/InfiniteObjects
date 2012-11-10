@@ -24,42 +24,40 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects;
+package org.spout.infobjects.value;
 
-import org.powermock.api.mockito.PowerMockito;
+public class IncrementableValue implements Value {
+	private final Value value;
+	private final Value increment;
+	private double totalIncrement;
 
-import org.spout.api.Engine;
-import org.spout.api.FileSystem;
-import org.spout.api.Spout;
-import org.spout.api.plugin.Platform;
-
-public class EngineFaker {
-	private static final Engine ENGINE;
-
-	static {
-		Engine engine = PowerMockito.mock(Engine.class);
-		FileSystem filesystem = PowerMockito.mock(FileSystem.class);
-		try {
-			PowerMockito.when(engine, Engine.class.getMethod("getPlatform", (Class[]) null)).
-					withNoArguments().thenReturn(Platform.SERVER);
-			PowerMockito.stub(Engine.class.getMethod("getFilesystem", (Class[]) null)).
-					toReturn(filesystem);
-			PowerMockito.stub(FileSystem.class.getMethod("getResource", new Class[]{String.class})).
-					toReturn(null);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		if (engine == null) {
-			throw new NullPointerException("Engine is null");
-		}
-		if (engine.getPlatform() == null) {
-			throw new NullPointerException("Platform is null");
-		}
-		Spout.setEngine(engine);
-		ENGINE = engine;
+	public IncrementableValue(Value value, Value increment) {
+		this.value = value;
+		this.increment = increment;
 	}
 
-	public static Engine setupEngine() {
-		return ENGINE;
+	@Override
+	public void calculate() {
+		value.calculate();
+	}
+
+	@Override
+	public double getValue() {
+		return value.getValue() + totalIncrement;
+	}
+
+	public void increment() {
+		increment.calculate();
+		totalIncrement += increment.getValue();
+	}
+
+	public void reset() {
+		totalIncrement = 0;
+	}
+
+	@Override
+	public String toString() {
+		return "IncrementableValue{value=" + value + ", increment=" + increment
+				+ ", totalIncrement=" + totalIncrement + '}';
 	}
 }

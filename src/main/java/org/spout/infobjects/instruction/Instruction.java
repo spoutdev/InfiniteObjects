@@ -27,19 +27,17 @@
 package org.spout.infobjects.instruction;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.spout.infobjects.IWGO;
-import org.spout.infobjects.util.IWGOUtils;
 import org.spout.infobjects.util.TypeFactory;
 import org.spout.infobjects.variable.Variable;
 import org.spout.infobjects.variable.VariableSource;
 
-public class Instruction implements VariableSource {
+public abstract class Instruction implements VariableSource {
 	private static final TypeFactory<Instruction> INSTRUCTIONS = new TypeFactory<Instruction>(IWGO.class, String.class);
-	private final IWGO parent;
+	private final IWGO iwgo;
 	private final String name;
 	private final Map<String, Variable> variables = new LinkedHashMap<String, Variable>();
 
@@ -48,19 +46,21 @@ public class Instruction implements VariableSource {
 		register("repeat", RepeatInstruction.class);
 	}
 
-	public Instruction(IWGO parent, String name) {
-		this.parent = parent;
+	public Instruction(IWGO iwgo, String name) {
+		this.iwgo = iwgo;
 		this.name = name;
 	}
 
-	public IWGO getParent() {
-		return parent;
+	public IWGO getIWGO() {
+		return iwgo;
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	public abstract void execute();
+	
 	public void randomize() {
 		for (Variable variable : variables.values()) {
 			variable.calculate();
@@ -79,7 +79,7 @@ public class Instruction implements VariableSource {
 
 	@Override
 	public Map<String, Variable> getVariableMap() {
-		return Collections.unmodifiableMap(variables);
+		return variables;
 	}
 
 	@Override
@@ -96,8 +96,8 @@ public class Instruction implements VariableSource {
 		INSTRUCTIONS.register(type, instruction);
 	}
 
-	public static Instruction newInstruction(String type, IWGO parent, String name) {
-		return INSTRUCTIONS.newInstance(type, parent, name);
+	public static Instruction newInstruction(String type, IWGO iwgo, String name) {
+		return INSTRUCTIONS.newInstance(type, iwgo, name);
 
 	}
 }

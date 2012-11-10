@@ -27,7 +27,6 @@
 package org.spout.infobjects.instruction;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.spout.infobjects.IWGO;
@@ -36,8 +35,8 @@ import org.spout.infobjects.shape.Shape;
 public class PlaceInstruction extends Instruction {
 	private final List<Shape> shapes = new ArrayList<Shape>();
 
-	public PlaceInstruction(IWGO parent, String name) {
-		super(parent, name);
+	public PlaceInstruction(IWGO iwgo, String name) {
+		super(iwgo, name);
 	}
 
 	public void addShape(Shape shape) {
@@ -45,7 +44,7 @@ public class PlaceInstruction extends Instruction {
 	}
 
 	public List<Shape> getShapes() {
-		return Collections.unmodifiableList(shapes);
+		return shapes;
 	}
 
 	@Override
@@ -54,5 +53,17 @@ public class PlaceInstruction extends Instruction {
 		for (Shape shape : shapes) {
 			shape.randomize();
 		}
+	}
+
+	@Override
+	public void execute() {
+		for (Shape shape : shapes) {
+			shape.draw();
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "PlaceInstruction{shapes=" + shapes + '}';
 	}
 }

@@ -1,42 +1,28 @@
-name: test-tree
+name: tree
 
 variables:
-  height: ranI=20-30
-  minLeafHeight: ranI=10-15
+  height: ranI=25-30
+  minLeafHeight: ranI=7-10
   
 materials:
   leaves:
     type: simple
     properties:
-      material: leaf
+      material: Leaves
       data: 3
   wood:
     type: simple
     properties:
-      material: log
+      material: Wood
       data: 3
   
 instructions:
-  trunk:
-    type: place
-    shapes:
-      trunk:
-        type: cuboid
-        properties:
-          width: 2
-          height: height
-          depth: 2
-        position:
-          x: 0
-          y: 0
-          z: 0
-        material: wood
   leafPod:
     type: place
     variables:
       angle: ranF(0, 2) * PI
-      offsetX: sin(angle) * 4
-      offsetZ: cos(angle) * 4
+      offsetX: sin(angle) * 6
+      offsetZ: cos(angle) * 6
     shapes:
       leafPod:
         type: sphere
@@ -64,7 +50,33 @@ instructions:
         material: wood
   leafPods:
     type: repeat
-    name: leafPod
-    times: ranI=1-3
+    repeat: leafPod
+    times: ranI=5-8
     increment:
       minLeafHeight: ranI=1-3
+  main:
+    type: place
+    shapes:
+      canopy:
+        type: sphere
+        properties:
+          size:
+            x: ranI=5-6
+            y: ranI=1-2
+            z: ranI=5-6
+        position:
+          x: 0
+          y: height + 1
+          z: 0
+        material: leaves
+      trunk:
+        type: cuboid
+        properties:
+          width: 2
+          height: height
+          depth: 2
+        position:
+          x: 0
+          y: 0
+          z: 0
+        material: wood

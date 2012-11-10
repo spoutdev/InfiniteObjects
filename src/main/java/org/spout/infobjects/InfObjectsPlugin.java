@@ -26,40 +26,36 @@
  */
 package org.spout.infobjects;
 
-import org.powermock.api.mockito.PowerMockito;
+import org.spout.api.command.CommandRegistrationsFactory;
+import org.spout.api.command.annotated.AnnotatedCommandRegistrationFactory;
+import org.spout.api.command.annotated.SimpleAnnotatedCommandExecutorFactory;
+import org.spout.api.command.annotated.SimpleInjector;
+import org.spout.api.plugin.CommonPlugin;
 
-import org.spout.api.Engine;
-import org.spout.api.FileSystem;
-import org.spout.api.Spout;
-import org.spout.api.plugin.Platform;
+public class InfObjectsPlugin extends CommonPlugin {
+	private static final IWGOManager MANAGER = new IWGOManager("plugins/InfObjects/IWGOs", true);
 
-public class EngineFaker {
-	private static final Engine ENGINE;
-
-	static {
-		Engine engine = PowerMockito.mock(Engine.class);
-		FileSystem filesystem = PowerMockito.mock(FileSystem.class);
+	@Override
+	public void onEnable() {
 		try {
-			PowerMockito.when(engine, Engine.class.getMethod("getPlatform", (Class[]) null)).
-					withNoArguments().thenReturn(Platform.SERVER);
-			PowerMockito.stub(Engine.class.getMethod("getFilesystem", (Class[]) null)).
-					toReturn(filesystem);
-			PowerMockito.stub(FileSystem.class.getMethod("getResource", new Class[]{String.class})).
-					toReturn(null);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+			Class.forName("org.spout.infobjects.function.RandomFunction");
+		} catch (ClassNotFoundException ex) {
+			getLogger().warning("Class \"org.spout.infobjects.function.RandomFunction\""
+					+ " couldn't be found. IWGO loading may fail");
 		}
-		if (engine == null) {
-			throw new NullPointerException("Engine is null");
-		}
-		if (engine.getPlatform() == null) {
-			throw new NullPointerException("Platform is null");
-		}
-		Spout.setEngine(engine);
-		ENGINE = engine;
+		final CommandRegistrationsFactory<Class<?>> commandRegFactory =
+				new AnnotatedCommandRegistrationFactory(new SimpleInjector(this), new SimpleAnnotatedCommandExecutorFactory());
+		getEngine().getRootCommand().addSubCommands(this, IWGOCommands.class, commandRegFactory);
+		MANAGER.loadIWGOs();
+		getLogger().info("v" + getDescription().getVersion() + " enabled.");
 	}
 
-	public static Engine setupEngine() {
-		return ENGINE;
+	@Override
+	public void onDisable() {
+		getLogger().info("disabled");
+	}
+
+	public static IWGOManager getIWGOManager() {
+		return MANAGER;
 	}
 }

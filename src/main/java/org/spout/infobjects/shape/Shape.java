@@ -35,7 +35,7 @@ import org.spout.infobjects.value.Value;
 
 public abstract class Shape {
 	private static final TypeFactory<Shape> SHAPES = new TypeFactory<Shape>(IWGO.class);
-	protected final IWGO parent;
+	protected final IWGO iwgo;
 	protected Value x;
 	protected Value y;
 	protected Value z;
@@ -47,8 +47,12 @@ public abstract class Shape {
 		register("sphere", Sphere.class);
 	}
 
-	public Shape(IWGO parent) {
-		this.parent = parent;
+	public Shape(IWGO iwgo) {
+		this.iwgo = iwgo;
+	}
+
+	public IWGO getIWGO() {
+		return iwgo;
 	}
 
 	public MaterialPicker getMaterialPicker() {
@@ -109,7 +113,7 @@ public abstract class Shape {
 		SHAPES.register(type, shape);
 	}
 
-	public static Shape newShape(String type, IWGO parent) {
-		return SHAPES.newInstance(type, parent);
+	public static Shape newShape(String type, IWGO iwgo) {
+		return SHAPES.newInstance(type, iwgo);
 	}
 }

@@ -27,7 +27,6 @@
 package org.spout.infobjects;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -50,15 +49,10 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 	private final IntVector3 position = new IntVector3(0, 0, 0);
 	private final Map<String, Variable> variables = new LinkedHashMap<String, Variable>();
 	private final Map<String, MaterialPicker> pickers = new HashMap<String, MaterialPicker>();
-	private final Map<String, Instruction> instructions = new HashMap<String, Instruction>();
+	private final Map<String, Instruction> instructions = new LinkedHashMap<String, Instruction>();
 
 	public IWGO(String name) {
 		this.name = name;
-	}
-
-	public void setPosition(Point position) {
-		world = position.getWorld();
-		this.position.set(position.getBlockX(), position.getBlockY(), position.getBlockZ());
 	}
 
 	@Override
@@ -68,12 +62,20 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 
 	@Override
 	public boolean canPlaceObject(World w, int x, int y, int z) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		return true;
 	}
 
 	@Override
 	public void placeObject(World w, int x, int y, int z) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		world = w;
+		position.set(x, y, z);
+		for (Instruction instruction : instructions.values()) {
+			instruction.execute();
+		}
+	}
+
+	public World getWorld() {
+		return world;
 	}
 
 	public void randomize() {
@@ -93,7 +95,7 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 		world.getBlock(transform(xx, yy, zz)).setMaterial(material, data);
 	}
 
-	private Point transform(int xx, int yy, int zz) {
+	public Point transform(int xx, int yy, int zz) {
 		return new Point(world, position.getX() + xx, position.getY() + yy, position.getZ() + zz);
 	}
 
@@ -114,7 +116,7 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 
 	@Override
 	public Map<String, Variable> getVariableMap() {
-		return Collections.unmodifiableMap(variables);
+		return variables;
 	}
 
 	@Override
@@ -135,11 +137,15 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 	}
 
 	public Map<String, MaterialPicker> getMaterialPickerMap() {
-		return Collections.unmodifiableMap(pickers);
+		return pickers;
 	}
 
 	public void addInstruction(Instruction instruction) {
 		instructions.put(instruction.getName(), instruction);
+	}
+
+	public Instruction getInstruction(String name) {
+		return instructions.get(name);
 	}
 
 	public Collection<Instruction> getInstructions() {
@@ -147,6 +153,6 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 	}
 
 	public Map<String, Instruction> getInstructionMap() {
-		return Collections.unmodifiableMap(instructions);
+		return instructions;
 	}
 }

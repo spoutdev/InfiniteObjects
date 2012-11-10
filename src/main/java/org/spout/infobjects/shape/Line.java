@@ -27,6 +27,8 @@
 package org.spout.infobjects.shape;
 
 import java.util.Map;
+import org.spout.api.geo.discrete.Point;
+import org.spout.api.util.BlockIterator;
 
 import org.spout.infobjects.IWGO;
 import org.spout.infobjects.value.Value;
@@ -36,8 +38,8 @@ public class Line extends Shape {
 	private Value lengthY;
 	private Value lengthZ;
 
-	public Line(IWGO parent) {
-		super(parent);
+	public Line(IWGO iwgo) {
+		super(iwgo);
 	}
 
 	@Override
@@ -49,6 +51,11 @@ public class Line extends Shape {
 
 	@Override
 	public void draw() {
+		final Point start = iwgo.transform((int) x.getValue(), (int) y.getValue(), (int) z.getValue());
+		final BlockIterator line = new BlockIterator(start, start.add(lengthX.getValue(), lengthY.getValue(), lengthZ.getValue()));
+		while (line.hasNext()) {
+			line.next().setMaterial(picker.pickMaterial(true));
+		}
 	}
 
 	@Override
@@ -61,7 +68,7 @@ public class Line extends Shape {
 
 	@Override
 	public String toString() {
-		return "Line{x=" + x + ", y=" + y + ", z=" + z + ", picker=" + picker + ", length="
-				+ lengthX + ", height=" + lengthY + ", depth=" + lengthZ + '}';
+		return "Line{x=" + x + ", y=" + y + ", z=" + z + ", picker=" + picker + ", lengthX="
+				+ lengthX + ", lengthY=" + lengthY + ", lengthZ=" + lengthZ + '}';
 	}
 }

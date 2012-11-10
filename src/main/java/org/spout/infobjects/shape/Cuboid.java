@@ -36,8 +36,8 @@ public class Cuboid extends Shape {
 	private Value height;
 	private Value depth;
 
-	public Cuboid(IWGO parent) {
-		super(parent);
+	public Cuboid(IWGO iwgo) {
+		super(iwgo);
 	}
 
 	@Override
@@ -49,6 +49,21 @@ public class Cuboid extends Shape {
 
 	@Override
 	public void draw() {
+		final int px = (int) x.getValue();
+		final int py = (int) y.getValue();
+		final int pz = (int) z.getValue();
+		final int sizeX = (int) length.getValue();
+		final int sizeY = (int) height.getValue();
+		final int sizeZ = (int) depth.getValue();
+		for (int xx = 0; xx < sizeX; xx++) {
+			for (int yy = 0; yy < sizeY; yy++) {
+				for (int zz = 0; zz < sizeZ; zz++) {
+					iwgo.setMaterial(px + xx, py + yy, pz + zz,
+							picker.pickMaterial(xx == 0 || yy == 0 || zz == 0
+							|| xx == sizeX || yy == sizeY || zz == sizeZ));
+				}
+			}
+		}
 	}
 
 	@Override

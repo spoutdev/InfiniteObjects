@@ -36,8 +36,8 @@ public class Sphere extends Shape {
 	private Value radiusY;
 	private Value radiusZ;
 
-	public Sphere(IWGO parent) {
-		super(parent);
+	public Sphere(IWGO iwgo) {
+		super(iwgo);
 	}
 
 	@Override
@@ -49,9 +49,9 @@ public class Sphere extends Shape {
 
 	@Override
 	public void draw() {
-		final int px = (int) this.x.getValue();
-		final int py = (int) this.y.getValue();
-		final int pz = (int) this.z.getValue();
+		final int px = (int) x.getValue();
+		final int py = (int) y.getValue();
+		final int pz = (int) z.getValue();
 		final double rx = radiusX.getValue() + 0.5;
 		final double ry = radiusY.getValue() + 0.5;
 		final double rz = radiusZ.getValue() + 0.5;
@@ -85,17 +85,17 @@ public class Sphere extends Shape {
 						}
 						break forZ;
 					}
-					boolean outer = lengthSq(nextXn, yn, zn) > 1
+					final boolean outer = lengthSq(nextXn, yn, zn) > 1
 							|| lengthSq(xn, nextYn, zn) > 1
 							|| lengthSq(xn, yn, nextZn) > 1;
-					parent.setMaterial(px + xx, py + yy, pz + zz, picker.pickMaterial(outer));
-					parent.setMaterial(px - xx, py + yy, pz + zz, picker.pickMaterial(outer));
-					parent.setMaterial(px + xx, py - yy, pz + zz, picker.pickMaterial(outer));
-					parent.setMaterial(px + xx, py + yy, pz - zz, picker.pickMaterial(outer));
-					parent.setMaterial(px - xx, py - yy, pz + zz, picker.pickMaterial(outer));
-					parent.setMaterial(px + xx, py - yy, pz - zz, picker.pickMaterial(outer));
-					parent.setMaterial(px - xx, py + yy, pz - zz, picker.pickMaterial(outer));
-					parent.setMaterial(px - xx, py - yy, pz - zz, picker.pickMaterial(outer));
+					iwgo.setMaterial(px + xx, py + yy, pz + zz, picker.pickMaterial(outer));
+					iwgo.setMaterial(px - xx, py + yy, pz + zz, picker.pickMaterial(outer));
+					iwgo.setMaterial(px + xx, py - yy, pz + zz, picker.pickMaterial(outer));
+					iwgo.setMaterial(px + xx, py + yy, pz - zz, picker.pickMaterial(outer));
+					iwgo.setMaterial(px - xx, py - yy, pz + zz, picker.pickMaterial(outer));
+					iwgo.setMaterial(px + xx, py - yy, pz - zz, picker.pickMaterial(outer));
+					iwgo.setMaterial(px - xx, py + yy, pz - zz, picker.pickMaterial(outer));
+					iwgo.setMaterial(px - xx, py - yy, pz - zz, picker.pickMaterial(outer));
 				}
 			}
 		}
@@ -111,8 +111,8 @@ public class Sphere extends Shape {
 
 	@Override
 	public String toString() {
-		return "Sphere{x=" + x + ", y=" + y + ", z=" + z + ", picker=" + picker + ", length="
-				+ radiusZ + ", height=" + radiusY + ", depth=" + radiusZ + '}';
+		return "Sphere{x=" + x + ", y=" + y + ", z=" + z + ", picker=" + picker + ", radiusX="
+				+ radiusX + ", radiusY=" + radiusY + ", radiusZ=" + radiusZ + '}';
 	}
 
 	private static double lengthSq(double x, double y, double z) {

@@ -27,7 +27,6 @@
 package org.spout.infobjects.variable;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -71,7 +70,7 @@ public class SimpleVariableSource implements VariableSource {
 
 	@Override
 	public Map<String, Variable> getVariableMap() {
-		return Collections.unmodifiableMap(variables);
+		return variables;
 	}
 
 	@Override

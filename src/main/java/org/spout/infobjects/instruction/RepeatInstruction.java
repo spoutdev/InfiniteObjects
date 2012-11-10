@@ -26,10 +26,72 @@
  */
 package org.spout.infobjects.instruction;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.value.IncrementableValue;
+import org.spout.infobjects.value.Value;
+import org.spout.infobjects.variable.Variable;
 
 public class RepeatInstruction extends Instruction {
-	public RepeatInstruction(IWGO parent, String name) {
-		super(parent, name);
+	private Instruction repeat;
+	private Value times;
+	private final Set<IncrementableValue> incrementables = new HashSet<IncrementableValue>();
+
+	public RepeatInstruction(IWGO iwgo, String name) {
+		super(iwgo, name);
+	}
+
+	public void setRepeat(Instruction repeat) {
+		this.repeat = repeat;
+	}
+
+	public void setTimes(Value times) {
+		this.times = times;
+	}
+
+	public Instruction getRepeat() {
+		return repeat;
+	}
+
+	public Value getTimes() {
+		return times;
+	}
+
+	public void addIncrementableValue(String name, IncrementableValue value) {
+		getIWGO().addVariable(new Variable(name, value));
+		incrementables.add(value);
+	}
+
+	public Collection<IncrementableValue> getIncrementables() {
+		return incrementables;
+	}
+
+	@Override
+	public void randomize() {
+		super.randomize();
+		times.calculate();
+	}
+
+	@Override
+	public void execute() {
+		for (int i = (int) times.getValue(); i >= 0; i--) {
+			repeat.execute();
+			for (IncrementableValue increment : incrementables) {
+				increment.increment();
+			}
+			repeat.randomize();
+		}
+		for (IncrementableValue increment : incrementables) {
+			increment.reset();
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "RepeatInstruction{repeat=" + repeat + ", times=" + times + ", incrementables="
+				+ incrementables + '}';
 	}
 }

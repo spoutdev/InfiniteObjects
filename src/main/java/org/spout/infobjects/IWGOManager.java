@@ -41,9 +41,11 @@ import org.spout.api.util.config.yaml.YamlConfiguration;
 
 import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.instruction.PlaceInstruction;
+import org.spout.infobjects.instruction.RepeatInstruction;
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.shape.Shape;
 import org.spout.infobjects.util.IWGOUtils;
+import org.spout.infobjects.value.IncrementableValue;
 import org.spout.infobjects.variable.Variable;
 import org.spout.infobjects.value.ValueParser;
 import org.spout.infobjects.variable.VariableSource;
@@ -52,9 +54,17 @@ public class IWGOManager {
 	private final File folder;
 	private final Map<String, IWGO> iwgos = new HashMap<String, IWGO>();
 
-	public IWGOManager(File folder) {
+	public IWGOManager(String folderDir, boolean create) {
+		this(new File(folderDir), create);
+	}
+
+	public IWGOManager(File folder, boolean create) {
 		if (!folder.exists()) {
-			throw new IllegalArgumentException("Folder does not exist.");
+			if (create) {
+				folder.mkdirs();
+			} else {
+				throw new IllegalArgumentException("Folder does not exist.");
+			}
 		}
 		if (!folder.isDirectory()) {
 			throw new IllegalArgumentException("Folder is not a directory.");
@@ -83,7 +93,7 @@ public class IWGOManager {
 	}
 
 	public Collection<IWGO> getIWGOs() {
-		return iwgos.values();
+		return Collections.unmodifiableCollection(iwgos.values());
 	}
 
 	public Map<String, IWGO> getIWGOMap() {
@@ -126,15 +136,18 @@ public class IWGOManager {
 			if (instruction != null) {
 				loadVariables(instruction, instructionNode.getNode("variables"), iwgo, instruction);
 				if (instruction instanceof PlaceInstruction) {
-					loadShapes((PlaceInstruction) instruction, instructionNode.getNode("shapes"));
+					loadPlaceInstruction((PlaceInstruction) instruction, instructionNode);
+				} else if (instruction instanceof RepeatInstruction) {
+					loadRepeatInstruction((RepeatInstruction) instruction, instructionNode);
 				}
 				iwgo.addInstruction(instruction);
 			}
 		}
 	}
 
-	private static void loadShapes(PlaceInstruction instruction, ConfigurationNode shapesNode) {
-		final IWGO iwgo = instruction.getParent();
+	private static void loadPlaceInstruction(PlaceInstruction instruction, ConfigurationNode instructionNode) {
+		final IWGO iwgo = instruction.getIWGO();
+		ConfigurationNode shapesNode = instructionNode.getNode("shapes");
 		for (String key : shapesNode.getKeys(false)) {
 			final ConfigurationNode shapeNode = shapesNode.getNode(key);
 			final Shape shape = Shape.newShape(shapeNode.getNode("type").getString(), iwgo);
@@ -144,6 +157,17 @@ public class IWGOManager {
 				shape.setMaterialPicker(iwgo.getMaterialPicker(shapeNode.getNode("material").getString()));
 				instruction.addShape(shape);
 			}
+		}
+	}
+
+	private static void loadRepeatInstruction(RepeatInstruction instruction, ConfigurationNode repeatNode) {
+		final IWGO iwgo = instruction.getIWGO();
+		instruction.setRepeat(iwgo.getInstruction(repeatNode.getNode("repeat").getString()));
+		instruction.setTimes(ValueParser.parse(repeatNode.getNode("times").getString(), iwgo, instruction));
+		final ConfigurationNode incrementNode = repeatNode.getNode("increment");
+		for (String key : incrementNode.getKeys(false)) {
+			instruction.addIncrementableValue(key, new IncrementableValue(iwgo.getVariable(key).getRawValue(),
+					ValueParser.parse(incrementNode.getNode(key).getString(), iwgo, instruction)));
 		}
 	}
 }
