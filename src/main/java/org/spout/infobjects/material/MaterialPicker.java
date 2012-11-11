@@ -52,7 +52,7 @@ public abstract class MaterialPicker implements Named {
 	public abstract void configure(Map<String, String> properties);
 
 	public void setMaterial(Point pos, boolean outer) {
-		setMaterial(pos.getWorld(), pos.getBlockX(), pos.getBlockY(), pos.getBlockY(), outer);
+		setMaterial(pos.getWorld(), pos.getBlockX(), pos.getBlockY(), pos.getBlockZ(), outer);
 	}
 
 	public abstract void setMaterial(World world, int x, int y, int z, boolean outer);
