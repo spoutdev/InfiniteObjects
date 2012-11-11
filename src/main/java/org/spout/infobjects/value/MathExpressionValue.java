@@ -35,8 +35,9 @@ import de.congrace.exp4j.expression.ExpressionBuilder;
 
 import org.spout.infobjects.function.RandomDoubleFunction;
 import org.spout.infobjects.function.RandomIntFunction;
+import org.spout.infobjects.util.RandomOwner;
 
-public class MathExpressionValue implements Value {
+public class MathExpressionValue implements Value, RandomOwner {
 	private final RandomIntFunction randomIntFunction = new RandomIntFunction();
 	private final RandomDoubleFunction randomFloatFunction = new RandomDoubleFunction();
 	protected final Calculable calculable;
@@ -66,6 +67,7 @@ public class MathExpressionValue implements Value {
 		value = calculable.calculate();
 	}
 
+	@Override
 	public void setRandom(Random random) {
 		randomIntFunction.setRandom(random);
 		randomFloatFunction.setRandom(random);

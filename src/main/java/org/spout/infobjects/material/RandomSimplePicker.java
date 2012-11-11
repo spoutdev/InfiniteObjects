@@ -29,10 +29,13 @@ package org.spout.infobjects.material;
 import java.util.Map;
 import java.util.Random;
 
+import org.spout.api.geo.World;
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.material.MaterialRegistry;
 
-public class RandomSimplePicker extends MaterialPicker {
+import org.spout.infobjects.util.RandomOwner;
+
+public class RandomSimplePicker extends MaterialPicker implements RandomOwner {
 	private Random random = new Random();
 	private BlockMaterial material;
 	private short data;
@@ -50,10 +53,13 @@ public class RandomSimplePicker extends MaterialPicker {
 	}
 
 	@Override
-	public BlockMaterial pickMaterial(boolean outer) {
-		return random.nextInt(100) < odd ? material : BlockMaterial.AIR;
+	public void setMaterial(World world, int x, int y, int z, boolean outer) {
+		if (random.nextInt(100) < odd) {
+			world.setBlockMaterial(x, y, z, material, data, null);
+		}
 	}
 
+	@Override
 	public void setRandom(Random random) {
 		this.random = random;
 	}

@@ -28,6 +28,7 @@ package org.spout.infobjects;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +56,12 @@ public class IWGOTest {
 		final IWGOManager manager = new IWGOManager(new File("src/test/resources"), false);
 		manager.loadIWGOs();
 		final IWGO iwgo = manager.getIWGO("tree");
+
+		iwgo.setRandom(new Random());
+
+		long start = System.nanoTime();
+		iwgo.randomize();
+		System.out.println("Estimated randomization time: " + (System.nanoTime() - start) / 1000000d + "ms");
 
 		System.out.println("Variables:");
 		for (Variable variable : iwgo.getVariables()) {

@@ -58,9 +58,8 @@ public class Cuboid extends Shape {
 		for (int xx = 0; xx < sizeX; xx++) {
 			for (int yy = 0; yy < sizeY; yy++) {
 				for (int zz = 0; zz < sizeZ; zz++) {
-					iwgo.setMaterial(px + xx, py + yy, pz + zz,
-							picker.pickMaterial(xx == 0 || yy == 0 || zz == 0
-							|| xx == sizeX || yy == sizeY || zz == sizeZ));
+					picker.setMaterial(iwgo.transform(px + xx, py + yy, pz + zz),
+							xx == 0 || yy == 0 || zz == 0 | xx == sizeX || yy == sizeY || zz == sizeZ);
 				}
 			}
 		}

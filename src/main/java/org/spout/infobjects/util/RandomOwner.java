@@ -24,33 +24,10 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.function;
+package org.spout.infobjects.util;
 
 import java.util.Random;
 
-import de.congrace.exp4j.function.Function;
-import de.congrace.exp4j.function.Functions;
-
-import org.spout.infobjects.util.RandomOwner;
-
-public abstract class RandomFunction extends Function implements RandomOwner {
-	protected Random random = new Random();
-
-	static {
-		Functions.register(new RandomIntFunction());
-		Functions.register(new RandomDoubleFunction());
-	}
-
-	public RandomFunction(String name, int argumentCount) {
-		super(name, argumentCount);
-	}
-
-	public RandomFunction(String name) {
-		super(name);
-	}
-
-	@Override
-	public void setRandom(Random random) {
-		this.random = random;
-	}
+public interface RandomOwner {
+	public void setRandom(Random random);
 }

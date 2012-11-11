@@ -88,14 +88,14 @@ public class Sphere extends Shape {
 					final boolean outer = lengthSq(nextXn, yn, zn) > 1
 							|| lengthSq(xn, nextYn, zn) > 1
 							|| lengthSq(xn, yn, nextZn) > 1;
-					iwgo.setMaterial(px + xx, py + yy, pz + zz, picker.pickMaterial(outer));
-					iwgo.setMaterial(px - xx, py + yy, pz + zz, picker.pickMaterial(outer));
-					iwgo.setMaterial(px + xx, py - yy, pz + zz, picker.pickMaterial(outer));
-					iwgo.setMaterial(px + xx, py + yy, pz - zz, picker.pickMaterial(outer));
-					iwgo.setMaterial(px - xx, py - yy, pz + zz, picker.pickMaterial(outer));
-					iwgo.setMaterial(px + xx, py - yy, pz - zz, picker.pickMaterial(outer));
-					iwgo.setMaterial(px - xx, py + yy, pz - zz, picker.pickMaterial(outer));
-					iwgo.setMaterial(px - xx, py - yy, pz - zz, picker.pickMaterial(outer));
+					picker.setMaterial(iwgo.transform(px + xx, py + yy, pz + zz), outer);
+					picker.setMaterial(iwgo.transform(px - xx, py + yy, pz + zz), outer);
+					picker.setMaterial(iwgo.transform(px + xx, py - yy, pz + zz), outer);
+					picker.setMaterial(iwgo.transform(px + xx, py + yy, pz - zz), outer);
+					picker.setMaterial(iwgo.transform(px - xx, py - yy, pz + zz), outer);
+					picker.setMaterial(iwgo.transform(px + xx, py - yy, pz - zz), outer);
+					picker.setMaterial(iwgo.transform(px - xx, py + yy, pz - zz), outer);
+					picker.setMaterial(iwgo.transform(px - xx, py - yy, pz - zz), outer);
 				}
 			}
 		}

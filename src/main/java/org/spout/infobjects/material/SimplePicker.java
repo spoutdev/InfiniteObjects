@@ -28,6 +28,7 @@ package org.spout.infobjects.material;
 
 import java.util.Map;
 
+import org.spout.api.geo.World;
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.material.MaterialRegistry;
 
@@ -46,8 +47,8 @@ public class SimplePicker extends MaterialPicker {
 	}
 
 	@Override
-	public BlockMaterial pickMaterial(boolean outer) {
-		return material;
+	public void setMaterial(World world, int x, int y, int z, boolean outer) {
+		world.setBlockMaterial(x, y, z, material, data, null);
 	}
 
 	@Override

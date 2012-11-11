@@ -54,7 +54,7 @@ public class Line extends Shape {
 		final Point start = iwgo.transform((int) x.getValue(), (int) y.getValue(), (int) z.getValue());
 		final BlockIterator line = new BlockIterator(start, start.add(lengthX.getValue(), lengthY.getValue(), lengthZ.getValue()));
 		while (line.hasNext()) {
-			line.next().setMaterial(picker.pickMaterial(true));
+			picker.setMaterial(iwgo.transform(line.next().getPosition()), true);
 		}
 	}
 

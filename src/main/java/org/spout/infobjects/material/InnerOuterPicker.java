@@ -28,6 +28,7 @@ package org.spout.infobjects.material;
 
 import java.util.Map;
 
+import org.spout.api.geo.World;
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.material.MaterialRegistry;
 
@@ -50,8 +51,12 @@ public class InnerOuterPicker extends MaterialPicker {
 	}
 
 	@Override
-	public BlockMaterial pickMaterial(boolean outer) {
-		return outer ? this.outer : inner;
+	public void setMaterial(World world, int x, int y, int z, boolean outer) {
+		if (outer) {
+			world.setBlockMaterial(x, y, z, this.outer, outerData, null);
+		} else {
+			world.setBlockMaterial(x, y, z, inner, innerData, null);
+		}
 	}
 
 	@Override

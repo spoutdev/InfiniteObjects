@@ -28,9 +28,12 @@ package org.spout.infobjects.value;
 
 import java.util.Random;
 
-public abstract class RandomValue implements Value {
+import org.spout.infobjects.util.RandomOwner;
+
+public abstract class RandomValue implements Value, RandomOwner {
 	protected Random random = new Random();
 
+	@Override
 	public void setRandom(Random random) {
 		this.random = random;
 	}

@@ -28,7 +28,8 @@ package org.spout.infobjects.material;
 
 import java.util.Map;
 
-import org.spout.api.material.BlockMaterial;
+import org.spout.api.geo.World;
+import org.spout.api.geo.discrete.Point;
 import org.spout.api.util.Named;
 
 import org.spout.infobjects.util.TypeFactory;
@@ -50,7 +51,11 @@ public abstract class MaterialPicker implements Named {
 
 	public abstract void configure(Map<String, String> properties);
 
-	public abstract BlockMaterial pickMaterial(boolean outer);
+	public void setMaterial(Point pos, boolean outer) {
+		setMaterial(pos.getWorld(), pos.getBlockX(), pos.getBlockY(), pos.getBlockY(), outer);
+	}
+
+	public abstract void setMaterial(World world, int x, int y, int z, boolean outer);
 
 	@Override
 	public String getName() {

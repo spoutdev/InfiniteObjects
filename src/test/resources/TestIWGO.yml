@@ -62,7 +62,7 @@ instructions:
         properties:
           size:
             x: ranI=5-6
-            y: ranI=1-2
+            y: ranI=2-3
             z: ranI=5-6
         position:
           x: 0

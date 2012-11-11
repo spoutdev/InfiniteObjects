@@ -30,20 +30,21 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.spout.api.generator.WorldGeneratorObject;
 import org.spout.api.geo.World;
 import org.spout.api.geo.discrete.Point;
-import org.spout.api.material.BlockMaterial;
 import org.spout.api.math.IntVector3;
 import org.spout.api.util.Named;
 
 import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.material.MaterialPicker;
+import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.variable.Variable;
 import org.spout.infobjects.variable.VariableSource;
 
-public class IWGO extends WorldGeneratorObject implements VariableSource, Named {
+public class IWGO extends WorldGeneratorObject implements VariableSource, Named, RandomOwner {
 	private final String name;
 	private World world;
 	private final IntVector3 position = new IntVector3(0, 0, 0);
@@ -74,8 +75,21 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 		}
 	}
 
-	public World getWorld() {
-		return world;
+	@Override
+	public void setRandom(Random random) {
+		for (Variable variable : variables.values()) {
+			if (variable.getRawValue() instanceof RandomOwner) {
+				((RandomOwner) variable.getRawValue()).setRandom(random);
+			}
+		}
+		for (MaterialPicker picker : pickers.values()) {
+			if (picker instanceof RandomOwner) {
+				((RandomOwner) picker).setRandom(random);
+			}
+		}
+		for (Instruction instruction : instructions.values()) {
+			instruction.setRandom(random);
+		}
 	}
 
 	public void randomize() {
@@ -87,16 +101,12 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named 
 		}
 	}
 
-	public void setMaterial(int xx, int yy, int zz, BlockMaterial material) {
-		setMaterial(xx, yy, zz, material, material.getData());
-	}
-
-	public void setMaterial(int xx, int yy, int zz, BlockMaterial material, short data) {
-		world.getBlock(transform(xx, yy, zz)).setMaterial(material, data);
-	}
-
 	public Point transform(int xx, int yy, int zz) {
-		return new Point(world, position.getX() + xx, position.getY() + yy, position.getZ() + zz);
+		return transform(new Point(world, xx, yy, zz));
+	}
+
+	public Point transform(Point pos) {
+		return pos.add(position.getX(), position.getY(), position.getZ());
 	}
 
 	@Override

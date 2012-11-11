@@ -29,21 +29,23 @@ package org.spout.infobjects.instruction;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.util.TypeFactory;
 import org.spout.infobjects.variable.Variable;
 import org.spout.infobjects.variable.VariableSource;
 
-public abstract class Instruction implements VariableSource {
+public abstract class Instruction implements VariableSource, RandomOwner {
 	private static final TypeFactory<Instruction> INSTRUCTIONS = new TypeFactory<Instruction>(IWGO.class, String.class);
 	private final IWGO iwgo;
 	private final String name;
 	private final Map<String, Variable> variables = new LinkedHashMap<String, Variable>();
 
 	static {
-		register("place", PlaceInstruction.class);
-		register("repeat", RepeatInstruction.class);
+		INSTRUCTIONS.register("place", PlaceInstruction.class);
+		INSTRUCTIONS.register("repeat", RepeatInstruction.class);
 	}
 
 	public Instruction(IWGO iwgo, String name) {
@@ -60,7 +62,16 @@ public abstract class Instruction implements VariableSource {
 	}
 
 	public abstract void execute();
-	
+
+	@Override
+	public void setRandom(Random random) {
+		for (Variable variable : variables.values()) {
+			if (variable.getRawValue() instanceof RandomOwner) {
+				((RandomOwner) variable.getRawValue()).setRandom(random);
+			}
+		}
+	}
+
 	public void randomize() {
 		for (Variable variable : variables.values()) {
 			variable.calculate();
@@ -90,10 +101,6 @@ public abstract class Instruction implements VariableSource {
 	@Override
 	public void addVariable(Variable variable) {
 		variables.put(variable.getName(), variable);
-	}
-
-	public static void register(String type, Class<? extends Instruction> instruction) {
-		INSTRUCTIONS.register(type, instruction);
 	}
 
 	public static Instruction newInstruction(String type, IWGO iwgo, String name) {

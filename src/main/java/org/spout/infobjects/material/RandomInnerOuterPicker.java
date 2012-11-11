@@ -29,10 +29,13 @@ package org.spout.infobjects.material;
 import java.util.Map;
 import java.util.Random;
 
+import org.spout.api.geo.World;
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.material.MaterialRegistry;
 
-public class RandomInnerOuterPicker extends MaterialPicker {
+import org.spout.infobjects.util.RandomOwner;
+
+public class RandomInnerOuterPicker extends MaterialPicker implements RandomOwner {
 	private Random random = new Random();
 	private BlockMaterial inner;
 	private short innerData;
@@ -56,14 +59,19 @@ public class RandomInnerOuterPicker extends MaterialPicker {
 	}
 
 	@Override
-	public BlockMaterial pickMaterial(boolean outer) {
+	public void setMaterial(World world, int x, int y, int z, boolean outer) {
 		if (outer) {
-			return random.nextInt(100) < outerOdd ? this.outer : BlockMaterial.AIR;
+			if (random.nextInt(100) < outerOdd) {
+				world.setBlockMaterial(x, y, z, this.outer, outerData, null);
+			}
 		} else {
-			return random.nextInt(100) < innerOdd ? inner : BlockMaterial.AIR;
+			if (random.nextInt(100) < innerOdd) {
+				world.setBlockMaterial(x, y, z, inner, innerData, null);
+			}
 		}
 	}
 
+	@Override
 	public void setRandom(Random random) {
 		this.random = random;
 	}
