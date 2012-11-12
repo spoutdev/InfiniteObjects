@@ -16,6 +16,40 @@ materials:
       material: Wood
       data: 3
   
+conditions:
+  under:
+    type: allow
+    shape: cuboid
+    properties:
+      size:
+        x: 2
+        y: 1
+        z: 2
+    position:
+      x: 0
+      y: 0
+      z: 0
+    check:
+      - Grass
+      - Dirt
+  main:
+    type: exclude
+    shape: cuboid
+    properties:
+      size:
+        x: 6
+        y: height
+        z: 6
+    position:
+      x: -2
+      y: 2
+      z: -2
+    check:
+      - Water
+      - Grass
+      - Dirt
+      - Stone
+  
 instructions:
   leafPod:
     type: place
@@ -80,3 +114,11 @@ instructions:
           y: 0
           z: 0
         material: wood
+  test:
+    type: block
+    position:
+      x: 0
+      y: height + 1
+      z: 0
+    material: wood
+    outer: true

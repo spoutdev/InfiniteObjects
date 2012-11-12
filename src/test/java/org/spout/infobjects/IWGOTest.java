@@ -35,6 +35,7 @@ import org.junit.Test;
 
 import org.spout.api.material.BlockMaterial;
 
+import org.spout.infobjects.instruction.BlockInstruction;
 import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.instruction.PlaceInstruction;
 import org.spout.infobjects.instruction.RepeatInstruction;
@@ -95,8 +96,15 @@ public class IWGOTest {
 				for (IncrementableValue incrementable : repeat.getIncrementables()) {
 					System.out.println("\t\t" + incrementable);
 				}
+			} else if (instruction instanceof BlockInstruction) {
+				final BlockInstruction block = (BlockInstruction) instruction;
+				System.out.println("\tX: " + block.getX());
+				System.out.println("\tY: " + block.getY());
+				System.out.println("\tZ: " + block.getZ());
+				System.out.println("\tPicker: " + block.getPicker());
+				System.out.println("\tOuter: " + block.isOuter());
 			}
-			System.out.println();
+			System.out.println("\t--------------------");
 		}
 		System.out.println();
 	}

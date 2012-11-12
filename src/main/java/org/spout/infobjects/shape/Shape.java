@@ -27,13 +27,15 @@
 package org.spout.infobjects.shape;
 
 import java.util.Map;
+import java.util.Random;
 
 import org.spout.infobjects.IWGO;
 import org.spout.infobjects.material.MaterialPicker;
+import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.util.TypeFactory;
 import org.spout.infobjects.value.Value;
 
-public abstract class Shape {
+public abstract class Shape implements RandomOwner {
 	private static final TypeFactory<Shape> SHAPES = new TypeFactory<Shape>(IWGO.class);
 	protected final IWGO iwgo;
 	protected Value x;
@@ -105,6 +107,19 @@ public abstract class Shape {
 		x.calculate();
 		y.calculate();
 		z.calculate();
+	}
+
+	@Override
+	public void setRandom(Random random) {
+		if (x instanceof RandomOwner) {
+			((RandomOwner) x).setRandom(random);
+		}
+		if (y instanceof RandomOwner) {
+			((RandomOwner) y).setRandom(random);
+		}
+		if (z instanceof RandomOwner) {
+			((RandomOwner) z).setRandom(random);
+		}
 	}
 
 	public abstract void draw();

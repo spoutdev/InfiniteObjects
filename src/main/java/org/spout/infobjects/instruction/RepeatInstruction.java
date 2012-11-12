@@ -28,9 +28,11 @@ package org.spout.infobjects.instruction;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.IncrementableValue;
 import org.spout.infobjects.value.Value;
 import org.spout.infobjects.variable.Variable;
@@ -73,6 +75,14 @@ public class RepeatInstruction extends Instruction {
 	public void randomize() {
 		super.randomize();
 		times.calculate();
+	}
+
+	@Override
+	public void setRandom(Random random) {
+		super.setRandom(random);
+		if (times instanceof RandomOwner) {
+			((RandomOwner) times).setRandom(random);
+		}
 	}
 
 	@Override

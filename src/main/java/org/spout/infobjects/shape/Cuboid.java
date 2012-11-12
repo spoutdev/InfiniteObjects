@@ -27,8 +27,10 @@
 package org.spout.infobjects.shape;
 
 import java.util.Map;
+import java.util.Random;
 
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
 public class Cuboid extends Shape {
@@ -71,6 +73,20 @@ public class Cuboid extends Shape {
 		length.calculate();
 		height.calculate();
 		depth.calculate();
+	}
+
+	@Override
+	public void setRandom(Random random) {
+		super.setRandom(random);
+		if (length instanceof RandomOwner) {
+			((RandomOwner) length).setRandom(random);
+		}
+		if (height instanceof RandomOwner) {
+			((RandomOwner) height).setRandom(random);
+		}
+		if (depth instanceof RandomOwner) {
+			((RandomOwner) depth).setRandom(random);
+		}
 	}
 
 	@Override

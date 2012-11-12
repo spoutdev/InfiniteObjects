@@ -37,8 +37,8 @@ public class EngineFaker {
 	private static final Engine ENGINE;
 
 	static {
-		Engine engine = PowerMockito.mock(Engine.class);
-		FileSystem filesystem = PowerMockito.mock(FileSystem.class);
+		final Engine engine = PowerMockito.mock(Engine.class);
+		final FileSystem filesystem = PowerMockito.mock(FileSystem.class);
 		try {
 			PowerMockito.when(engine, Engine.class.getMethod("getPlatform", (Class[]) null)).
 					withNoArguments().thenReturn(Platform.SERVER);

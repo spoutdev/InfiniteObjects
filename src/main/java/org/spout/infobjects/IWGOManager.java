@@ -39,6 +39,7 @@ import org.spout.api.util.config.Configuration;
 import org.spout.api.util.config.ConfigurationNode;
 import org.spout.api.util.config.yaml.YamlConfiguration;
 
+import org.spout.infobjects.instruction.BlockInstruction;
 import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.instruction.PlaceInstruction;
 import org.spout.infobjects.instruction.RepeatInstruction;
@@ -139,6 +140,8 @@ public class IWGOManager {
 					loadPlaceInstruction((PlaceInstruction) instruction, instructionNode);
 				} else if (instruction instanceof RepeatInstruction) {
 					loadRepeatInstruction((RepeatInstruction) instruction, instructionNode);
+				} else if (instruction instanceof BlockInstruction) {
+					loadBlockInstruction((BlockInstruction) instruction, instructionNode);
 				}
 				iwgo.addInstruction(instruction);
 			}
@@ -169,5 +172,15 @@ public class IWGOManager {
 			instruction.addIncrementableValue(key, new IncrementableValue(iwgo.getVariable(key).getRawValue(),
 					ValueParser.parse(incrementNode.getNode(key).getString(), iwgo, instruction)));
 		}
+	}
+
+	private static void loadBlockInstruction(BlockInstruction instruction, ConfigurationNode blockNode) {
+		final IWGO iwgo = instruction.getIWGO();
+		final ConfigurationNode positionNode = blockNode.getNode("position");
+		instruction.setX(ValueParser.parse(positionNode.getNode("x").getString(), iwgo, instruction));
+		instruction.setY(ValueParser.parse(positionNode.getNode("y").getString(), iwgo, instruction));
+		instruction.setZ(ValueParser.parse(positionNode.getNode("z").getString(), iwgo, instruction));
+		instruction.setPicker(iwgo.getMaterialPicker(blockNode.getNode("material").getString()));
+		instruction.setOuter(Boolean.parseBoolean(blockNode.getNode("outer").getString()));
 	}
 }

@@ -101,6 +101,10 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 		}
 	}
 
+	public Point transform(double xx, double yy, double zz) {
+		return transform((int) xx, (int) yy, (int) zz);
+	}
+
 	public Point transform(int xx, int yy, int zz) {
 		return transform(new Point(world, xx, yy, zz));
 	}

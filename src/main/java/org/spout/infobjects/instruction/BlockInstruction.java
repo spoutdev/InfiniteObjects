@@ -26,56 +26,93 @@
  */
 package org.spout.infobjects.instruction;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-
 import org.spout.infobjects.IWGO;
-import org.spout.infobjects.shape.Shape;
+import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.util.RandomOwner;
+import org.spout.infobjects.value.Value;
 
-public class PlaceInstruction extends Instruction {
-	private final List<Shape> shapes = new ArrayList<Shape>();
+public class BlockInstruction extends Instruction {
+	private MaterialPicker picker;
+	private Value x;
+	private Value y;
+	private Value z;
+	private boolean outer;
 
-	public PlaceInstruction(IWGO iwgo, String name) {
+	public BlockInstruction(IWGO iwgo, String name) {
 		super(iwgo, name);
 	}
 
-	public void addShape(Shape shape) {
-		shapes.add(shape);
-	}
-
-	public List<Shape> getShapes() {
-		return shapes;
+	@Override
+	public void execute() {
+		picker.setMaterial(getIWGO().transform(x.getValue(), y.getValue(), z.getValue()), outer);
 	}
 
 	@Override
 	public void randomize() {
 		super.randomize();
-		for (Shape shape : shapes) {
-			shape.randomize();
-		}
+		x.calculate();
+		y.calculate();
+		z.calculate();
 	}
 
 	@Override
 	public void setRandom(Random random) {
 		super.setRandom(random);
-		for (Shape shape : shapes) {
-			if (shape instanceof RandomOwner) {
-				((RandomOwner) shape).setRandom(random);
-			}
+		if (x instanceof RandomOwner) {
+			((RandomOwner) x).setRandom(random);
+		}
+		if (y instanceof RandomOwner) {
+			((RandomOwner) y).setRandom(random);
+		}
+		if (z instanceof RandomOwner) {
+			((RandomOwner) z).setRandom(random);
 		}
 	}
 
-	@Override
-	public void execute() {
-		for (Shape shape : shapes) {
-			shape.draw();
-		}
+	public boolean isOuter() {
+		return outer;
+	}
+
+	public void setOuter(boolean outer) {
+		this.outer = outer;
+	}
+
+	public MaterialPicker getPicker() {
+		return picker;
+	}
+
+	public void setPicker(MaterialPicker picker) {
+		this.picker = picker;
+	}
+
+	public Value getX() {
+		return x;
+	}
+
+	public void setX(Value x) {
+		this.x = x;
+	}
+
+	public Value getY() {
+		return y;
+	}
+
+	public void setY(Value y) {
+		this.y = y;
+	}
+
+	public Value getZ() {
+		return z;
+	}
+
+	public void setZ(Value z) {
+		this.z = z;
 	}
 
 	@Override
 	public String toString() {
-		return "PlaceInstruction{shapes=" + shapes + '}';
+		return "BlockInstruction{picker=" + picker + ", x=" + x + ", y=" + y + ", z=" + z
+				+ ", outer=" + outer + '}';
 	}
 }

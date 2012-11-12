@@ -27,10 +27,13 @@
 package org.spout.infobjects.shape;
 
 import java.util.Map;
+import java.util.Random;
+
 import org.spout.api.geo.discrete.Point;
 import org.spout.api.util.BlockIterator;
 
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
 public class Line extends Shape {
@@ -51,7 +54,7 @@ public class Line extends Shape {
 
 	@Override
 	public void draw() {
-		final Point start = iwgo.transform((int) x.getValue(), (int) y.getValue(), (int) z.getValue());
+		final Point start = iwgo.transform(x.getValue(), y.getValue(), z.getValue());
 		final BlockIterator line = new BlockIterator(start, start.add(lengthX.getValue(), lengthY.getValue(), lengthZ.getValue()));
 		while (line.hasNext()) {
 			picker.setMaterial(line.next().getPosition(), true);
@@ -64,6 +67,20 @@ public class Line extends Shape {
 		lengthX.calculate();
 		lengthY.calculate();
 		lengthZ.calculate();
+	}
+
+	@Override
+	public void setRandom(Random random) {
+		super.setRandom(random);
+		if (lengthX instanceof RandomOwner) {
+			((RandomOwner) lengthX).setRandom(random);
+		}
+		if (lengthY instanceof RandomOwner) {
+			((RandomOwner) lengthY).setRandom(random);
+		}
+		if (lengthZ instanceof RandomOwner) {
+			((RandomOwner) lengthZ).setRandom(random);
+		}
 	}
 
 	@Override

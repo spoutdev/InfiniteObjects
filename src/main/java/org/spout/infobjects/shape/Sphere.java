@@ -27,8 +27,10 @@
 package org.spout.infobjects.shape;
 
 import java.util.Map;
+import java.util.Random;
 
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
 public class Sphere extends Shape {
@@ -107,6 +109,20 @@ public class Sphere extends Shape {
 		radiusX.calculate();
 		radiusY.calculate();
 		radiusZ.calculate();
+	}
+
+	@Override
+	public void setRandom(Random random) {
+		super.setRandom(random);
+		if (radiusX instanceof RandomOwner) {
+			((RandomOwner) radiusX).setRandom(random);
+		}
+		if (radiusY instanceof RandomOwner) {
+			((RandomOwner) radiusY).setRandom(random);
+		}
+		if (radiusZ instanceof RandomOwner) {
+			((RandomOwner) radiusZ).setRandom(random);
+		}
 	}
 
 	@Override

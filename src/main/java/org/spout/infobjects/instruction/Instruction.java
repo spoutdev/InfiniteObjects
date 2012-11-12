@@ -46,6 +46,7 @@ public abstract class Instruction implements VariableSource, RandomOwner {
 	static {
 		INSTRUCTIONS.register("place", PlaceInstruction.class);
 		INSTRUCTIONS.register("repeat", RepeatInstruction.class);
+		INSTRUCTIONS.register("block", BlockInstruction.class);
 	}
 
 	public Instruction(IWGO iwgo, String name) {
