@@ -44,7 +44,7 @@ public class InfObjectsPlugin extends CommonPlugin {
 					+ " couldn't be found. IWGO loading may fail");
 		}
 		final CommandRegistrationsFactory<Class<?>> commandRegFactory =
-				new AnnotatedCommandRegistrationFactory(new SimpleInjector(this), new SimpleAnnotatedCommandExecutorFactory());
+				new AnnotatedCommandRegistrationFactory(new SimpleInjector(), new SimpleAnnotatedCommandExecutorFactory());
 		getEngine().getRootCommand().addSubCommands(this, IWGOCommands.class, commandRegFactory);
 		MANAGER.loadIWGOs();
 		getLogger().info("v" + getDescription().getVersion() + " enabled.");
