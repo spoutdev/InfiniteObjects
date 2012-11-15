@@ -26,9 +26,11 @@
  */
 package org.spout.infobjects;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -38,6 +40,7 @@ import org.spout.api.geo.discrete.Point;
 import org.spout.api.math.IntVector3;
 import org.spout.api.util.Named;
 
+import org.spout.infobjects.condition.Condition;
 import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.util.RandomOwner;
@@ -50,6 +53,7 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 	private final IntVector3 position = new IntVector3(0, 0, 0);
 	private final Map<String, Variable> variables = new LinkedHashMap<String, Variable>();
 	private final Map<String, MaterialPicker> pickers = new HashMap<String, MaterialPicker>();
+	private final List<Condition> conditions = new ArrayList<Condition>();
 	private final Map<String, Instruction> instructions = new LinkedHashMap<String, Instruction>();
 
 	public IWGO(String name) {
@@ -63,6 +67,13 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 
 	@Override
 	public boolean canPlaceObject(World w, int x, int y, int z) {
+		world = w;
+		position.set(x, y, z);
+		for (Condition condition : conditions) {
+			if (!condition.check()) {
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -87,6 +98,9 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 				((RandomOwner) picker).setRandom(random);
 			}
 		}
+		for (Condition condition : conditions) {
+			condition.setRandom(random);
+		}
 		for (Instruction instruction : instructions.values()) {
 			instruction.setRandom(random);
 		}
@@ -95,6 +109,9 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 	public void randomize() {
 		for (Variable variable : variables.values()) {
 			variable.calculate();
+		}
+		for (Condition condition : conditions) {
+			condition.randomize();
 		}
 		for (Instruction instruction : instructions.values()) {
 			instruction.randomize();
@@ -152,6 +169,14 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 
 	public Map<String, MaterialPicker> getMaterialPickerMap() {
 		return pickers;
+	}
+
+	public void addCondition(Condition condition) {
+		conditions.add(condition);
+	}
+
+	public List<Condition> getConditions() {
+		return conditions;
 	}
 
 	public void addInstruction(Instruction instruction) {

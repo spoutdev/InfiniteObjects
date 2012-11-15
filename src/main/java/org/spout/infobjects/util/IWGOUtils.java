@@ -41,12 +41,12 @@ public class IWGOUtils {
 		return random.nextDouble() * (max - min) + min;
 	}
 
-	public static Map<String, String> toStringMap(ConfigurationNode propertiesNode) {
+	public static Map<String, String> toStringMap(ConfigurationNode node) {
 		final Map<String, String> propertiesMap = new HashMap<String, String>();
-		for (String key : propertiesNode.getKeys(true)) {
-			final ConfigurationNode node = propertiesNode.getNode(key);
-			if (!node.hasChildren()) {
-				propertiesMap.put(key, node.getString());
+		for (String key : node.getKeys(true)) {
+			final ConfigurationNode n = node.getNode(key);
+			if (!n.hasChildren()) {
+				propertiesMap.put(key, n.getString());
 			}
 		}
 		return propertiesMap;

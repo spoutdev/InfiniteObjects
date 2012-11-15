@@ -43,10 +43,10 @@ public class Cuboid extends Shape {
 	}
 
 	@Override
-	public void configure(Map<String, Value> properties) {
-		length = properties.get("width");
-		height = properties.get("height");
-		depth = properties.get("depth");
+	public void setSize(Map<String, Value> sizes) {
+		length = sizes.get("x");
+		height = sizes.get("y");
+		depth = sizes.get("z");
 	}
 
 	@Override

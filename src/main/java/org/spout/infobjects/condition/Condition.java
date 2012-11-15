@@ -24,45 +24,39 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.shape;
+package org.spout.infobjects.condition;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+
+import org.spout.api.material.BlockMaterial;
 
 import org.spout.infobjects.IWGO;
-import org.spout.infobjects.material.MaterialPicker;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.util.TypeFactory;
 import org.spout.infobjects.value.Value;
 
-public abstract class Shape implements RandomOwner {
-	private static final TypeFactory<Shape> SHAPES = new TypeFactory<Shape>(IWGO.class);
+public abstract class Condition implements RandomOwner {
+	private static final TypeFactory<Condition> CONDITIONS = new TypeFactory<Condition>(IWGO.class);
+	protected final Set<BlockMaterial> materials = new HashSet<BlockMaterial>();
 	protected final IWGO iwgo;
 	protected Value x;
 	protected Value y;
 	protected Value z;
-	protected MaterialPicker picker;
+	protected ConditionMode mode;
 
 	static {
-		register("cuboid", Cuboid.class);
-		register("line", Line.class);
-		register("sphere", Sphere.class);
+		register("cuboid", CuboidCondition.class);
 	}
 
-	public Shape(IWGO iwgo) {
+	public Condition(IWGO iwgo) {
 		this.iwgo = iwgo;
 	}
 
 	public IWGO getIWGO() {
 		return iwgo;
-	}
-
-	public MaterialPicker getMaterialPicker() {
-		return picker;
-	}
-
-	public void setMaterialPicker(MaterialPicker picker) {
-		this.picker = picker;
 	}
 
 	public Value getX() {
@@ -95,13 +89,35 @@ public abstract class Shape implements RandomOwner {
 		this.z = z;
 	}
 
+	public abstract void setSize(Map<String, Value> sizes);
+
 	public void setPosition(Map<String, Value> position) {
 		x = position.get("x");
 		y = position.get("y");
 		z = position.get("z");
 	}
 
-	public abstract void setSize(Map<String, Value> sizes);
+	public void addBlockMaterial(BlockMaterial material) {
+		materials.add(material);
+	}
+
+	public void removeMaterial(BlockMaterial material) {
+		materials.remove(material);
+	}
+
+	public Set<BlockMaterial> getMaterials() {
+		return materials;
+	}
+
+	public ConditionMode getMode() {
+		return mode;
+	}
+
+	public void setMode(ConditionMode mode) {
+		this.mode = mode;
+	}
+
+	public abstract boolean check();
 
 	public void randomize() {
 		x.calculate();
@@ -122,13 +138,26 @@ public abstract class Shape implements RandomOwner {
 		}
 	}
 
-	public abstract void draw();
-
-	public static void register(String type, Class<? extends Shape> shape) {
-		SHAPES.register(type, shape);
+	public static void register(String type, Class<? extends Condition> condition) {
+		CONDITIONS.register(type, condition);
 	}
 
-	public static Shape newShape(String type, IWGO iwgo) {
-		return SHAPES.newInstance(type, iwgo);
+	public static Condition newCondition(String type, IWGO iwgo) {
+		return CONDITIONS.newInstance(type, iwgo);
+	}
+
+	public static enum ConditionMode {
+		INCLUDE, EXCLUDE;
+
+		public boolean check(BlockMaterial material, Set<BlockMaterial> materials) {
+			switch (this) {
+				case INCLUDE:
+					return materials.contains(material);
+				case EXCLUDE:
+					return !materials.contains(material);
+				default:
+					return false;
+			}
+		}
 	}
 }

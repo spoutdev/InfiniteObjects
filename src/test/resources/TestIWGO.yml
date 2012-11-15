@@ -17,29 +17,27 @@ materials:
       data: 3
   
 conditions:
-  under:
-    type: allow
+  ground:
     shape: cuboid
-    properties:
-      size:
-        x: 2
-        y: 1
-        z: 2
+    mode: include
+    size:
+      x: 2
+      y: 1
+      z: 2
     position:
       x: 0
-      y: 0
+      y: -1
       z: 0
     check:
       - Grass
       - Dirt
   main:
-    type: exclude
     shape: cuboid
-    properties:
-      size:
-        x: 6
-        y: height
-        z: 6
+    mode: exclude
+    size:
+      x: 6
+      y: height
+      z: 6
     position:
       x: -2
       y: 2
@@ -49,6 +47,8 @@ conditions:
       - Grass
       - Dirt
       - Stone
+      - Jungle Wood
+      - Jungle Leaves
   
 instructions:
   leafPod:
@@ -60,11 +60,10 @@ instructions:
     shapes:
       leafPod:
         type: sphere
-        properties:
-          size:
-            x: ranI=2-4
-            y: ranI=2-4
-            z: ranI=2-4
+        size:
+          x: ranI=2-4
+          y: ranI=2-4
+          z: ranI=2-4
         position:
           x: offsetX
           y: minLeafHeight
@@ -72,11 +71,10 @@ instructions:
         material: leaves
       branch:
         type: line
-        properties:
-          length:
-            x: offsetX
-            y: 3
-            z: offsetZ
+        size:
+          x: offsetX
+          y: 3
+          z: offsetZ
         position:
           x: 0
           y: minLeafHeight - 3
@@ -93,11 +91,10 @@ instructions:
     shapes:
       canopy:
         type: sphere
-        properties:
-          size:
-            x: ranI=5-6
-            y: ranI=2-3
-            z: ranI=5-6
+        size:
+          x: ranI=5-6
+          y: ranI=2-3
+          z: ranI=5-6
         position:
           x: 0
           y: height + 1
@@ -105,10 +102,10 @@ instructions:
         material: leaves
       trunk:
         type: cuboid
-        properties:
-          width: 2
-          height: height
-          depth: 2
+        size:
+          x: 2
+          y: height
+          z: 2
         position:
           x: 0
           y: 0

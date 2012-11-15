@@ -29,6 +29,10 @@ package org.spout.infobjects.value;
 import java.util.regex.Matcher;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import de.congrace.exp4j.constant.Constants;
 import de.congrace.exp4j.function.Functions;
@@ -71,10 +75,26 @@ public class ValueParser {
 		}
 	}
 
+	public static List<Value> parse(List<String> expressions, VariableSource... sources) {
+		final List<Value> values = new ArrayList<Value>();
+		for (String expression : expressions) {
+			values.add(parse(expression, sources));
+		}
+		return values;
+	}
+
+	public static Set<Value> parse(Set<String> expressions, VariableSource... sources) {
+		final Set<Value> values = new HashSet<Value>();
+		for (String expression : expressions) {
+			values.add(parse(expression, sources));
+		}
+		return values;
+	}
+
 	public static Map<String, Value> parse(Map<String, String> expressions, VariableSource... sources) {
 		final Map<String, Value> values = new HashMap<String, Value>();
 		for (Map.Entry<String, String> entry : expressions.entrySet()) {
-			values.put(entry.getKey(), ValueParser.parse(entry.getValue(), sources));
+			values.put(entry.getKey(), parse(entry.getValue(), sources));
 		}
 		return values;
 	}

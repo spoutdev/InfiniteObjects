@@ -43,10 +43,10 @@ public class Sphere extends Shape {
 	}
 
 	@Override
-	public void configure(Map<String, Value> properties) {
-		radiusX = properties.get("size.x");
-		radiusY = properties.get("size.y");
-		radiusZ = properties.get("size.z");
+	public void setSize(Map<String, Value> sizes) {
+		radiusX = sizes.get("x");
+		radiusY = sizes.get("y");
+		radiusZ = sizes.get("z");
 	}
 
 	@Override

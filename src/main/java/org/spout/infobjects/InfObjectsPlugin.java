@@ -52,7 +52,13 @@ public class InfObjectsPlugin extends CommonPlugin {
 
 	@Override
 	public void onDisable() {
+		MANAGER.unloadIWGOs();
 		getLogger().info("disabled");
+	}
+
+	@Override
+	public void onReload() {
+		MANAGER.reloadIWGOs();
 	}
 
 	public static IWGOManager getIWGOManager() {

@@ -26,6 +26,9 @@
  */
 package org.spout.infobjects;
 
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.junit.Assert;
@@ -39,8 +42,8 @@ import org.spout.infobjects.value.RandomDoubleValue;
 import org.spout.infobjects.value.RandomIntValue;
 import org.spout.infobjects.value.ValueParser;
 import org.spout.infobjects.value.VariableMathExpressionValue;
-import org.spout.infobjects.variable.SimpleVariableSource;
 import org.spout.infobjects.variable.Variable;
+import org.spout.infobjects.variable.VariableSource;
 
 public class ValueParserTest {
 	private static final Random VALUE_RANDOM = new Random();
@@ -107,5 +110,40 @@ public class ValueParserTest {
 		mathVarExpValue.setRandom(VALUE_RANDOM);
 		mathVarExpValue.calculate();
 		Assert.assertEquals(mathVarExpValue.getValue(), EXPECTED_VARIABLE_MATH_EXP, 0);
+	}
+
+	private static class SimpleVariableSource implements VariableSource {
+		private final Map<String, Variable> variables = new LinkedHashMap<String, Variable>();
+
+		private SimpleVariableSource(Variable... variables) {
+			for (Variable variable : variables) {
+				addVariable(variable);
+			}
+		}
+
+		@Override
+		public final void addVariable(Variable variable) {
+			variables.put(variable.getName(), variable);
+		}
+
+		@Override
+		public Variable getVariable(String name) {
+			return variables.get(name);
+		}
+
+		@Override
+		public Collection<Variable> getVariables() {
+			return variables.values();
+		}
+
+		@Override
+		public Map<String, Variable> getVariableMap() {
+			return variables;
+		}
+
+		@Override
+		public boolean hasVariable(String name) {
+			return variables.containsKey(name);
+		}
 	}
 }

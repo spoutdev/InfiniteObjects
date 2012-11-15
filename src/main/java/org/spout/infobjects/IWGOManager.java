@@ -35,10 +35,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.spout.api.exception.ConfigurationException;
+import org.spout.api.material.BlockMaterial;
+import org.spout.api.material.MaterialRegistry;
 import org.spout.api.util.config.Configuration;
 import org.spout.api.util.config.ConfigurationNode;
 import org.spout.api.util.config.yaml.YamlConfiguration;
 
+import org.spout.infobjects.condition.Condition;
+import org.spout.infobjects.condition.Condition.ConditionMode;
 import org.spout.infobjects.instruction.BlockInstruction;
 import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.instruction.PlaceInstruction;
@@ -55,13 +59,13 @@ public class IWGOManager {
 	private final File folder;
 	private final Map<String, IWGO> iwgos = new HashMap<String, IWGO>();
 
-	public IWGOManager(String folderDir, boolean create) {
-		this(new File(folderDir), create);
+	public IWGOManager(String folderDir, boolean createFolder) {
+		this(new File(folderDir), createFolder);
 	}
 
-	public IWGOManager(File folder, boolean create) {
+	public IWGOManager(File folder, boolean createFolder) {
 		if (!folder.exists()) {
-			if (create) {
+			if (createFolder) {
 				folder.mkdirs();
 			} else {
 				throw new IllegalArgumentException("Folder does not exist.");
@@ -89,6 +93,15 @@ public class IWGOManager {
 		}
 	}
 
+	public void unloadIWGOs() {
+		iwgos.clear();
+	}
+
+	public void reloadIWGOs() {
+		unloadIWGOs();
+		loadIWGOs();
+	}
+
 	public IWGO getIWGO(String name) {
 		return iwgos.get(name);
 	}
@@ -105,6 +118,7 @@ public class IWGOManager {
 		final IWGO iwgo = new IWGO(config.getNode("name").getString());
 		loadVariables(iwgo, config.getNode("variables"), iwgo);
 		loadMaterialPickers(iwgo, config.getNode("materials"));
+		loadConditions(iwgo, config.getNode("conditions"));
 		loadInstructions(iwgo, config.getNode("instructions"));
 		iwgo.randomize();
 		return iwgo;
@@ -155,7 +169,7 @@ public class IWGOManager {
 			final ConfigurationNode shapeNode = shapesNode.getNode(key);
 			final Shape shape = Shape.newShape(shapeNode.getNode("type").getString(), iwgo);
 			if (shape != null) {
-				shape.configure(ValueParser.parse(IWGOUtils.toStringMap(shapeNode.getNode("properties")), iwgo, instruction));
+				shape.setSize(ValueParser.parse(IWGOUtils.toStringMap(shapeNode.getNode("size")), iwgo, instruction));
 				shape.setPosition(ValueParser.parse(IWGOUtils.toStringMap(shapeNode.getNode("position")), iwgo, instruction));
 				shape.setMaterialPicker(iwgo.getMaterialPicker(shapeNode.getNode("material").getString()));
 				instruction.addShape(shape);
@@ -182,5 +196,19 @@ public class IWGOManager {
 		instruction.setZ(ValueParser.parse(positionNode.getNode("z").getString(), iwgo, instruction));
 		instruction.setPicker(iwgo.getMaterialPicker(blockNode.getNode("material").getString()));
 		instruction.setOuter(Boolean.parseBoolean(blockNode.getNode("outer").getString()));
+	}
+
+	private static void loadConditions(IWGO iwgo, ConfigurationNode conditionsNode) {
+		for (String key : conditionsNode.getKeys(false)) {
+			final ConfigurationNode conditionNode = conditionsNode.getNode(key);
+			final Condition condition = Condition.newCondition(conditionNode.getNode("shape").getString(), iwgo);
+			condition.setMode(ConditionMode.valueOf(conditionNode.getNode("mode").getString().toUpperCase()));
+			condition.setSize(ValueParser.parse(IWGOUtils.toStringMap(conditionNode.getNode("size")), iwgo));
+			condition.setPosition(ValueParser.parse(IWGOUtils.toStringMap(conditionNode.getNode("position")), iwgo));
+			for (String name : conditionNode.getNode("check").getStringList()) {
+				condition.addBlockMaterial((BlockMaterial) MaterialRegistry.get(name));
+			}
+			iwgo.addCondition(condition);
+		}
 	}
 }

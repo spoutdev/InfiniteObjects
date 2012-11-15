@@ -34,6 +34,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.spout.api.material.BlockMaterial;
+import org.spout.infobjects.condition.Condition;
 
 import org.spout.infobjects.instruction.BlockInstruction;
 import org.spout.infobjects.instruction.Instruction;
@@ -76,6 +77,13 @@ public class IWGOTest {
 		}
 		System.out.println();
 
+
+		System.out.println("Conditions:");
+		for (Condition condition : iwgo.getConditions()) {
+			System.out.println('\t' + condition.toString());
+		}
+		System.out.println();
+
 		System.out.println("Instructions:");
 		for (Instruction instruction : iwgo.getInstructions()) {
 			System.out.println("\tName: " + instruction.getName());
@@ -112,7 +120,11 @@ public class IWGOTest {
 	private void initTestMaterials() throws Exception {
 		final String[] testMaterials = new String[]{
 			"Leaves",
-			"Wood"
+			"Wood",
+			"Stone",
+			"Dirt",
+			"Grass",
+			"Water"
 		};
 		final Constructor constructor = TestMaterial.class.getDeclaredConstructor(String.class);
 		constructor.setAccessible(true);
