@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.spout.infobjects.IWGO;
-import org.spout.infobjects.material.MaterialPicker;
+import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.util.TypeFactory;
 import org.spout.infobjects.value.Value;
@@ -41,7 +41,7 @@ public abstract class Shape implements RandomOwner {
 	protected Value x;
 	protected Value y;
 	protected Value z;
-	protected MaterialPicker picker;
+	protected MaterialSetter setter;
 
 	static {
 		register("cuboid", Cuboid.class);
@@ -57,12 +57,12 @@ public abstract class Shape implements RandomOwner {
 		return iwgo;
 	}
 
-	public MaterialPicker getMaterialPicker() {
-		return picker;
+	public MaterialSetter getMaterialSetter() {
+		return setter;
 	}
 
-	public void setMaterialPicker(MaterialPicker picker) {
-		this.picker = picker;
+	public void setMaterialSetter(MaterialSetter setter) {
+		this.setter = setter;
 	}
 
 	public Value getX() {

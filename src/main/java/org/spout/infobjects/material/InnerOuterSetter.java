@@ -32,36 +32,44 @@ import org.spout.api.geo.World;
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.material.MaterialRegistry;
 
-public class InnerOuterPicker extends MaterialPicker {
-	private BlockMaterial inner;
-	private short innerData;
-	private BlockMaterial outer;
-	private short outerData;
+public class InnerOuterSetter extends MaterialSetter {
+	protected BlockMaterial inner;
+	protected short innerData;
+	protected BlockMaterial outer;
+	protected short outerData;
 
-	public InnerOuterPicker(String name) {
+	public InnerOuterSetter(String name) {
 		super(name);
 	}
 
 	@Override
 	public void configure(Map<String, String> properties) {
 		inner = (BlockMaterial) MaterialRegistry.get(properties.get("inner.material"));
-		innerData = Short.parseShort(properties.get("inner.data"));
+		if (properties.containsKey("inner.data")) {
+			innerData = Short.parseShort(properties.get("inner.data"));
+		} else {
+			innerData = -1;
+		}
 		outer = (BlockMaterial) MaterialRegistry.get(properties.get("outer.material"));
-		outerData = Short.parseShort(properties.get("outer.data"));
+		if (properties.containsKey("outer.data")) {
+			outerData = Short.parseShort(properties.get("outer.data"));
+		} else {
+			outerData = -1;
+		}
 	}
 
 	@Override
 	public void setMaterial(World world, int x, int y, int z, boolean outer) {
 		if (outer) {
-			world.setBlockMaterial(x, y, z, this.outer, outerData, null);
+			world.setBlockMaterial(x, y, z, this.outer, outerData == -1 ? this.outer.getData() : outerData, null);
 		} else {
-			world.setBlockMaterial(x, y, z, inner, innerData, null);
+			world.setBlockMaterial(x, y, z, inner, innerData == -1 ? inner.getData() : innerData, null);
 		}
 	}
 
 	@Override
 	public String toString() {
-		return "InnerOuterPicker{name=" + getName() + ", inner=" + inner + ", innerData="
+		return "InnerOuterSetter{name=" + getName() + ", inner=" + inner + ", innerData="
 				+ innerData + ", outer=" + outer + ", outerData=" + outerData + '}';
 	}
 }

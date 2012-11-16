@@ -90,14 +90,14 @@ public class Sphere extends Shape {
 					final boolean outer = lengthSq(nextXn, yn, zn) > 1
 							|| lengthSq(xn, nextYn, zn) > 1
 							|| lengthSq(xn, yn, nextZn) > 1;
-					picker.setMaterial(iwgo.transform(px + xx, py + yy, pz + zz), outer);
-					picker.setMaterial(iwgo.transform(px - xx, py + yy, pz + zz), outer);
-					picker.setMaterial(iwgo.transform(px + xx, py - yy, pz + zz), outer);
-					picker.setMaterial(iwgo.transform(px + xx, py + yy, pz - zz), outer);
-					picker.setMaterial(iwgo.transform(px - xx, py - yy, pz + zz), outer);
-					picker.setMaterial(iwgo.transform(px + xx, py - yy, pz - zz), outer);
-					picker.setMaterial(iwgo.transform(px - xx, py + yy, pz - zz), outer);
-					picker.setMaterial(iwgo.transform(px - xx, py - yy, pz - zz), outer);
+					setter.setMaterial(iwgo.transform(px + xx, py + yy, pz + zz), outer);
+					setter.setMaterial(iwgo.transform(px - xx, py + yy, pz + zz), outer);
+					setter.setMaterial(iwgo.transform(px + xx, py - yy, pz + zz), outer);
+					setter.setMaterial(iwgo.transform(px + xx, py + yy, pz - zz), outer);
+					setter.setMaterial(iwgo.transform(px - xx, py - yy, pz + zz), outer);
+					setter.setMaterial(iwgo.transform(px + xx, py - yy, pz - zz), outer);
+					setter.setMaterial(iwgo.transform(px - xx, py + yy, pz - zz), outer);
+					setter.setMaterial(iwgo.transform(px - xx, py - yy, pz - zz), outer);
 				}
 			}
 		}
@@ -127,7 +127,7 @@ public class Sphere extends Shape {
 
 	@Override
 	public String toString() {
-		return "Sphere{x=" + x + ", y=" + y + ", z=" + z + ", picker=" + picker + ", radiusX="
+		return "Sphere{x=" + x + ", y=" + y + ", z=" + z + ", setter=" + setter + ", radiusX="
 				+ radiusX + ", radiusY=" + radiusY + ", radiusZ=" + radiusZ + '}';
 	}
 

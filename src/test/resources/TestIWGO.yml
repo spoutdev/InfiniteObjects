@@ -4,17 +4,15 @@ variables:
   height: ranI=25-30
   minLeafHeight: ranI=7-10
   
-materials:
+setters:
   leaves:
     type: simple
     properties:
-      material: Leaves
-      data: 3
+      material: Jungle Leaves
   wood:
     type: simple
     properties:
-      material: Wood
-      data: 3
+      material: Jungle Wood
   
 conditions:
   ground:

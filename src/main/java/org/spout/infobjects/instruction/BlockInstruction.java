@@ -28,12 +28,12 @@ package org.spout.infobjects.instruction;
 
 import java.util.Random;
 import org.spout.infobjects.IWGO;
-import org.spout.infobjects.material.MaterialPicker;
+import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
 public class BlockInstruction extends Instruction {
-	private MaterialPicker picker;
+	private MaterialSetter setter;
 	private Value x;
 	private Value y;
 	private Value z;
@@ -45,7 +45,7 @@ public class BlockInstruction extends Instruction {
 
 	@Override
 	public void execute() {
-		picker.setMaterial(getIWGO().transform(x.getValue(), y.getValue(), z.getValue()), outer);
+		setter.setMaterial(getIWGO().transform(x.getValue(), y.getValue(), z.getValue()), outer);
 	}
 
 	@Override
@@ -78,12 +78,12 @@ public class BlockInstruction extends Instruction {
 		this.outer = outer;
 	}
 
-	public MaterialPicker getPicker() {
-		return picker;
+	public MaterialSetter getMaterialSetter() {
+		return setter;
 	}
 
-	public void setPicker(MaterialPicker picker) {
-		this.picker = picker;
+	public void setPicker(MaterialSetter setter) {
+		this.setter = setter;
 	}
 
 	public Value getX() {
@@ -112,7 +112,7 @@ public class BlockInstruction extends Instruction {
 
 	@Override
 	public String toString() {
-		return "BlockInstruction{picker=" + picker + ", x=" + x + ", y=" + y + ", z=" + z
+		return "BlockInstruction{setter=" + setter + ", x=" + x + ", y=" + y + ", z=" + z
 				+ ", outer=" + outer + '}';
 	}
 }

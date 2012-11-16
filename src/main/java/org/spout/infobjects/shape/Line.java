@@ -55,9 +55,10 @@ public class Line extends Shape {
 	@Override
 	public void draw() {
 		final Point start = iwgo.transform(x.getValue(), y.getValue(), z.getValue());
-		final BlockIterator line = new BlockIterator(start, start.add(lengthX.getValue(), lengthY.getValue(), lengthZ.getValue()));
+		final BlockIterator line = new BlockIterator(start, start.add(lengthX.getValue(),
+				lengthY.getValue(), lengthZ.getValue()));
 		while (line.hasNext()) {
-			picker.setMaterial(line.next().getPosition(), true);
+			setter.setMaterial(line.next().getPosition(), true);
 		}
 	}
 
@@ -85,7 +86,7 @@ public class Line extends Shape {
 
 	@Override
 	public String toString() {
-		return "Line{x=" + x + ", y=" + y + ", z=" + z + ", picker=" + picker + ", lengthX="
+		return "Line{x=" + x + ", y=" + y + ", z=" + z + ", setter=" + setter + ", lengthX="
 				+ lengthX + ", lengthY=" + lengthY + ", lengthZ=" + lengthZ + '}';
 	}
 }

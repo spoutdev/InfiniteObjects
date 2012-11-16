@@ -40,7 +40,7 @@ import org.spout.infobjects.instruction.BlockInstruction;
 import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.instruction.PlaceInstruction;
 import org.spout.infobjects.instruction.RepeatInstruction;
-import org.spout.infobjects.material.MaterialPicker;
+import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.shape.Shape;
 import org.spout.infobjects.value.IncrementableValue;
 import org.spout.infobjects.variable.Variable;
@@ -71,9 +71,9 @@ public class IWGOTest {
 		}
 		System.out.println();
 
-		System.out.println("Material pickers:");
-		for (MaterialPicker picker : iwgo.getMaterialPickers()) {
-			System.out.println('\t' + picker.toString());
+		System.out.println("Material setters:");
+		for (MaterialSetter setter : iwgo.getMaterialSetters()) {
+			System.out.println('\t' + setter.toString());
 		}
 		System.out.println();
 
@@ -109,7 +109,7 @@ public class IWGOTest {
 				System.out.println("\tX: " + block.getX());
 				System.out.println("\tY: " + block.getY());
 				System.out.println("\tZ: " + block.getZ());
-				System.out.println("\tPicker: " + block.getPicker());
+				System.out.println("\tSetter: " + block.getMaterialSetter());
 				System.out.println("\tOuter: " + block.isOuter());
 			}
 			System.out.println("\t--------------------");
@@ -119,8 +119,8 @@ public class IWGOTest {
 
 	private void initTestMaterials() throws Exception {
 		final String[] testMaterials = new String[]{
-			"Leaves",
-			"Wood",
+			"Jungle Leaves",
+			"Jungle Wood",
 			"Stone",
 			"Dirt",
 			"Grass",

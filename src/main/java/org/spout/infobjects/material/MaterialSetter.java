@@ -29,30 +29,45 @@ package org.spout.infobjects.material;
 import java.util.Map;
 
 import org.spout.api.geo.World;
-import org.spout.api.material.BlockMaterial;
-import org.spout.api.material.MaterialRegistry;
+import org.spout.api.geo.discrete.Point;
+import org.spout.api.util.Named;
 
-public class SimplePicker extends MaterialPicker {
-	private BlockMaterial material;
-	private short data;
+import org.spout.infobjects.util.TypeFactory;
 
-	public SimplePicker(String name) {
-		super(name);
+public abstract class MaterialSetter implements Named {
+	private static final TypeFactory<MaterialSetter> SETTERS = new TypeFactory<MaterialSetter>(String.class);
+	private final String name;
+
+	static {
+		register("simple", SimpleSetter.class);
+		register("random-simple", RandomSimpleSetter.class);
+		register("inner-outer", InnerOuterSetter.class);
+		register("random-inner-outer", RandomInnerOuterSetter.class);
 	}
 
-	@Override
-	public void configure(Map<String, String> properties) {
-		material = (BlockMaterial) MaterialRegistry.get(properties.get("material"));
-		data = Short.parseShort(properties.get("data"));
+	public MaterialSetter(String name) {
+		this.name = name;
 	}
 
-	@Override
-	public void setMaterial(World world, int x, int y, int z, boolean outer) {
-		world.setBlockMaterial(x, y, z, material, data, null);
+	public abstract void configure(Map<String, String> properties);
+
+	public void setMaterial(Point pos, boolean outer) {
+		setMaterial(pos.getWorld(), pos.getBlockX(), pos.getBlockY(), pos.getBlockZ(), outer);
 	}
 
+	public abstract void setMaterial(World world, int x, int y, int z, boolean outer);
+
 	@Override
-	public String toString() {
-		return "SimplePicker{name=" + getName() + ", material=" + material + ", data=" + data + '}';
+	public String getName() {
+		return name;
+	}
+
+	public static void register(String type, Class<? extends MaterialSetter> setter) {
+		SETTERS.register(type, setter);
+	}
+
+	public static MaterialSetter newMaterialSetter(String type, String name) {
+		return SETTERS.newInstance(type, name);
+
 	}
 }

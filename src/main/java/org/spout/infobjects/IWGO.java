@@ -42,7 +42,7 @@ import org.spout.api.util.Named;
 
 import org.spout.infobjects.condition.Condition;
 import org.spout.infobjects.instruction.Instruction;
-import org.spout.infobjects.material.MaterialPicker;
+import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.variable.Variable;
 import org.spout.infobjects.variable.VariableSource;
@@ -52,7 +52,7 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 	private World world;
 	private final IntVector3 position = new IntVector3(0, 0, 0);
 	private final Map<String, Variable> variables = new LinkedHashMap<String, Variable>();
-	private final Map<String, MaterialPicker> pickers = new HashMap<String, MaterialPicker>();
+	private final Map<String, MaterialSetter> setters = new HashMap<String, MaterialSetter>();
 	private final List<Condition> conditions = new ArrayList<Condition>();
 	private final Map<String, Instruction> instructions = new LinkedHashMap<String, Instruction>();
 
@@ -93,9 +93,9 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 				((RandomOwner) variable.getRawValue()).setRandom(random);
 			}
 		}
-		for (MaterialPicker picker : pickers.values()) {
-			if (picker instanceof RandomOwner) {
-				((RandomOwner) picker).setRandom(random);
+		for (MaterialSetter setter : setters.values()) {
+			if (setter instanceof RandomOwner) {
+				((RandomOwner) setter).setRandom(random);
 			}
 		}
 		for (Condition condition : conditions) {
@@ -155,20 +155,20 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 		return variables.containsKey(name);
 	}
 
-	public void addMaterialPicker(MaterialPicker picker) {
-		pickers.put(picker.getName(), picker);
+	public void addMaterialSetter(MaterialSetter setter) {
+		setters.put(setter.getName(), setter);
 	}
 
-	public MaterialPicker getMaterialPicker(String name) {
-		return pickers.get(name);
+	public MaterialSetter getMaterialSetter(String name) {
+		return setters.get(name);
 	}
 
-	public Collection<MaterialPicker> getMaterialPickers() {
-		return pickers.values();
+	public Collection<MaterialSetter> getMaterialSetters() {
+		return setters.values();
 	}
 
-	public Map<String, MaterialPicker> getMaterialPickerMap() {
-		return pickers;
+	public Map<String, MaterialSetter> getMaterialSetterMap() {
+		return setters;
 	}
 
 	public void addCondition(Condition condition) {

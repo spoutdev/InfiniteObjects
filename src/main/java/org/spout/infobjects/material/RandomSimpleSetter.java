@@ -30,32 +30,27 @@ import java.util.Map;
 import java.util.Random;
 
 import org.spout.api.geo.World;
-import org.spout.api.material.BlockMaterial;
-import org.spout.api.material.MaterialRegistry;
 
 import org.spout.infobjects.util.RandomOwner;
 
-public class RandomSimplePicker extends MaterialPicker implements RandomOwner {
+public class RandomSimpleSetter extends SimpleSetter implements RandomOwner {
 	private Random random = new Random();
-	private BlockMaterial material;
-	private short data;
 	private byte odd;
 
-	public RandomSimplePicker(String name) {
+	public RandomSimpleSetter(String name) {
 		super(name);
 	}
 
 	@Override
 	public void configure(Map<String, String> properties) {
-		material = (BlockMaterial) MaterialRegistry.get(properties.get("material"));
-		data = Short.parseShort(properties.get("data"));
+		super.configure(properties);
 		odd = Byte.parseByte(properties.get("odd"));
 	}
 
 	@Override
 	public void setMaterial(World world, int x, int y, int z, boolean outer) {
 		if (random.nextInt(100) < odd) {
-			world.setBlockMaterial(x, y, z, material, data, null);
+			super.setMaterial(world, x, y, z, outer);
 		}
 	}
 
@@ -66,7 +61,7 @@ public class RandomSimplePicker extends MaterialPicker implements RandomOwner {
 
 	@Override
 	public String toString() {
-		return "RandomSimplePicker{name=" + getName() + ", material=" + material + ", data=" + data
+		return "RandomSimpleSetter{name=" + getName() + ", material=" + material + ", data=" + data
 				+ ", odd=" + odd + '}';
 	}
 }

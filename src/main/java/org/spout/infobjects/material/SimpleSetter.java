@@ -27,59 +27,36 @@
 package org.spout.infobjects.material;
 
 import java.util.Map;
-import java.util.Random;
 
 import org.spout.api.geo.World;
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.material.MaterialRegistry;
 
-import org.spout.infobjects.util.RandomOwner;
+public class SimpleSetter extends MaterialSetter {
+	protected BlockMaterial material;
+	protected short data;
 
-public class RandomInnerOuterPicker extends MaterialPicker implements RandomOwner {
-	private Random random = new Random();
-	private BlockMaterial inner;
-	private short innerData;
-	private byte innerOdd;
-	private BlockMaterial outer;
-	private short outerData;
-	private byte outerOdd;
-
-	public RandomInnerOuterPicker(String name) {
+	public SimpleSetter(String name) {
 		super(name);
 	}
 
 	@Override
 	public void configure(Map<String, String> properties) {
-		inner = (BlockMaterial) MaterialRegistry.get(properties.get("inner.material"));
-		innerData = Short.parseShort(properties.get("inner.data"));
-		innerOdd = Byte.parseByte(properties.get("inner.odd"));
-		outer = (BlockMaterial) MaterialRegistry.get(properties.get("outer.material"));
-		outerData = Short.parseShort(properties.get("outer.data"));
-		outerOdd = Byte.parseByte(properties.get("outer.odd"));
-	}
-
-	@Override
-	public void setMaterial(World world, int x, int y, int z, boolean outer) {
-		if (outer) {
-			if (random.nextInt(100) < outerOdd) {
-				world.setBlockMaterial(x, y, z, this.outer, outerData, null);
-			}
+		material = (BlockMaterial) MaterialRegistry.get(properties.get("material"));
+		if (properties.containsKey("data")) {
+			data = Short.parseShort(properties.get("data"));
 		} else {
-			if (random.nextInt(100) < innerOdd) {
-				world.setBlockMaterial(x, y, z, inner, innerData, null);
-			}
+			data = -1;
 		}
 	}
 
 	@Override
-	public void setRandom(Random random) {
-		this.random = random;
+	public void setMaterial(World world, int x, int y, int z, boolean outer) {
+		world.setBlockMaterial(x, y, z, material, data == -1 ? material.getData() : data, null);
 	}
 
 	@Override
 	public String toString() {
-		return "RandomInnerOuterPicker{name=" + getName() + ", inner=" + inner + ", innerData="
-				+ innerData + ", innerOdd=" + innerOdd + ", outer=" + outer + ", outerData="
-				+ outerData + ", outerOdd=" + outerOdd + '}';
+		return "SimpleSetter{name=" + getName() + ", material=" + material + ", data=" + data + '}';
 	}
 }

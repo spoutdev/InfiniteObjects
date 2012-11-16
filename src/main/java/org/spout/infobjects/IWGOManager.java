@@ -47,7 +47,7 @@ import org.spout.infobjects.instruction.BlockInstruction;
 import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.instruction.PlaceInstruction;
 import org.spout.infobjects.instruction.RepeatInstruction;
-import org.spout.infobjects.material.MaterialPicker;
+import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.shape.Shape;
 import org.spout.infobjects.util.IWGOUtils;
 import org.spout.infobjects.value.IncrementableValue;
@@ -117,7 +117,7 @@ public class IWGOManager {
 	private static IWGO buildIWGO(Configuration config) {
 		final IWGO iwgo = new IWGO(config.getNode("name").getString());
 		loadVariables(iwgo, config.getNode("variables"), iwgo);
-		loadMaterialPickers(iwgo, config.getNode("materials"));
+		loadMaterialSetters(iwgo, config.getNode("setters"));
 		loadConditions(iwgo, config.getNode("conditions"));
 		loadInstructions(iwgo, config.getNode("instructions"));
 		iwgo.randomize();
@@ -131,14 +131,14 @@ public class IWGOManager {
 		}
 	}
 
-	private static void loadMaterialPickers(IWGO iwgo, ConfigurationNode materialsNode) {
-		for (String key : materialsNode.getKeys(false)) {
-			final ConfigurationNode pickerNode = materialsNode.getNode(key);
-			final MaterialPicker picker =
-					MaterialPicker.newPicker(pickerNode.getNode("type").getString(), key);
-			if (picker != null) {
-				picker.configure(IWGOUtils.toStringMap(pickerNode.getNode("properties")));
-				iwgo.addMaterialPicker(picker);
+	private static void loadMaterialSetters(IWGO iwgo, ConfigurationNode settersNode) {
+		for (String key : settersNode.getKeys(false)) {
+			final ConfigurationNode setterNode = settersNode.getNode(key);
+			final MaterialSetter setter =
+					MaterialSetter.newMaterialSetter(setterNode.getNode("type").getString(), key);
+			if (setter != null) {
+				setter.configure(IWGOUtils.toStringMap(setterNode.getNode("properties")));
+				iwgo.addMaterialSetter(setter);
 			}
 		}
 	}
@@ -171,7 +171,7 @@ public class IWGOManager {
 			if (shape != null) {
 				shape.setSize(ValueParser.parse(IWGOUtils.toStringMap(shapeNode.getNode("size")), iwgo, instruction));
 				shape.setPosition(ValueParser.parse(IWGOUtils.toStringMap(shapeNode.getNode("position")), iwgo, instruction));
-				shape.setMaterialPicker(iwgo.getMaterialPicker(shapeNode.getNode("material").getString()));
+				shape.setMaterialSetter(iwgo.getMaterialSetter(shapeNode.getNode("material").getString()));
 				instruction.addShape(shape);
 			}
 		}
@@ -194,7 +194,7 @@ public class IWGOManager {
 		instruction.setX(ValueParser.parse(positionNode.getNode("x").getString(), iwgo, instruction));
 		instruction.setY(ValueParser.parse(positionNode.getNode("y").getString(), iwgo, instruction));
 		instruction.setZ(ValueParser.parse(positionNode.getNode("z").getString(), iwgo, instruction));
-		instruction.setPicker(iwgo.getMaterialPicker(blockNode.getNode("material").getString()));
+		instruction.setPicker(iwgo.getMaterialSetter(blockNode.getNode("material").getString()));
 		instruction.setOuter(Boolean.parseBoolean(blockNode.getNode("outer").getString()));
 	}
 

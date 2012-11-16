@@ -27,47 +27,44 @@
 package org.spout.infobjects.material;
 
 import java.util.Map;
+import java.util.Random;
 
 import org.spout.api.geo.World;
-import org.spout.api.geo.discrete.Point;
-import org.spout.api.util.Named;
 
-import org.spout.infobjects.util.TypeFactory;
+import org.spout.infobjects.util.RandomOwner;
 
-public abstract class MaterialPicker implements Named {
-	private static final TypeFactory<MaterialPicker> PICKERS = new TypeFactory<MaterialPicker>(String.class);
-	private final String name;
+public class RandomInnerOuterSetter extends InnerOuterSetter implements RandomOwner {
+	private Random random = new Random();
+	private byte innerOdd;
+	private byte outerOdd;
 
-	static {
-		register("simple", SimplePicker.class);
-		register("random-simple", RandomSimplePicker.class);
-		register("inner-outer", InnerOuterPicker.class);
-		register("random-inner-outer", RandomInnerOuterPicker.class);
+	public RandomInnerOuterSetter(String name) {
+		super(name);
 	}
-
-	public MaterialPicker(String name) {
-		this.name = name;
-	}
-
-	public abstract void configure(Map<String, String> properties);
-
-	public void setMaterial(Point pos, boolean outer) {
-		setMaterial(pos.getWorld(), pos.getBlockX(), pos.getBlockY(), pos.getBlockZ(), outer);
-	}
-
-	public abstract void setMaterial(World world, int x, int y, int z, boolean outer);
 
 	@Override
-	public String getName() {
-		return name;
+	public void configure(Map<String, String> properties) {
+		super.configure(properties);
+		innerOdd = Byte.parseByte(properties.get("inner.odd"));
+		outerOdd = Byte.parseByte(properties.get("outer.odd"));
 	}
 
-	public static void register(String type, Class<? extends MaterialPicker> picker) {
-		PICKERS.register(type, picker);
+	@Override
+	public void setMaterial(World world, int x, int y, int z, boolean outer) {
+		if (random.nextInt(100) < (outer ? outerOdd : innerOdd)) {
+			super.setMaterial(world, x, y, z, outer);
+		}
 	}
 
-	public static MaterialPicker newPicker(String type, String name) {
-		return PICKERS.newInstance(type, name);
+	@Override
+	public void setRandom(Random random) {
+		this.random = random;
+	}
 
+	@Override
+	public String toString() {
+		return "RandomInnerOuterSetter{name=" + getName() + ", inner=" + inner + ", innerData="
+				+ innerData + ", innerOdd=" + innerOdd + ", outer=" + outer + ", outerData="
+				+ outerData + ", outerOdd=" + outerOdd + '}';
 	}
 }
