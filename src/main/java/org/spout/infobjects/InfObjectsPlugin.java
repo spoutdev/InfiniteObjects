@@ -47,7 +47,8 @@ public class InfObjectsPlugin extends CommonPlugin {
 				new AnnotatedCommandRegistrationFactory(new SimpleInjector(), new SimpleAnnotatedCommandExecutorFactory());
 		getEngine().getRootCommand().addSubCommands(this, IWGOCommands.class, commandRegFactory);
 		MANAGER.loadIWGOs();
-		getLogger().info("v" + getDescription().getVersion() + " enabled.");
+		getLogger().info("Loaded " + MANAGER.getIWGOMap().size() + " IWGO(s)");
+		getLogger().info("v" + getDescription().getVersion() + " enabled");
 	}
 
 	@Override

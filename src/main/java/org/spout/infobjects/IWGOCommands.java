@@ -40,7 +40,7 @@ import org.spout.api.geo.discrete.Point;
  * @author DDoS
  */
 public class IWGOCommands {
-	@Command(aliases = {"iwgo"}, usage = "<name>", flags = "f", desc = "Spawn a IWGO at your location. Use -f to ignore canPlace check", min = 1, max = 2)
+	@Command(aliases = {"iwgo"}, usage = "<name>", flags = "f", desc = "Spawn a IWGO at your location. Use -f to ignore conditions check", min = 1, max = 2)
 	@CommandPermissions("infobjects.place")
 	public void iwgo(CommandContext args, CommandSource source) throws CommandException {
 		if (!(source instanceof Player)) {
@@ -66,5 +66,12 @@ public class IWGOCommands {
 		}
 		iwgo.placeObject(world, x, y, z);
 		iwgo.randomize();
+	}
+
+	@Command(aliases = {"reloadiwgos"}, desc = "Reload the IWGOs")
+	@CommandPermissions("infobjects.reload")
+	public void reloadIWGOs(CommandContext args, CommandSource source) throws CommandException {
+		InfObjectsPlugin.getIWGOManager().reloadIWGOs();
+		source.sendMessage("Reloaded " + InfObjectsPlugin.getIWGOManager().getIWGOMap().size() + " IWGO(s) successfully.");
 	}
 }
