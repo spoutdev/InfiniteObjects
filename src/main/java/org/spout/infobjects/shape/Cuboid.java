@@ -44,6 +44,7 @@ public class Cuboid extends Shape {
 
 	@Override
 	public void setSize(Map<String, Value> sizes) {
+		super.setSize(sizes);
 		length = sizes.get("x");
 		height = sizes.get("y");
 		depth = sizes.get("z");

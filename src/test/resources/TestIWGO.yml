@@ -3,7 +3,7 @@ name: tree
 variables:
   height: ranI=25-30
   minLeafHeight: ranI=7-10
-  
+
 setters:
   leaves:
     type: simple
@@ -13,7 +13,7 @@ setters:
     type: simple
     properties:
       material: Jungle Wood
-  
+
 conditions:
   ground:
     shape: cuboid
@@ -47,7 +47,7 @@ conditions:
       - Stone
       - Jungle Wood
       - Jungle Leaves
-  
+
 instructions:
   leafPod:
     type: place

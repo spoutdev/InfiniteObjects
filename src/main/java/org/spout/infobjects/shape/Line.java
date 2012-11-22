@@ -47,6 +47,7 @@ public class Line extends Shape {
 
 	@Override
 	public void setSize(Map<String, Value> sizes) {
+		super.setSize(sizes);
 		lengthX = sizes.get("x");
 		lengthY = sizes.get("y");
 		lengthZ = sizes.get("z");

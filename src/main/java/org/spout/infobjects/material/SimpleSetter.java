@@ -30,7 +30,8 @@ import java.util.Map;
 
 import org.spout.api.geo.World;
 import org.spout.api.material.BlockMaterial;
-import org.spout.api.material.MaterialRegistry;
+
+import org.spout.infobjects.util.IWGOUtils;
 
 public class SimpleSetter extends MaterialSetter {
 	protected BlockMaterial material;
@@ -42,7 +43,7 @@ public class SimpleSetter extends MaterialSetter {
 
 	@Override
 	public void configure(Map<String, String> properties) {
-		material = (BlockMaterial) MaterialRegistry.get(properties.get("material"));
+		material = IWGOUtils.tryGetBlockMaterial(properties.get("material"));
 		if (properties.containsKey("data")) {
 			data = Short.parseShort(properties.get("data"));
 		} else {

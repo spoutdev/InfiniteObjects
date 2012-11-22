@@ -38,6 +38,7 @@ import de.congrace.exp4j.constant.Constants;
 import de.congrace.exp4j.function.Functions;
 
 import org.spout.infobjects.variable.VariableSource;
+import org.spout.infobjects.exception.ValueParsingException;
 
 public class ValueParser {
 	private static final String RANDOM_INT_VALUE_REGEX = "ranI\\=.*";
@@ -45,6 +46,9 @@ public class ValueParser {
 	private static final String RANDOM_MATH_EXP_VALUE_REGEX = ".*ran[IF]\\(.*";
 
 	public static Value parse(String expression, VariableSource... sources) {
+		if (expression == null || expression.trim().equals("")) {
+			throw new ValueParsingException("Value can not be null or empty");
+		}
 		expression = expression.trim();
 		if (expression.matches(RANDOM_INT_VALUE_REGEX)) {
 			return new RandomIntValue(expression);
@@ -56,22 +60,19 @@ public class ValueParser {
 				varMathExpValue.addVariableSources(sources);
 				return varMathExpValue;
 			} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
+				throw new ValueParsingException(expression, ex);
 			}
 		} else if (expression.matches(RANDOM_MATH_EXP_VALUE_REGEX)) {
 			try {
 				return new MathExpressionValue(expression);
 			} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
+				throw new ValueParsingException(expression, ex);
 			}
 		}
 		try {
 			return new DoubleValue(expression);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			return null;
+			throw new ValueParsingException(expression, ex);
 		}
 	}
 

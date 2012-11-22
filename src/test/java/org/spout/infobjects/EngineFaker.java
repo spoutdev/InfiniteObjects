@@ -26,6 +26,9 @@
  */
 package org.spout.infobjects;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.powermock.api.mockito.PowerMockito;
 
 import org.spout.api.Engine;
@@ -42,10 +45,15 @@ public class EngineFaker {
 		try {
 			PowerMockito.when(engine, Engine.class.getMethod("getPlatform", (Class[]) null)).
 					withNoArguments().thenReturn(Platform.SERVER);
-			PowerMockito.stub(Engine.class.getMethod("getFilesystem", (Class[]) null)).
-					toReturn(filesystem);
-			PowerMockito.stub(FileSystem.class.getMethod("getResource", new Class[]{String.class})).
-					toReturn(null);
+			PowerMockito.when(engine, Engine.class.getMethod("getLogger", (Class[]) null)).
+					withNoArguments().thenReturn(new Logger("InfObjects.Tests", null) {
+				@Override
+				public void log(Level level, String string) {
+					System.out.println("[" + level.getLocalizedName() + "] " + string);
+				}
+			});
+			PowerMockito.stub(Engine.class.getMethod("getFilesystem", (Class[]) null)).toReturn(filesystem);
+			PowerMockito.stub(FileSystem.class.getMethod("getResource", new Class[]{String.class})).toReturn(null);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -54,6 +62,9 @@ public class EngineFaker {
 		}
 		if (engine.getPlatform() == null) {
 			throw new NullPointerException("Platform is null");
+		}
+		if (engine.getLogger() == null) {
+			throw new NullPointerException("Logger is null");
 		}
 		Spout.setEngine(engine);
 		ENGINE = engine;

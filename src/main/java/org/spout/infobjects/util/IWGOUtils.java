@@ -30,6 +30,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import org.spout.api.material.BlockMaterial;
+import org.spout.api.material.Material;
+import org.spout.api.material.MaterialRegistry;
+
 import org.spout.api.util.config.ConfigurationNode;
 
 public class IWGOUtils {
@@ -50,5 +54,16 @@ public class IWGOUtils {
 			}
 		}
 		return propertiesMap;
+	}
+
+	public static BlockMaterial tryGetBlockMaterial(String name) {
+		if (name == null || name.trim().equals("")) {
+			throw new IllegalArgumentException("Name can not be null or empty");
+		}
+		final Material material = MaterialRegistry.get(name);
+		if (material == null || !(material instanceof BlockMaterial)) {
+			throw new IllegalArgumentException("\"" + name + "\" is not a block material");
+		}
+		return (BlockMaterial) material;
 	}
 }

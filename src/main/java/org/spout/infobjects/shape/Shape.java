@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.exception.ShapeLoadingException;
 import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.util.TypeFactory;
@@ -96,12 +97,31 @@ public abstract class Shape implements RandomOwner {
 	}
 
 	public void setPosition(Map<String, Value> position) {
+		if (!position.containsKey("x")) {
+			throw new ShapeLoadingException("x coordinate for position is missing");
+		}
+		if (!position.containsKey("y")) {
+			throw new ShapeLoadingException("y coordinate for position is missing");
+		}
+		if (!position.containsKey("z")) {
+			throw new ShapeLoadingException("z coordinate for position is missing");
+		}
 		x = position.get("x");
 		y = position.get("y");
 		z = position.get("z");
 	}
 
-	public abstract void setSize(Map<String, Value> sizes);
+	public void setSize(Map<String, Value> sizes) {
+		if (!sizes.containsKey("x")) {
+			throw new ShapeLoadingException("x size is missing");
+		}
+		if (!sizes.containsKey("y")) {
+			throw new ShapeLoadingException("y size is missing");
+		}
+		if (!sizes.containsKey("z")) {
+			throw new ShapeLoadingException("z size is missing");
+		}
+	}
 
 	public void randomize() {
 		x.calculate();

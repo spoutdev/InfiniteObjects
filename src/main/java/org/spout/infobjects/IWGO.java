@@ -57,7 +57,10 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 	private final Map<String, Instruction> instructions = new LinkedHashMap<String, Instruction>();
 
 	public IWGO(String name) {
-		this.name = name;
+		if (name == null || name.trim().equals("")) {
+			throw new IllegalArgumentException("Name cannot be null or empty");
+		}
+		this.name = name.trim();
 	}
 
 	@Override

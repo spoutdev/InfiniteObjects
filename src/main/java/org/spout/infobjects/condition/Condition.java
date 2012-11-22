@@ -34,6 +34,7 @@ import java.util.Set;
 import org.spout.api.material.BlockMaterial;
 
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.exception.ConditionLoadingException;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.util.TypeFactory;
 import org.spout.infobjects.value.Value;
@@ -89,9 +90,28 @@ public abstract class Condition implements RandomOwner {
 		this.z = z;
 	}
 
-	public abstract void setSize(Map<String, Value> sizes);
+	public void setSize(Map<String, Value> sizes) {
+		if (!sizes.containsKey("x")) {
+			throw new ConditionLoadingException("x size is missing");
+		}
+		if (!sizes.containsKey("y")) {
+			throw new ConditionLoadingException("y size is missing");
+		}
+		if (!sizes.containsKey("z")) {
+			throw new ConditionLoadingException("z size is missing");
+		}
+	}
 
 	public void setPosition(Map<String, Value> position) {
+		if (!position.containsKey("x")) {
+			throw new ConditionLoadingException("x coordinate for position is missing");
+		}
+		if (!position.containsKey("y")) {
+			throw new ConditionLoadingException("y coordinate for position is missing");
+		}
+		if (!position.containsKey("z")) {
+			throw new ConditionLoadingException("z coordinate for position is missing");
+		}
 		x = position.get("x");
 		y = position.get("y");
 		z = position.get("z");

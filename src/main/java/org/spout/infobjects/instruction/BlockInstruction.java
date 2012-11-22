@@ -27,6 +27,7 @@
 package org.spout.infobjects.instruction;
 
 import java.util.Random;
+
 import org.spout.infobjects.IWGO;
 import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.util.RandomOwner;
@@ -82,7 +83,7 @@ public class BlockInstruction extends Instruction {
 		return setter;
 	}
 
-	public void setPicker(MaterialSetter setter) {
+	public void setMaterialSetter(MaterialSetter setter) {
 		this.setter = setter;
 	}
 

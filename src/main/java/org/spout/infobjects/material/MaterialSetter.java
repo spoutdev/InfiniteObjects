@@ -68,6 +68,5 @@ public abstract class MaterialSetter implements Named {
 
 	public static MaterialSetter newMaterialSetter(String type, String name) {
 		return SETTERS.newInstance(type, name);
-
 	}
 }

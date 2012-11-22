@@ -44,6 +44,7 @@ public class Sphere extends Shape {
 
 	@Override
 	public void setSize(Map<String, Value> sizes) {
+		super.setSize(sizes);
 		radiusX = sizes.get("x");
 		radiusY = sizes.get("y");
 		radiusZ = sizes.get("z");
