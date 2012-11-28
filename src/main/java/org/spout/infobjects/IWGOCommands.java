@@ -46,7 +46,7 @@ public class IWGOCommands {
 		if (!(source instanceof Player)) {
 			throw new CommandException("You must be a player.");
 		}
-		final IWGO iwgo = InfObjectsPlugin.getIWGOManager().getIWGO(args.getString(0));
+		final IWGO iwgo = InfObjects.getIWGOManager().getIWGO(args.getString(0));
 		if (iwgo == null) {
 			throw new CommandException("Invalid IWGO name.");
 		}
@@ -71,7 +71,7 @@ public class IWGOCommands {
 	@Command(aliases = {"reloadiwgos"}, desc = "Reload the IWGOs")
 	@CommandPermissions("infobjects.reload")
 	public void reloadIWGOs(CommandContext args, CommandSource source) throws CommandException {
-		InfObjectsPlugin.getIWGOManager().reloadIWGOs();
-		source.sendMessage("Reloaded " + InfObjectsPlugin.getIWGOManager().getIWGOMap().size() + " IWGO(s) successfully.");
+		InfObjects.getIWGOManager().reloadIWGOs();
+		source.sendMessage("Reloaded " + InfObjects.getIWGOManager().getIWGOMap().size() + " IWGO(s) successfully.");
 	}
 }

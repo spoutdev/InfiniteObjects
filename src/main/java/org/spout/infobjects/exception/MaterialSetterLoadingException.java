@@ -26,7 +26,7 @@
  */
 package org.spout.infobjects.exception;
 
-public class MaterialSetterLoadingException extends RuntimeException {
+public class MaterialSetterLoadingException extends Exception {
 	public MaterialSetterLoadingException(String string) {
 		super(string);
 	}

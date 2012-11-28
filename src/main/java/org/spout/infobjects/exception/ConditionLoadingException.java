@@ -26,7 +26,7 @@
  */
 package org.spout.infobjects.exception;
 
-public class ConditionLoadingException extends RuntimeException {
+public class ConditionLoadingException extends Exception {
 	public ConditionLoadingException(String string) {
 		super(string);
 	}

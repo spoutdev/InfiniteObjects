@@ -33,6 +33,7 @@ import org.spout.api.geo.discrete.Point;
 import org.spout.api.util.BlockIterator;
 
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.exception.ShapeLoadingException;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
@@ -46,7 +47,7 @@ public class Line extends Shape {
 	}
 
 	@Override
-	public void setSize(Map<String, Value> sizes) {
+	public void setSize(Map<String, Value> sizes) throws ShapeLoadingException {
 		super.setSize(sizes);
 		lengthX = sizes.get("x");
 		lengthY = sizes.get("y");

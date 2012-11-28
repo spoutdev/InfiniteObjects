@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.exception.ShapeLoadingException;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
@@ -43,7 +44,7 @@ public class Sphere extends Shape {
 	}
 
 	@Override
-	public void setSize(Map<String, Value> sizes) {
+	public void setSize(Map<String, Value> sizes) throws ShapeLoadingException {
 		super.setSize(sizes);
 		radiusX = sizes.get("x");
 		radiusY = sizes.get("y");

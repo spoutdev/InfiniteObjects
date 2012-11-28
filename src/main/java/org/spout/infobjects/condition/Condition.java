@@ -90,7 +90,7 @@ public abstract class Condition implements RandomOwner {
 		this.z = z;
 	}
 
-	public void setSize(Map<String, Value> sizes) {
+	public void setSize(Map<String, Value> sizes) throws ConditionLoadingException {
 		if (!sizes.containsKey("x")) {
 			throw new ConditionLoadingException("x size is missing");
 		}
@@ -102,7 +102,7 @@ public abstract class Condition implements RandomOwner {
 		}
 	}
 
-	public void setPosition(Map<String, Value> position) {
+	public void setPosition(Map<String, Value> position) throws ConditionLoadingException {
 		if (!position.containsKey("x")) {
 			throw new ConditionLoadingException("x coordinate for position is missing");
 		}

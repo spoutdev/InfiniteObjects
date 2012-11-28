@@ -26,7 +26,7 @@
  */
 package org.spout.infobjects.exception;
 
-public class VariableLoadingException extends RuntimeException {
+public class VariableLoadingException extends Exception {
 	public VariableLoadingException(String name, Throwable thrwbl) {
 		super("Could not load variable \"" + name + "\"", thrwbl);
 	}

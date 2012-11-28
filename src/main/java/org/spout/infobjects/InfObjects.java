@@ -32,7 +32,7 @@ import org.spout.api.command.annotated.SimpleAnnotatedCommandExecutorFactory;
 import org.spout.api.command.annotated.SimpleInjector;
 import org.spout.api.plugin.CommonPlugin;
 
-public class InfObjectsPlugin extends CommonPlugin {
+public class InfObjects extends CommonPlugin {
 	private static final IWGOManager MANAGER = new IWGOManager("plugins/InfObjects/IWGOs", true);
 
 	@Override

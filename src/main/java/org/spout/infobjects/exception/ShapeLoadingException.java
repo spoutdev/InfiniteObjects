@@ -26,7 +26,7 @@
  */
 package org.spout.infobjects.exception;
 
-public class ShapeLoadingException extends RuntimeException {
+public class ShapeLoadingException extends Exception {
 	public ShapeLoadingException(String string) {
 		super(string);
 	}

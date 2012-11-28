@@ -96,7 +96,7 @@ public abstract class Shape implements RandomOwner {
 		this.z = z;
 	}
 
-	public void setPosition(Map<String, Value> position) {
+	public void setPosition(Map<String, Value> position) throws ShapeLoadingException {
 		if (!position.containsKey("x")) {
 			throw new ShapeLoadingException("x coordinate for position is missing");
 		}
@@ -111,7 +111,7 @@ public abstract class Shape implements RandomOwner {
 		z = position.get("z");
 	}
 
-	public void setSize(Map<String, Value> sizes) {
+	public void setSize(Map<String, Value> sizes) throws ShapeLoadingException {
 		if (!sizes.containsKey("x")) {
 			throw new ShapeLoadingException("x size is missing");
 		}
