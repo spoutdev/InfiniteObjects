@@ -35,10 +35,6 @@ import org.spout.api.exception.CommandException;
 import org.spout.api.geo.World;
 import org.spout.api.geo.discrete.Point;
 
-/**
- *
- * @author DDoS
- */
 public class IWGOCommands {
 	@Command(aliases = {"iwgo"}, usage = "<name>", flags = "f", desc = "Spawn a IWGO at your location. Use -f to ignore conditions check", min = 1, max = 2)
 	@CommandPermissions("infobjects.place")
@@ -51,7 +47,7 @@ public class IWGOCommands {
 			throw new CommandException("Invalid IWGO name.");
 		}
 		final Player player = (Player) source;
-		final Point loc = player.getTransform().getPosition();
+		final Point loc = player.getScene().getPosition();
 		final World world = loc.getWorld();
 		final int x = loc.getBlockX();
 		final int y = loc.getBlockY();

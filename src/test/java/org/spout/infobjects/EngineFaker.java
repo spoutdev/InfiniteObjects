@@ -33,8 +33,8 @@ import org.powermock.api.mockito.PowerMockito;
 
 import org.spout.api.Engine;
 import org.spout.api.FileSystem;
+import org.spout.api.Platform;
 import org.spout.api.Spout;
-import org.spout.api.plugin.Platform;
 
 public class EngineFaker {
 	private static final Engine ENGINE;
