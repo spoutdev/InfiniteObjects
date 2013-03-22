@@ -34,14 +34,32 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.spout.infobjects.exception.IWGOLoadingException;
 
+/**
+ * A simple manager for iWGOs located in the same directory. This manager loads all the iWGO in a
+ * directory and manages access and loading.
+ */
 public class IWGOManager {
 	private final File directory;
 	private final Map<String, IWGO> iwgos = new ConcurrentHashMap<String, IWGO>();
 
-	public IWGOManager(String folderDir, boolean createFolder) {
-		this(new File(folderDir), createFolder);
+	/**
+	 * Constructs a new iWGO manager. It will manage a directory and if wanted can create the
+	 * directory if missing. The string path will be converted to a {@link java.io.File}.
+	 *
+	 * @param dirPath The directory to manage
+	 * @param createDir If true, will create the directory if missing
+	 */
+	public IWGOManager(String dirPath, boolean createDir) {
+		this(new File(dirPath), createDir);
 	}
 
+	/**
+	 * Constructs a new iWGO manager. It will manage a directory and if wanted can create the
+	 * directory if missing.
+	 *
+	 * @param directory The directory to manage
+	 * @param createFolder If true, will create the directory if missing
+	 */
 	public IWGOManager(File directory, boolean createFolder) {
 		if (!directory.exists()) {
 			if (createFolder) {
@@ -56,6 +74,10 @@ public class IWGOManager {
 		this.directory = directory;
 	}
 
+	/**
+	 * Loads the iWGO from the files in the directory. Will replace any already loaded versions of
+	 * the iWGOs.
+	 */
 	public void loadIWGOs() {
 		synchronized (iwgos) {
 			for (File file : directory.listFiles()) {
@@ -72,25 +94,47 @@ public class IWGOManager {
 		}
 	}
 
+	/**
+	 * Unloads the iWGO. Clears the map.
+	 */
 	public void unloadIWGOs() {
 		synchronized (iwgos) {
 			iwgos.clear();
 		}
 	}
 
+	/**
+	 * Calls {@link #unloadIWGOs()} then calls {@link #loadIWGOs()}.
+	 */
 	public void reloadIWGOs() {
 		unloadIWGOs();
 		loadIWGOs();
 	}
 
+	/**
+	 * Gets an iWGO from it's name.
+	 *
+	 * @param name The name of the iWGO to lookup
+	 * @return
+	 */
 	public IWGO getIWGO(String name) {
 		return iwgos.get(name);
 	}
 
+	/**
+	 * Gets the loaded iWGO as an unmodifiable collection.
+	 *
+	 * @return The loaded iWGOs
+	 */
 	public Collection<IWGO> getIWGOs() {
 		return Collections.unmodifiableCollection(iwgos.values());
 	}
 
+	/**
+	 * Gets the loaded iWGO map (mapped as name and iWGO) as an unmodifiable map.
+	 *
+	 * @return The loaded iWGO map
+	 */
 	public Map<String, IWGO> getIWGOMap() {
 		return Collections.unmodifiableMap(iwgos);
 	}

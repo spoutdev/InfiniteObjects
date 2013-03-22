@@ -29,7 +29,7 @@ package org.spout.infobjects.exception;
 import java.io.File;
 
 public class IWGOLoadingException extends Exception {
-	public IWGOLoadingException(File source, Throwable thrwbl) {
-		super("Could not load iWGO file \"" + source.getPath() + "\"", thrwbl);
+	public IWGOLoadingException(String source, Throwable thrwbl) {
+		super("Could not load iWGO from \"" + source + "\"", thrwbl);
 	}
 }

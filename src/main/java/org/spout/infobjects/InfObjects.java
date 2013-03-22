@@ -32,6 +32,10 @@ import org.spout.api.command.annotated.SimpleAnnotatedCommandExecutorFactory;
 import org.spout.api.command.annotated.SimpleInjector;
 import org.spout.api.plugin.CommonPlugin;
 
+/**
+ * The InfiniteObjects plugin. Keeps a static {@link IWGOManager} for the folder
+ * "plugins/InfObjects/IWGOs".
+ */
 public class InfObjects extends CommonPlugin {
 	private static final IWGOManager MANAGER = new IWGOManager("plugins/InfObjects/IWGOs", true);
 
@@ -62,6 +66,11 @@ public class InfObjects extends CommonPlugin {
 		MANAGER.reloadIWGOs();
 	}
 
+	/**
+	 * Gets the static iWGO manager for the folder "plugins/InfObjects/IWGOs" kept by the plugin.
+	 *
+	 * @return The iWGO manager.
+	 */
 	public static IWGOManager getIWGOManager() {
 		return MANAGER;
 	}

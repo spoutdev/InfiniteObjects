@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.spout.api.Spout;
+import org.spout.api.util.config.Configuration;
 import org.spout.api.util.config.ConfigurationNode;
 import org.spout.api.util.config.yaml.YamlConfiguration;
 
@@ -53,10 +54,47 @@ import org.spout.infobjects.value.ValueParser;
 import org.spout.infobjects.variable.Variable;
 import org.spout.infobjects.variable.VariableSource;
 
+/**
+ * A static class for loading iWGO from files and configurations.
+ */
 public class IWGOLoader {
+	private IWGOLoader() {
+	}
+
+	/**
+	 * Attempts to load an iWGO from a file. This file must be a YAML configuration.
+	 *
+	 * @param file The YAML configuration file
+	 * @return The loaded and ready to use iWGO
+	 * @throws IWGOLoadingException If loading of the iWGO fails
+	 */
 	public static IWGO loadIWGO(File file) throws IWGOLoadingException {
+		return loadIWGO(new YamlConfiguration(file), file.getPath());
+	}
+
+	/**
+	 * Attempts to load an iWGO from a configuration.
+	 *
+	 * @param config The configuration
+	 * @return The loaded and ready to use iWGO
+	 * @throws IWGOLoadingException If loading of the iWGO fails
+	 */
+	public static IWGO loadIWGO(Configuration config) throws IWGOLoadingException {
+		return loadIWGO(config, null);
+	}
+
+	/**
+	 * Attempts to load an iWGO from a configuration. This method accepts the source of the
+	 * configuration for better debugging of iWGO loading failures. This source maybe a file path,
+	 * plugin name or any other string representation of the source of the configuration.
+	 *
+	 * @param config The configuration
+	 * @param source The source of the configuration. May be null
+	 * @return The loaded and ready to use iWGO
+	 * @throws IWGOLoadingException If loading of the iWGO fails
+	 */
+	public static IWGO loadIWGO(Configuration config, String source) throws IWGOLoadingException {
 		try {
-			final YamlConfiguration config = new YamlConfiguration(file);
 			config.load();
 			final IWGO iwgo = new IWGO(config.getNode("name").getString());
 			loadVariables(iwgo, config.getNode("variables"), iwgo);
@@ -66,10 +104,19 @@ public class IWGOLoader {
 			iwgo.randomize();
 			return iwgo;
 		} catch (Exception ex) {
-			throw new IWGOLoadingException(file, ex);
+			throw new IWGOLoadingException(source != null ? source : "unknown source", ex);
 		}
 	}
 
+	/**
+	 * Loads the variables into the source.
+	 *
+	 * @param destination The source to load to
+	 * @param variableNode The configuration node with the variable info
+	 * @param sources The variable sources for the new variables (as these might depend on other
+	 * already loaded variables)
+	 * @throws VariableLoadingException If variable loading fails
+	 */
 	public static void loadVariables(VariableSource destination, ConfigurationNode variableNode,
 			VariableSource... sources) throws VariableLoadingException {
 		for (String key : variableNode.getKeys(false)) {
@@ -81,6 +128,13 @@ public class IWGOLoader {
 		}
 	}
 
+	/**
+	 * Loads the material setter to the iWGO.
+	 *
+	 * @param iwgo The iWGO to load to
+	 * @param settersNode The configuration node with the material setter info
+	 * @throws MaterialSetterLoadingException If material setter loading fails
+	 */
 	public static void loadMaterialSetters(IWGO iwgo, ConfigurationNode settersNode)
 			throws MaterialSetterLoadingException {
 		for (String key : settersNode.getKeys(false)) {
@@ -96,6 +150,13 @@ public class IWGOLoader {
 		}
 	}
 
+	/**
+	 * Loads the instructions to the iWGO.
+	 *
+	 * @param iwgo The iWGO to load to
+	 * @param instructionsNode The configuration node with the instruction info
+	 * @throws InstructionLoadingException If instruction loading fails
+	 */
 	public static void loadInstructions(IWGO iwgo, ConfigurationNode instructionsNode)
 			throws InstructionLoadingException {
 		for (String key : instructionsNode.getKeys(false)) {
@@ -178,6 +239,13 @@ public class IWGOLoader {
 		instruction.setOuter(Boolean.parseBoolean(blockNode.getNode("outer").getString()));
 	}
 
+	/**
+	 * Loads the conditions to the iWGO.
+	 *
+	 * @param iwgo The iWGO to load to
+	 * @param conditionsNode The configuration node with the condition info
+	 * @throws ConditionLoadingException If condition loading fails
+	 */
 	public static void loadConditions(IWGO iwgo, ConfigurationNode conditionsNode)
 			throws ConditionLoadingException {
 		for (String key : conditionsNode.getKeys(false)) {
@@ -197,15 +265,27 @@ public class IWGOLoader {
 		}
 	}
 
-	public static void logIWGOLoadingException(IWGOLoadingException ex) {
-		logIWGOLoadingException(Spout.getLogger(), ex);
+	/**
+	 * Logs iWGO loading exceptions to the Spout default logger (as defined by {@link org.spout.api.Spout#getLogger()})
+	 * in a user friendly manner.
+	 *
+	 * @param exception The exception to log
+	 */
+	public static void logIWGOLoadingException(IWGOLoadingException exception) {
+		logIWGOLoadingException(Spout.getLogger(), exception);
 	}
 
-	public static void logIWGOLoadingException(Logger logger, IWGOLoadingException ex) {
+	/**
+	 * Logs iWGO loading exceptions to the specified logger in a user friendly manner.
+	 *
+	 * @param logger The logger to log to
+	 * @param exception The exception to log
+	 */
+	public static void logIWGOLoadingException(Logger logger, IWGOLoadingException exception) {
 		logger.log(Level.WARNING, "------------------------");
 		logger.log(Level.WARNING, "| IWGO LOADING FAILURE |");
 		logger.log(Level.WARNING, "------------------------");
-		Throwable cause = ex;
+		Throwable cause = exception;
 		int tabCount = 0;
 		do {
 			String tabs = "";

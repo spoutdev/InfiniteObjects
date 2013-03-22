@@ -35,10 +35,22 @@ import org.spout.api.exception.CommandException;
 import org.spout.api.geo.World;
 import org.spout.api.geo.discrete.Point;
 
+/**
+ * Commands for the InfiniteObjects plugin. These are mostly designed for testing and
+ * administration.
+ */
 public class IWGOCommands {
+	/**
+	 * Attempts to place an iWGO at the player location. Placement checks can be disabled with the
+	 * -f flag.
+	 *
+	 * @param args The command arguments
+	 * @param source The source of the command
+	 * @throws CommandException If the the iWGO name couldn't be found or the source isn't a player.
+	 */
 	@Command(aliases = {"iwgo"}, usage = "<name>", flags = "f", desc = "Spawn a IWGO at your location. Use -f to ignore conditions check", min = 1, max = 2)
 	@CommandPermissions("infobjects.place")
-	public void iwgo(CommandContext args, CommandSource source) throws CommandException {
+	public void placeIWGO(CommandContext args, CommandSource source) throws CommandException {
 		if (!(source instanceof Player)) {
 			throw new CommandException("You must be a player.");
 		}
@@ -64,9 +76,15 @@ public class IWGOCommands {
 		iwgo.randomize();
 	}
 
+	/**
+	 * Reloads the plugin's static iWGO manager.
+	 *
+	 * @param args The command arguments
+	 * @param source The source of the command
+	 */
 	@Command(aliases = {"reloadiwgos"}, desc = "Reload the IWGOs")
 	@CommandPermissions("infobjects.reload")
-	public void reloadIWGOs(CommandContext args, CommandSource source) throws CommandException {
+	public void reloadIWGOs(CommandContext args, CommandSource source) {
 		InfObjects.getIWGOManager().reloadIWGOs();
 		source.sendMessage("Reloaded " + InfObjects.getIWGOManager().getIWGOMap().size() + " IWGO(s) successfully.");
 	}
