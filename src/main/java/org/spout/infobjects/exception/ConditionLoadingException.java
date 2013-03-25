@@ -26,11 +26,26 @@
  */
 package org.spout.infobjects.exception;
 
+/**
+ * An exception thrown when the loading of a condition fails.
+ */
 public class ConditionLoadingException extends Exception {
+	/**
+	 * Constructs a new condition loading exception from the message.
+	 *
+	 * @param string The message of this exception
+	 */
 	public ConditionLoadingException(String string) {
 		super(string);
 	}
 
+	/**
+	 * Constructs a new condition loading exception with the name of the condition and a parent
+	 * exception.
+	 *
+	 * @param name The name of the condition
+	 * @param thrwbl The exception which caused this one
+	 */
 	public ConditionLoadingException(String name, Throwable thrwbl) {
 		super("Could not load condition \"" + name + "\"", thrwbl);
 	}

@@ -26,11 +26,26 @@
  */
 package org.spout.infobjects.exception;
 
+/**
+ * An exception thrown when the parsing of a value fails.
+ */
 public class ValueParsingException extends RuntimeException {
+	/**
+	 * Constructs a new value parsing exception from the message.
+	 *
+	 * @param string The message of this exception
+	 */
 	public ValueParsingException(String string) {
 		super(string);
 	}
 
+	/**
+	 * Constructs a new exception from the expression which failed to parse and the parent
+	 * exception.
+	 *
+	 * @param expression The exception that failed to parse
+	 * @param thrwbl The exception which caused this one
+	 */
 	public ValueParsingException(String expression, Throwable thrwbl) {
 		super("Could not parse value \"" + expression + "\"", thrwbl);
 	}

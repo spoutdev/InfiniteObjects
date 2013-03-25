@@ -26,11 +26,26 @@
  */
 package org.spout.infobjects.exception;
 
+/**
+ * An exception thrown when the loading of a material setter fails.
+ */
 public class MaterialSetterLoadingException extends Exception {
+	/**
+	 * Constructs a new material setter exception from the message.
+	 *
+	 * @param string The message of this exception
+	 */
 	public MaterialSetterLoadingException(String string) {
 		super(string);
 	}
 
+	/**
+	 * Constructs a new material setter exception from the name of the material setter and the
+	 * parent exception.
+	 *
+	 * @param name The name of the material setter
+	 * @param thrwbl The exception that caused this one
+	 */
 	public MaterialSetterLoadingException(String name, Throwable thrwbl) {
 		super("Could not load material setter \"" + name + "\"", thrwbl);
 	}

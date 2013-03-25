@@ -32,25 +32,45 @@ import java.util.Random;
 import org.spout.api.geo.discrete.Point;
 
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.exception.ConditionLoadingException;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
+/**
+ * An implementation of {@link Condition}. This condition will check cuboid volumes.
+ */
 public class CuboidCondition extends Condition {
 	private Value length;
 	private Value height;
 	private Value depth;
 
+	/**
+	 * Constructs a new cuboid condition.
+	 *
+	 * @param iwgo The parent iWGO
+	 */
 	public CuboidCondition(IWGO iwgo) {
 		super(iwgo);
 	}
 
+	/**
+	 * Sets the size of the cuboid volume. Expected size values are x, y, and z.
+	 *
+	 * @param sizes The sizes mapped as name and value
+	 */
 	@Override
-	public void setSize(Map<String, Value> sizes) {
+	public void setSize(Map<String, Value> sizes) throws ConditionLoadingException {
+		super.setSize(sizes);
 		length = sizes.get("x");
 		height = sizes.get("y");
 		depth = sizes.get("z");
 	}
 
+	/**
+	 * Checks the cuboid volume defined from the position to the position plus the size.
+	 *
+	 * @return True if successful, false if not
+	 */
 	@Override
 	public boolean check() {
 		final int px = (int) x.getValue();
@@ -73,6 +93,10 @@ public class CuboidCondition extends Condition {
 		return true;
 	}
 
+	/**
+	 * Randomizes the x, y and z position and size of the cuboid. The sizes will only change if they
+	 * are randomizable.
+	 */
 	@Override
 	public void randomize() {
 		super.randomize();
@@ -81,6 +105,11 @@ public class CuboidCondition extends Condition {
 		depth.calculate();
 	}
 
+	/**
+	 * Sets the randoms of the position and size values to the provided one if they implement {@link org.spout.infobjects.util.RandomOwner}.
+	 *
+	 * @param random The random to set
+	 */
 	@Override
 	public void setRandom(Random random) {
 		super.setRandom(random);
@@ -95,6 +124,11 @@ public class CuboidCondition extends Condition {
 		}
 	}
 
+	/**
+	 * Returns a string representation of this condition.
+	 *
+	 * @return The string representation of the condition
+	 */
 	@Override
 	public String toString() {
 		return "CuboidCondition{x=" + x + ", y=" + y + ", z=" + z + ", materials="

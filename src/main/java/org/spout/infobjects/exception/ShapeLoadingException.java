@@ -26,11 +26,25 @@
  */
 package org.spout.infobjects.exception;
 
+/**
+ * An exception thrown when the loading of a shape fails.
+ */
 public class ShapeLoadingException extends Exception {
+	/**
+	 * Constructs a new shape loading exception from the message.
+	 *
+	 * @param string The message of this exception
+	 */
 	public ShapeLoadingException(String string) {
 		super(string);
 	}
 
+	/**
+	 * Constructs a new shape loading exception from the name of the shape and the parent exception.
+	 *
+	 * @param name The name of the shape
+	 * @param thrwbl The exception that caused this one
+	 */
 	public ShapeLoadingException(String name, Throwable thrwbl) {
 		super("Could not load shape \"" + name + "\"", thrwbl);
 	}

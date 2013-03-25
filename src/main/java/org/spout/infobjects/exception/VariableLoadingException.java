@@ -26,7 +26,17 @@
  */
 package org.spout.infobjects.exception;
 
+/**
+ * An exception thrown when the loading of a variable fails.
+ */
 public class VariableLoadingException extends Exception {
+	/**
+	 * Constructs a new variable loading exception from the name of the variable and the parent
+	 * exception.
+	 *
+	 * @param name The name of the variable
+	 * @param thrwbl The exception which caused this one
+	 */
 	public VariableLoadingException(String name, Throwable thrwbl) {
 		super("Could not load variable \"" + name + "\"", thrwbl);
 	}

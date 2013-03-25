@@ -26,11 +26,26 @@
  */
 package org.spout.infobjects.exception;
 
+/**
+ * An exception thrown when the loading of an instruction fails.
+ */
 public class InstructionLoadingException extends Exception {
+	/**
+	 * Constructs a new instruction loading exception from the message.
+	 *
+	 * @param string The message of this exception
+	 */
 	public InstructionLoadingException(String string) {
 		super(string);
 	}
 
+	/**
+	 * Constructs a new instruction loading exception from the name of the instruction and the
+	 * parent exception.
+	 *
+	 * @param name The name of the instruction
+	 * @param thrwbl The exception that caused this one
+	 */
 	public InstructionLoadingException(String name, Throwable thrwbl) {
 		super("Could not load instruction \"" + name + "\"", thrwbl);
 	}

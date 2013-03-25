@@ -115,7 +115,7 @@ public class IWGOManager {
 	 * Gets an iWGO from it's name.
 	 *
 	 * @param name The name of the iWGO to lookup
-	 * @return
+	 * @return The iWGO with the request name, or null if none could be found
 	 */
 	public IWGO getIWGO(String name) {
 		return iwgos.get(name);
