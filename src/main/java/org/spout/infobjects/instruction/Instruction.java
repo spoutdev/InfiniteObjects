@@ -37,33 +37,56 @@ import org.spout.infobjects.util.TypeFactory;
 import org.spout.infobjects.variable.Variable;
 import org.spout.infobjects.variable.VariableSource;
 
+/**
+ * An abstract instruction. This class provides the parent iWGO, the name of the instruction and
+ * it's variables to the extending class.
+ */
 public abstract class Instruction implements VariableSource, RandomOwner {
 	private static final TypeFactory<Instruction> INSTRUCTIONS = new TypeFactory<Instruction>(IWGO.class, String.class);
 	private final IWGO iwgo;
 	private final String name;
 	private final Map<String, Variable> variables = new LinkedHashMap<String, Variable>();
 
-	static {
-		INSTRUCTIONS.register("place", PlaceInstruction.class);
-		INSTRUCTIONS.register("repeat", RepeatInstruction.class);
-		INSTRUCTIONS.register("block", BlockInstruction.class);
-	}
-
+	/**
+	 * Constructs a new instruction from the parent iWGO and its name.
+	 *
+	 * @param iwgo The parent iWGO
+	 * @param name The name of the instruction
+	 */
 	public Instruction(IWGO iwgo, String name) {
 		this.iwgo = iwgo;
 		this.name = name;
 	}
 
+	/**
+	 * Gets the parent iWGO.
+	 *
+	 * @return The parent iWGO
+	 */
 	public IWGO getIWGO() {
 		return iwgo;
 	}
 
+	/**
+	 * Gets the name of this instruction.
+	 *
+	 * @return The name of this iWGO
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Executes this instruction. Each instruction is called once by placement call, unless another
+	 * instruction calls the method.
+	 */
 	public abstract void execute();
 
+	/**
+	 * Sets the random of the variables for this instruction.
+	 *
+	 * @param random The random to use
+	 */
 	@Override
 	public void setRandom(Random random) {
 		for (Variable variable : variables.values()) {
@@ -73,37 +96,90 @@ public abstract class Instruction implements VariableSource, RandomOwner {
 		}
 	}
 
+	/**
+	 * Randomizes the variables for this instruction.
+	 */
 	public void randomize() {
 		for (Variable variable : variables.values()) {
 			variable.calculate();
 		}
 	}
 
-	@Override
-	public Variable getVariable(String name) {
-		return variables.get(name);
-	}
-
-	@Override
-	public Collection<Variable> getVariables() {
-		return variables.values();
-	}
-
-	@Override
-	public Map<String, Variable> getVariableMap() {
-		return variables;
-	}
-
-	@Override
-	public boolean hasVariable(String name) {
-		return variables.containsKey(name);
-	}
-
+	/**
+	 * Adds a variable to the instruction.
+	 *
+	 * @param variable The variable to add
+	 */
 	@Override
 	public void addVariable(Variable variable) {
 		variables.put(variable.getName(), variable);
 	}
 
+	/**
+	 * Gets a variable from it's name from the instruction.
+	 *
+	 * @param name The name of the variable to lookup
+	 * @return The variable if found, else null
+	 */
+	@Override
+	public Variable getVariable(String name) {
+		return variables.get(name);
+	}
+
+	/**
+	 * Gets all the variables from the instruction. Changes to this collection are reflected in the
+	 * instruction.
+	 *
+	 * @return All the variables as a collection
+	 */
+	@Override
+	public Collection<Variable> getVariables() {
+		return variables.values();
+	}
+
+	/**
+	 * Returns the variable map (mapped as name and variable) from the instruction. Changes to this
+	 * map are reflected in the instruction.
+	 *
+	 * @return The variable map.
+	 */
+	@Override
+	public Map<String, Variable> getVariableMap() {
+		return variables;
+	}
+
+	/**
+	 * Checks if this instruction has the desired variable from the name.
+	 *
+	 * @param name The name of the variable to lookup
+	 * @return True if found, false if not
+	 */
+	@Override
+	public boolean hasVariable(String name) {
+		return variables.containsKey(name);
+	}
+
+	/**
+	 * Registers a new instruction. This is necessary for the loader to recognize it when loading a
+	 * new iWGO. This methods required the type, which is also the name used in the iWGO
+	 * configurations. For example: "shape", "repeat" or "block".
+	 *
+	 * @param type The type, also the name of the instruction
+	 * @param instruction The class of the instruction to register
+	 */
+	public static void register(String type, Class<? extends Instruction> instruction) {
+		INSTRUCTIONS.register(type, instruction);
+	}
+
+	/**
+	 * Creates a new instruction via reflection. The type is the one used during the registration.
+	 * The IWGO and the name will be passed to the constructor.
+	 *
+	 * @param type The type as registered
+	 * @param iwgo The iWGO to pass to the constructor
+	 * @param name The name to pass to the constructor
+	 * @return The new instruction
+	 */
 	public static Instruction newInstruction(String type, IWGO iwgo, String name) {
 		return INSTRUCTIONS.newInstance(type, iwgo, name);
 

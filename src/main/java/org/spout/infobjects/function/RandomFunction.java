@@ -33,22 +33,37 @@ import de.congrace.exp4j.function.Functions;
 
 import org.spout.infobjects.util.RandomOwner;
 
+/**
+ * An abstract random function. This class provides the random instance and implementation of the {@link org.spout.infobjects.util.RandomOwner}
+ * interface for the extending class.
+ */
 public abstract class RandomFunction extends Function implements RandomOwner {
 	protected Random random = new Random();
 
-	static {
-		Functions.register(new RandomIntFunction());
-		Functions.register(new RandomDoubleFunction());
-	}
-
+	/**
+	 * Constructs a new random function from the name of the function and it's argument count.
+	 *
+	 * @param name The name of the function
+	 * @param argumentCount The argument count
+	 */
 	public RandomFunction(String name, int argumentCount) {
 		super(name, argumentCount);
 	}
 
+	/**
+	 * Constructs a new function from it's name. The argument count will de defaulted to 1.
+	 *
+	 * @param name The name of the function
+	 */
 	public RandomFunction(String name) {
 		super(name);
 	}
 
+	/**
+	 * Sets the random for this random function.
+	 *
+	 * @param random The random to set
+	 */
 	@Override
 	public void setRandom(Random random) {
 		this.random = random;

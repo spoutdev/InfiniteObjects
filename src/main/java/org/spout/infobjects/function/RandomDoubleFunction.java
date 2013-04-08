@@ -26,15 +26,33 @@
  */
 package org.spout.infobjects.function;
 
+import de.congrace.exp4j.function.Functions;
+
 import org.spout.infobjects.util.IWGOUtils;
 
+/**
+ * A function which returns a random double between the min (inclusive) and the max (exclusive).
+ */
 public class RandomDoubleFunction extends RandomFunction {
+	static {
+		Functions.register(new RandomDoubleFunction());
+	}
+
+	/**
+	 * Constructs a new random double function. The name is "ranF" and the argument count is 2.
+	 */
 	public RandomDoubleFunction() {
 		super("ranF", 2);
 	}
 
+	/**
+	 * Applies the function to the arguments.
+	 *
+	 * @param arguments The arguments for the function
+	 * @return A random double between the min (inclusive) and the max (exclusive)
+	 */
 	@Override
-	public double applyFunction(double... doubles) {
-		return IWGOUtils.nextDouble(random, doubles[0], doubles[1]);
+	public double applyFunction(double... arguments) {
+		return IWGOUtils.nextDouble(random, arguments[0], arguments[1]);
 	}
 }

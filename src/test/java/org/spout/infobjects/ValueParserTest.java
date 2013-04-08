@@ -78,7 +78,8 @@ public class ValueParserTest {
 
 	@Before
 	public void before() throws ClassNotFoundException {
-		Class.forName("org.spout.infobjects.function.RandomFunction");
+		Class.forName("org.spout.infobjects.function.RandomDoubleFunction");
+		Class.forName("org.spout.infobjects.function.RandomIntFunction");
 	}
 
 	@Test

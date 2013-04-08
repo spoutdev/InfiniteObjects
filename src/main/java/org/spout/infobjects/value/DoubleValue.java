@@ -37,10 +37,8 @@ public class DoubleValue implements Value {
 		this.value = value;
 	}
 
-	public DoubleValue(String exp)
-			throws UnknownFunctionException, UnparsableExpressionException {
-		final ExpressionBuilder builder = new ExpressionBuilder(exp);
-		value = builder.build().calculate();
+	public DoubleValue(String exp) throws UnknownFunctionException, UnparsableExpressionException {
+		value = new ExpressionBuilder(exp).build().calculate();
 	}
 
 	@Override

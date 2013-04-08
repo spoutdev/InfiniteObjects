@@ -37,46 +37,105 @@ import org.spout.infobjects.value.IncrementableValue;
 import org.spout.infobjects.value.Value;
 import org.spout.infobjects.variable.Variable;
 
+/**
+ * An instruction for repeating another instruction a specific number of time. This instruction can
+ * also increment iWGO variables for each repeat. The values of the variables are reset once
+ * execution is over.
+ */
 public class RepeatInstruction extends Instruction {
 	private Instruction repeat;
 	private Value times;
 	private final Set<IncrementableValue> incrementables = new HashSet<IncrementableValue>();
 
+	static {
+		Instruction.register("repeat", RepeatInstruction.class);
+	}
+
+	/**
+	 * Constructs a new repeat instruction from the parent iWGO and its name.
+	 *
+	 * @param iwgo The parent iWGO
+	 * @param name The name
+	 */
 	public RepeatInstruction(IWGO iwgo, String name) {
 		super(iwgo, name);
 	}
 
-	public void setRepeat(Instruction repeat) {
-		this.repeat = repeat;
-	}
-
-	public void setTimes(Value times) {
-		this.times = times;
-	}
-
+	/**
+	 * Gets the instruction to repeat.
+	 *
+	 * @return The instruction to repeat
+	 */
 	public Instruction getRepeat() {
 		return repeat;
 	}
 
+	/**
+	 * Sets the instruction to repeat.
+	 *
+	 * @param repeat The instruction to repeat
+	 */
+	public void setRepeat(Instruction repeat) {
+		this.repeat = repeat;
+	}
+
+	/**
+	 * Gets the number of times to repeat the instruction.
+	 *
+	 * @return The number of times to repeat the instruction
+	 */
 	public Value getTimes() {
 		return times;
 	}
 
+	/**
+	 * Sets the value representing the number of time to repeat the instruction.
+	 *
+	 * @param times The number of times to repeat the instruction
+	 */
+	public void setTimes(Value times) {
+		this.times = times;
+	}
+
+	/**
+	 * Adds a named value to be incremented. This value should have the same name as the iWGO
+	 * variable that needs to be incremented. The incrementable value should have for value the
+	 * value of the iWGO variable.
+	 *
+	 * @param name The name of the iWGO variable to increment
+	 * @param value The incrementable value to increment
+	 */
 	public void addIncrementableValue(String name, IncrementableValue value) {
 		getIWGO().addVariable(new Variable(name, value));
 		incrementables.add(value);
 	}
 
-	public Collection<IncrementableValue> getIncrementables() {
+	/**
+	 * Gets all the incrementable values for this instruction as a set. Changes to this set are
+	 * reflected in the instruction.
+	 *
+	 * @return A set of all the incrementable values
+	 */
+	public Set<IncrementableValue> getIncrementables() {
 		return incrementables;
 	}
 
+	/**
+	 * Randomizes the value for the times to repeat the repeated instruction and calls the super
+	 * method.
+	 */
 	@Override
 	public void randomize() {
 		super.randomize();
 		times.calculate();
 	}
 
+	/**
+	 * Sets the random of the value for the times to repeat the repeated instruction and calls the
+	 * super method.
+	 *
+	 * @param random THe random to use
+	 */
 	@Override
 	public void setRandom(Random random) {
 		super.setRandom(random);
@@ -85,6 +144,11 @@ public class RepeatInstruction extends Instruction {
 		}
 	}
 
+	/**
+	 * Executes this instruction. Executes the repeated instruction for the number of times
+	 * specified by the time value, incrementing all the incrementable values once during each
+	 * iteration. Resets all the incrementable values to the original values once execution is over.
+	 */
 	@Override
 	public void execute() {
 		for (int i = (int) times.getValue(); i >= 0; i--) {
@@ -99,6 +163,11 @@ public class RepeatInstruction extends Instruction {
 		}
 	}
 
+	/**
+	 * Returns the string representation of this repeat instruction.
+	 *
+	 * @return The string form of this instruction
+	 */
 	@Override
 	public String toString() {
 		return "RepeatInstruction{repeat=" + repeat + ", times=" + times + ", incrementables="

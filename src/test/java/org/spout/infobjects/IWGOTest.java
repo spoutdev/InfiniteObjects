@@ -34,12 +34,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.spout.api.material.BlockMaterial;
-import org.spout.infobjects.condition.Condition;
 
+import org.spout.infobjects.condition.Condition;
 import org.spout.infobjects.instruction.BlockInstruction;
 import org.spout.infobjects.instruction.Instruction;
-import org.spout.infobjects.instruction.PlaceInstruction;
 import org.spout.infobjects.instruction.RepeatInstruction;
+import org.spout.infobjects.instruction.ShapeInstruction;
 import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.shape.Shape;
 import org.spout.infobjects.value.IncrementableValue;
@@ -50,7 +50,12 @@ public class IWGOTest {
 	public void before() throws Exception {
 		EngineFaker.setupEngine();
 		initTestMaterials();
-		Class.forName("org.spout.infobjects.function.RandomFunction");
+		Class.forName("org.spout.infobjects.function.RandomDoubleFunction");
+		Class.forName("org.spout.infobjects.function.RandomIntFunction");
+		Class.forName("org.spout.infobjects.condition.CuboidCondition");
+		Class.forName("org.spout.infobjects.instruction.ShapeInstruction");
+		Class.forName("org.spout.infobjects.instruction.RepeatInstruction");
+		Class.forName("org.spout.infobjects.instruction.BlockInstruction");
 	}
 
 	@Test
@@ -91,9 +96,9 @@ public class IWGOTest {
 			for (Variable variable : instruction.getVariables()) {
 				System.out.println("\t\t" + variable);
 			}
-			if (instruction instanceof PlaceInstruction) {
+			if (instruction instanceof ShapeInstruction) {
 				System.out.println("\tShapes:");
-				for (Shape shape : ((PlaceInstruction) instruction).getShapes()) {
+				for (Shape shape : ((ShapeInstruction) instruction).getShapes()) {
 					System.out.println("\t\t" + shape);
 				}
 			} else if (instruction instanceof RepeatInstruction) {

@@ -26,15 +26,33 @@
  */
 package org.spout.infobjects.function;
 
+import de.congrace.exp4j.function.Functions;
+
 import org.spout.infobjects.util.IWGOUtils;
 
+/**
+ * A function which returns a random integer between the min (inclusive) and the max (exclusive).
+ */
 public class RandomIntFunction extends RandomFunction {
+	static {
+		Functions.register(new RandomIntFunction());
+	}
+
+	/**
+	 * Constructs a new random integer function. The name is "ranI" and the argument count is 2.
+	 */
 	public RandomIntFunction() {
 		super("ranI", 2);
 	}
 
+	/**
+	 * Applies the function to the arguments.
+	 *
+	 * @param arguments The arguments for the function
+	 * @return A random integer between the min (inclusive) and the max (exclusive)
+	 */
 	@Override
-	public double applyFunction(double... doubles) {
-		return IWGOUtils.nextInt(random, (int) doubles[0], (int) doubles[1]);
+	public double applyFunction(double... arguments) {
+		return IWGOUtils.nextInt(random, (int) arguments[0], (int) arguments[1]);
 	}
 }

@@ -44,7 +44,7 @@ import org.spout.infobjects.exception.ShapeLoadingException;
 import org.spout.infobjects.exception.VariableLoadingException;
 import org.spout.infobjects.instruction.BlockInstruction;
 import org.spout.infobjects.instruction.Instruction;
-import org.spout.infobjects.instruction.PlaceInstruction;
+import org.spout.infobjects.instruction.ShapeInstruction;
 import org.spout.infobjects.instruction.RepeatInstruction;
 import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.shape.Shape;
@@ -165,8 +165,8 @@ public class IWGOLoader {
 				final Instruction instruction =
 						Instruction.newInstruction(instructionNode.getNode("type").getString(), iwgo, key);
 				loadVariables(instruction, instructionNode.getNode("variables"), iwgo, instruction);
-				if (instruction instanceof PlaceInstruction) {
-					loadPlaceInstruction((PlaceInstruction) instruction, instructionNode);
+				if (instruction instanceof ShapeInstruction) {
+					loadShapeInstruction((ShapeInstruction) instruction, instructionNode);
 				} else if (instruction instanceof RepeatInstruction) {
 					loadRepeatInstruction((RepeatInstruction) instruction, instructionNode);
 				} else if (instruction instanceof BlockInstruction) {
@@ -179,7 +179,7 @@ public class IWGOLoader {
 		}
 	}
 
-	private static void loadPlaceInstruction(PlaceInstruction instruction, ConfigurationNode placeNode)
+	private static void loadShapeInstruction(ShapeInstruction instruction, ConfigurationNode placeNode)
 			throws ShapeLoadingException {
 		final IWGO iwgo = instruction.getIWGO();
 		final ConfigurationNode shapesNode = placeNode.getNode("shapes");

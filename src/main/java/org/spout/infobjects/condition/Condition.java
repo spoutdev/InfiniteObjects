@@ -49,16 +49,12 @@ import org.spout.infobjects.value.Value;
  */
 public abstract class Condition implements RandomOwner {
 	private static final TypeFactory<Condition> CONDITIONS = new TypeFactory<Condition>(IWGO.class);
-	protected final Set<BlockMaterial> materials = new HashSet<BlockMaterial>();
 	protected final IWGO iwgo;
+	protected final Set<BlockMaterial> materials = new HashSet<BlockMaterial>();
 	protected Value x;
 	protected Value y;
 	protected Value z;
 	protected ConditionMode mode;
-
-	static {
-		register("cuboid", CuboidCondition.class);
-	}
 
 	/**
 	 * Constructs a new condition.
@@ -296,7 +292,7 @@ public abstract class Condition implements RandomOwner {
 	 * the IWGO is the one to be passed to the constructor.
 	 *
 	 * @param type The type as registered
-	 * @param iwgo The iWGO to pass to the constructor during construction
+	 * @param iwgo The iWGO to pass to the constructor
 	 * @return The new condition
 	 */
 	public static Condition newCondition(String type, IWGO iwgo) {

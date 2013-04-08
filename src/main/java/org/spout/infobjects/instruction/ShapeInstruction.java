@@ -34,21 +34,48 @@ import org.spout.infobjects.IWGO;
 import org.spout.infobjects.shape.Shape;
 import org.spout.infobjects.util.RandomOwner;
 
-public class PlaceInstruction extends Instruction {
+/**
+ * A shape placing instruction.
+ */
+public class ShapeInstruction extends Instruction {
 	private final List<Shape> shapes = new ArrayList<Shape>();
 
-	public PlaceInstruction(IWGO iwgo, String name) {
+	static {
+		Instruction.register("shape", ShapeInstruction.class);
+	}
+
+	/**
+	 * Constructs a new shape instruction from the parent iWGO and its name.
+	 *
+	 * @param iwgo The parent iWGO
+	 * @param name The name
+	 */
+	public ShapeInstruction(IWGO iwgo, String name) {
 		super(iwgo, name);
 	}
 
+	/**
+	 * Adds a shape to be placed during execution of this instruction.
+	 *
+	 * @param shape The shape to add
+	 */
 	public void addShape(Shape shape) {
 		shapes.add(shape);
 	}
 
+	/**
+	 * Get the list of shape for this instruction. Changes to this collection are reflected in the
+	 * instruction.
+	 *
+	 * @return The list of shapes
+	 */
 	public List<Shape> getShapes() {
 		return shapes;
 	}
 
+	/**
+	 * Randomizes all the shapes for this instruction and calls the super method.
+	 */
 	@Override
 	public void randomize() {
 		super.randomize();
@@ -57,6 +84,12 @@ public class PlaceInstruction extends Instruction {
 		}
 	}
 
+	/**
+	 * Sets the randoms for all the shapes for this instruction to the provided one and calls the
+	 * super method.
+	 *
+	 * @param random The random to use
+	 */
 	@Override
 	public void setRandom(Random random) {
 		super.setRandom(random);
@@ -67,6 +100,9 @@ public class PlaceInstruction extends Instruction {
 		}
 	}
 
+	/**
+	 * Executes this instruction by drawing all the shapes.
+	 */
 	@Override
 	public void execute() {
 		for (Shape shape : shapes) {
@@ -74,8 +110,13 @@ public class PlaceInstruction extends Instruction {
 		}
 	}
 
+	/**
+	 * Returns the string representation of this shape instruction.
+	 *
+	 * @return The string form of this instruction
+	 */
 	@Override
 	public String toString() {
-		return "PlaceInstruction{shapes=" + shapes + '}';
+		return "ShapeInstruction{shapes=" + shapes + '}';
 	}
 }

@@ -44,6 +44,10 @@ public class CuboidCondition extends Condition {
 	private Value height;
 	private Value depth;
 
+	static {
+		Condition.register("cuboid", CuboidCondition.class);
+	}
+
 	/**
 	 * Constructs a new cuboid condition.
 	 *
