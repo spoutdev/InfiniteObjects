@@ -50,12 +50,6 @@ public class IWGOTest {
 	public void before() throws Exception {
 		EngineFaker.setupEngine();
 		initTestMaterials();
-		Class.forName("org.spout.infobjects.function.RandomDoubleFunction");
-		Class.forName("org.spout.infobjects.function.RandomIntFunction");
-		Class.forName("org.spout.infobjects.condition.CuboidCondition");
-		Class.forName("org.spout.infobjects.instruction.ShapeInstruction");
-		Class.forName("org.spout.infobjects.instruction.RepeatInstruction");
-		Class.forName("org.spout.infobjects.instruction.BlockInstruction");
 	}
 
 	@Test

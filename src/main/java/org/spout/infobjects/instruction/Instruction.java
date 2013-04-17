@@ -39,7 +39,9 @@ import org.spout.infobjects.variable.VariableSource;
 
 /**
  * An abstract instruction. This class provides the parent iWGO, the name of the instruction and
- * it's variables to the extending class.
+ * it's variables to the extending class. Register your own instruction with {@link #register(java.lang.String, java.lang.Class)}
+ * so the iWGO loader can recognize it. Make sure there's at least one constructor with the same
+ * arguments as the one for this class, as it's the one that will be called for construction.
  */
 public abstract class Instruction implements VariableSource, RandomOwner {
 	private static final TypeFactory<Instruction> INSTRUCTIONS = new TypeFactory<Instruction>(IWGO.class, String.class);
@@ -162,7 +164,7 @@ public abstract class Instruction implements VariableSource, RandomOwner {
 	/**
 	 * Registers a new instruction. This is necessary for the loader to recognize it when loading a
 	 * new iWGO. This methods required the type, which is also the name used in the iWGO
-	 * configurations. For example: "shape", "repeat" or "block".
+	 * configurations. For example: "shape", "repeat" or "block". The type must be unique.
 	 *
 	 * @param type The type, also the name of the instruction
 	 * @param instruction The class of the instruction to register

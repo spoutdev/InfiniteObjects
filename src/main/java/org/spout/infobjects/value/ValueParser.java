@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.congrace.exp4j.constant.Constants;
 import de.congrace.exp4j.function.Functions;
@@ -44,6 +46,16 @@ public class ValueParser {
 	private static final String RANDOM_INT_VALUE_REGEX = "ranI\\=.*";
 	private static final String RANDOM_DOUBLE_VALUE_REGEX = "ranF\\=.*";
 	private static final String RANDOM_MATH_EXP_VALUE_REGEX = ".*ran[IF]\\(.*";
+
+	static {
+		// Load all included resources so they can register themselves
+		try {
+			Class.forName("org.spout.infobjects.function.RandomIntFunction");
+			Class.forName("org.spout.infobjects.function.RandomDoubleFunction");
+		} catch (ClassNotFoundException ex) {
+			Logger.getLogger(ValueParser.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 
 	public static Value parse(String expression, VariableSource... sources) {
 		if (expression == null || expression.trim().equals("")) {

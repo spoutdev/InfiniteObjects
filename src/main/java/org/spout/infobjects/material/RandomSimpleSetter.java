@@ -33,20 +33,49 @@ import org.spout.api.geo.World;
 
 import org.spout.infobjects.util.RandomOwner;
 
+/**
+ * A material setter for randomly setting a material, depending on the specified odd. This setter
+ * sets the same material whatever the value for outer may be.
+ */
 public class RandomSimpleSetter extends SimpleSetter implements RandomOwner {
 	private Random random = new Random();
 	private byte odd;
 
+	static {
+		MaterialSetter.register("random-simple", RandomSimpleSetter.class);
+	}
+
+	/**
+	 * Constructs a new random setter from its name.
+	 *
+	 * @param name The name of the material setter
+	 */
 	public RandomSimpleSetter(String name) {
 		super(name);
 	}
 
+	/**
+	 * Configures this material setter. Expected properties are "odd" and the ones required by the
+	 * super class.
+	 *
+	 * @param properties The properties as a string, string map
+	 */
 	@Override
 	public void configure(Map<String, String> properties) {
 		super.configure(properties);
 		odd = Byte.parseByte(properties.get("odd"));
 	}
 
+	/**
+	 * Sets the material at the desired coordinates in the world. Only sets the material if the next
+	 * integer from the random in the [0, 100[ range is smaller than the odd.
+	 *
+	 * @param world The world to set the material in
+	 * @param x The x coordinate of the world position
+	 * @param y The y coordinate of the world position
+	 * @param z The z coordinate of the world position
+	 * @param outer Not used, will always set the same material
+	 */
 	@Override
 	public void setMaterial(World world, int x, int y, int z, boolean outer) {
 		if (random.nextInt(100) < odd) {
@@ -54,11 +83,21 @@ public class RandomSimpleSetter extends SimpleSetter implements RandomOwner {
 		}
 	}
 
+	/**
+	 * Sets the random for this material setter.
+	 *
+	 * @param random The random to use.
+	 */
 	@Override
 	public void setRandom(Random random) {
 		this.random = random;
 	}
 
+	/**
+	 * Returns the string representation of this material setter.
+	 *
+	 * @return The string form of this setter.
+	 */
 	@Override
 	public String toString() {
 		return "RandomSimpleSetter{name=" + getName() + ", material=" + material + ", data=" + data

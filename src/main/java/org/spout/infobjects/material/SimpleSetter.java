@@ -33,14 +33,32 @@ import org.spout.api.material.BlockMaterial;
 
 import org.spout.infobjects.util.IWGOUtils;
 
+/**
+ * A setter for setting a material independently from the value of outer.
+ */
 public class SimpleSetter extends MaterialSetter {
 	protected BlockMaterial material;
 	protected short data;
 
+	static {
+		MaterialSetter.register("simple", SimpleSetter.class);
+	}
+
+	/**
+	 * Constructs a new simple setter from its name.
+	 *
+	 * @param name The name of the setter
+	 */
 	public SimpleSetter(String name) {
 		super(name);
 	}
 
+	/**
+	 * Configures this material setter. Expected properties are "material" and "data". If data is
+	 * -1, {@link org.spout.api.material.Material#getData()} is used.
+	 *
+	 * @param properties The properties as a string, string map
+	 */
 	@Override
 	public void configure(Map<String, String> properties) {
 		material = IWGOUtils.tryGetBlockMaterial(properties.get("material"));
@@ -51,11 +69,26 @@ public class SimpleSetter extends MaterialSetter {
 		}
 	}
 
+	/**
+	 * Sets the material at the desired coordinates inside the world. This setter will always set
+	 * the same material, whatever the value of outer may be.
+	 *
+	 * @param world The world to set the material in
+	 * @param x The x coordinate of the world position
+	 * @param y The y coordinate of the world position
+	 * @param z The z coordinate of the world position
+	 * @param outer Not used, will always set the same material
+	 */
 	@Override
 	public void setMaterial(World world, int x, int y, int z, boolean outer) {
 		world.setBlockMaterial(x, y, z, material, data == -1 ? material.getData() : data, null);
 	}
 
+	/**
+	 * Returns the string representation of this material setter.
+	 *
+	 * @return The string form of this setter.
+	 */
 	@Override
 	public String toString() {
 		return "SimpleSetter{name=" + getName() + ", material=" + material + ", data=" + data + '}';

@@ -58,6 +58,22 @@ import org.spout.infobjects.variable.VariableSource;
  * A static class for loading iWGO from files and configurations.
  */
 public class IWGOLoader {
+	static {
+		// Load all included resources so they can register themselves
+		try {
+			Class.forName("org.spout.infobjects.condition.CuboidCondition");
+			Class.forName("org.spout.infobjects.instruction.ShapeInstruction");
+			Class.forName("org.spout.infobjects.instruction.RepeatInstruction");
+			Class.forName("org.spout.infobjects.instruction.BlockInstruction");
+			Class.forName("org.spout.infobjects.material.InnerOuterSetter");
+			Class.forName("org.spout.infobjects.material.RandomInnerOuterSetter");
+			Class.forName("org.spout.infobjects.material.SimpleSetter");
+			Class.forName("org.spout.infobjects.material.RandomSimpleSetter");
+		} catch (ClassNotFoundException ex) {
+			Logger.getLogger(IWGOLoader.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
 	private IWGOLoader() {
 	}
 

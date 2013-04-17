@@ -33,15 +33,34 @@ import org.spout.api.geo.World;
 
 import org.spout.infobjects.util.RandomOwner;
 
+/**
+ * A material setter for setting a different inner and outer material or not, depending on an
+ * individual.
+ */
 public class RandomInnerOuterSetter extends InnerOuterSetter implements RandomOwner {
 	private Random random = new Random();
 	private byte innerOdd;
 	private byte outerOdd;
 
+	static {
+		MaterialSetter.register("random-inner-outer", RandomInnerOuterSetter.class);
+	}
+
+	/**
+	 * Construct a new random inner outer-setter from its name.
+	 *
+	 * @param name The name of the setter
+	 */
 	public RandomInnerOuterSetter(String name) {
 		super(name);
 	}
 
+	/**
+	 * Configures the material setter. Expected properties are "inner.odd" and "outer.odd" plus
+	 * those required by the super class.
+	 *
+	 * @param properties The property map as a string, string map.
+	 */
 	@Override
 	public void configure(Map<String, String> properties) {
 		super.configure(properties);
@@ -49,6 +68,17 @@ public class RandomInnerOuterSetter extends InnerOuterSetter implements RandomOw
 		outerOdd = Byte.parseByte(properties.get("outer.odd"));
 	}
 
+	/**
+	 * Sets the material at the desired coordinates in the world. If outer is true and the next
+	 * integer from the random in the range [0, 100[ is smaller than the odd for outer, the outer
+	 * material is set. If outer is false, the same is done, but for the inner odd and material.
+	 *
+	 * @param world The world to set the material in
+	 * @param x The x coordinate of the world position
+	 * @param y The y coordinate of the world position
+	 * @param z The z coordinate of the world position
+	 * @param outer Whether or not the material is outside the shape
+	 */
 	@Override
 	public void setMaterial(World world, int x, int y, int z, boolean outer) {
 		if (random.nextInt(100) < (outer ? outerOdd : innerOdd)) {
@@ -56,11 +86,21 @@ public class RandomInnerOuterSetter extends InnerOuterSetter implements RandomOw
 		}
 	}
 
+	/**
+	 * Sets the random for this material setter.
+	 *
+	 * @param random The random to use.
+	 */
 	@Override
 	public void setRandom(Random random) {
 		this.random = random;
 	}
 
+	/**
+	 * Returns the string representation of this material setter.
+	 *
+	 * @return The string form of this material setter
+	 */
 	@Override
 	public String toString() {
 		return "RandomInnerOuterSetter{name=" + getName() + ", inner=" + inner + ", innerData="

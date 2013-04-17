@@ -278,7 +278,7 @@ public abstract class Condition implements RandomOwner {
 	/**
 	 * Registers a new condition. This is necessary for the loader to recognize it when loading a
 	 * new iWGO. This methods required the type, which is also the name used in the iWGO
-	 * configurations. For example: "cuboid", "pyramid" or "cylinder".
+	 * configurations. For example: "cuboid", "pyramid" or "cylinder". The type must be unique.
 	 *
 	 * @param type The type, also the name of the condition
 	 * @param condition The class of the condition to register

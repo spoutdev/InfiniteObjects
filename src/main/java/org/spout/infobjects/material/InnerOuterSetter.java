@@ -33,16 +33,37 @@ import org.spout.api.material.BlockMaterial;
 
 import org.spout.infobjects.util.IWGOUtils;
 
+/**
+ * A material setter for setting a different inner and outer material.
+ */
 public class InnerOuterSetter extends MaterialSetter {
 	protected BlockMaterial inner;
 	protected short innerData;
 	protected BlockMaterial outer;
 	protected short outerData;
 
+	static {
+		MaterialSetter.register("inner-outer", InnerOuterSetter.class);
+	}
+
+	/**
+	 * Construct a new inner-outer material setter from its name
+	 *
+	 * @param name The name of the material setter
+	 */
 	public InnerOuterSetter(String name) {
 		super(name);
 	}
 
+	/**
+	 * Configures the material setter. Expected properties are "inner.material" for the inner
+	 * material, "inner.data" for the inner material's data, "outer.material" for the outer material
+	 * and "outer.data" for the outer material's data. Material values are the simple names of the
+	 * materials. If the material's data (as obtained by {@link org.spout.api.material.Material#getData()})
+	 * is what should be used, the data value can be set to -1.
+	 *
+	 * @param properties The property map as a string, string map
+	 */
 	@Override
 	public void configure(Map<String, String> properties) {
 		inner = IWGOUtils.tryGetBlockMaterial(properties.get("inner.material"));
@@ -59,6 +80,17 @@ public class InnerOuterSetter extends MaterialSetter {
 		}
 	}
 
+	/**
+	 * Sets the material at the desired coordinated inside the world. If outer is true, the outer
+	 * material and data is used, if false, the inner one is. If data is -1, {@link org.spout.api.material.Material#getData()}
+	 * is used.
+	 *
+	 * @param world The world to set the material in
+	 * @param x The x coordinate of the world position
+	 * @param y The y coordinate of the world position
+	 * @param z The z coordinate of the world position
+	 * @param outer Whether or not the material is outside or inside the shape
+	 */
 	@Override
 	public void setMaterial(World world, int x, int y, int z, boolean outer) {
 		if (outer) {
@@ -68,6 +100,11 @@ public class InnerOuterSetter extends MaterialSetter {
 		}
 	}
 
+	/**
+	 * Returns the string representation of this material setter.
+	 *
+	 * @return The string form of this material setter
+	 */
 	@Override
 	public String toString() {
 		return "InnerOuterSetter{name=" + getName() + ", inner=" + inner + ", innerData="

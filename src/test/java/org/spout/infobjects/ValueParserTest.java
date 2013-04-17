@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Random;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import org.spout.infobjects.util.IWGOUtils;
@@ -74,12 +73,6 @@ public class ValueParserTest {
 		EXPECTED_RANDOM_FLOAT = IWGOUtils.nextDouble(expectedRandom, 18.9, 36.4);
 		EXPECTED_RANDOM_MATH_EXP = 3 * IWGOUtils.nextDouble(expectedRandom, 3, 54) + 10;
 		EXPECTED_VARIABLE_MATH_EXP = IWGOUtils.nextInt(expectedRandom, 0, 5) + EXPECTED_DOUBLE * Math.PI;
-	}
-
-	@Before
-	public void before() throws ClassNotFoundException {
-		Class.forName("org.spout.infobjects.function.RandomDoubleFunction");
-		Class.forName("org.spout.infobjects.function.RandomIntFunction");
 	}
 
 	@Test
