@@ -163,10 +163,10 @@ public abstract class Instruction implements VariableSource, RandomOwner {
 
 	/**
 	 * Registers a new instruction. This is necessary for the loader to recognize it when loading a
-	 * new iWGO. This methods required the type, which is also the name used in the iWGO
-	 * configurations. For example: "shape", "repeat" or "block". The type must be unique.
+	 * new iWGO. This methods required the type, which used in the iWGO configurations. For example:
+	 * "shape", "repeat" or "block". The type must be unique.
 	 *
-	 * @param type The type, also the name of the instruction
+	 * @param type The type of the instruction
 	 * @param instruction The class of the instruction to register
 	 */
 	public static void register(String type, Class<? extends Instruction> instruction) {

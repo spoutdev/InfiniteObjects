@@ -180,9 +180,7 @@ public abstract class Condition implements RandomOwner {
 		if (!position.containsKey("z")) {
 			throw new ConditionLoadingException("z coordinate for position is missing");
 		}
-		x = position.get("x");
-		y = position.get("y");
-		z = position.get("z");
+		setPosition(position.get("x"), position.get("y"), position.get("z"));
 	}
 
 	/**
@@ -277,10 +275,10 @@ public abstract class Condition implements RandomOwner {
 
 	/**
 	 * Registers a new condition. This is necessary for the loader to recognize it when loading a
-	 * new iWGO. This methods required the type, which is also the name used in the iWGO
-	 * configurations. For example: "cuboid", "pyramid" or "cylinder". The type must be unique.
+	 * new iWGO. This methods required the type, which used in the iWGO configurations. For example:
+	 * "cuboid", "pyramid" or "cylinder". The type must be unique.
 	 *
-	 * @param type The type, also the name of the condition
+	 * @param type The type of the condition
 	 * @param condition The class of the condition to register
 	 */
 	public static void register(String type, Class<? extends Condition> condition) {

@@ -101,11 +101,11 @@ public abstract class MaterialSetter implements Named {
 	}
 
 	/**
-	 * Registers a material setter type. The name of the type is as declared in the iWGO
-	 * configuration. Registering is necessary for the iWGO loader to recognize and load the
-	 * material setter. The type must be unique.
+	 * Registers a material setter type. The name of the type is as used in the iWGO configuration.
+	 * For example: "inner-outer", "simple" or "random-simple". Registering is necessary for the
+	 * iWGO loader to recognize and load the material setter. The type must be unique.
 	 *
-	 * @param type The type of the material setter, also its name
+	 * @param type The type of the material setter
 	 * @param setter The class of the material setter to register
 	 */
 	public static void register(String type, Class<? extends MaterialSetter> setter) {

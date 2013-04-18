@@ -34,15 +34,31 @@ import org.spout.infobjects.exception.ShapeLoadingException;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
+/**
+ * A shape to draw a cuboid.
+ */
 public class Cuboid extends Shape {
 	private Value length;
 	private Value height;
 	private Value depth;
 
+	/**
+	 * Constructs a new cuboid from the parent iWGO.
+	 *
+	 * @param iwgo The parent iWGO
+	 */
 	public Cuboid(IWGO iwgo) {
 		super(iwgo);
 	}
 
+	/**
+	 * Sets the size of the cuboid from the values in the map. The expected values are "x", "y" and
+	 * "z". The x size is the length, the y size, the height, and the z size, the depth. If any of
+	 * these values are missing, and exception is thrown.
+	 *
+	 * @param sizes The size map as a string, value map
+	 * @throws ShapeLoadingException If any of the "x", "y" or "z" keys are missing
+	 */
 	@Override
 	public void setSize(Map<String, Value> sizes) throws ShapeLoadingException {
 		super.setSize(sizes);
@@ -51,6 +67,10 @@ public class Cuboid extends Shape {
 		depth = sizes.get("z");
 	}
 
+	/**
+	 * Draws the cuboid. The position values define the first lower corner. The opposite corner is
+	 * the position plus the size.
+	 */
 	@Override
 	public void draw() {
 		final int px = (int) x.getValue();
@@ -69,6 +89,9 @@ public class Cuboid extends Shape {
 		}
 	}
 
+	/**
+	 * Randomizes the cuboid by recalculating the size values. Then calls the super method.
+	 */
 	@Override
 	public void randomize() {
 		super.randomize();
@@ -77,6 +100,12 @@ public class Cuboid extends Shape {
 		depth.calculate();
 	}
 
+	/**
+	 * Sets the random for each size value if they implement {@link org.spout.infobjects.util.RandomOwner}.
+	 * Calls the super method.
+	 *
+	 * @param random The random to use
+	 */
 	@Override
 	public void setRandom(Random random) {
 		super.setRandom(random);
@@ -91,6 +120,11 @@ public class Cuboid extends Shape {
 		}
 	}
 
+	/**
+	 * Returns the string representation of the shape.
+	 *
+	 * @return The string form of the shape
+	 */
 	@Override
 	public String toString() {
 		return "Cuboid{x=" + x + ", y=" + y + ", z=" + z + ", setter=" + setter + ", length="

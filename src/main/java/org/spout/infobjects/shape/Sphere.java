@@ -34,15 +34,31 @@ import org.spout.infobjects.exception.ShapeLoadingException;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
+/**
+ * A shape to draw a sphere.
+ */
 public class Sphere extends Shape {
 	private Value radiusX;
 	private Value radiusY;
 	private Value radiusZ;
 
+	/**
+	 * Constructs a new sphere shape from the parent iWGO.
+	 *
+	 * @param iwgo The parent iWGO
+	 */
 	public Sphere(IWGO iwgo) {
 		super(iwgo);
 	}
 
+	/**
+	 * Sets the size of the sphere from the values in the map. The size values represent the
+	 * radiuses for each axis. The expected values for the map are "x", "y" and "z". The x size If
+	 * any of these are missing, an exception is thrown.
+	 *
+	 * @param sizes The size as a string, value map
+	 * @throws ShapeLoadingException If any of the "x", "y" or "z" keys are missing
+	 */
 	@Override
 	public void setSize(Map<String, Value> sizes) throws ShapeLoadingException {
 		super.setSize(sizes);
@@ -51,6 +67,10 @@ public class Sphere extends Shape {
 		radiusZ = sizes.get("z");
 	}
 
+	/**
+	 * Draws the sphere. The position values indicate the center of the sphere. The size parameters
+	 * define the radius for each axis.
+	 */
 	@Override
 	public void draw() {
 		final int px = (int) x.getValue();
@@ -80,7 +100,7 @@ public class Sphere extends Shape {
 				for (int zz = 0; zz <= ceilRadiusZ; zz++) {
 					final double zn = nextZn;
 					nextZn = (zz + 1) * invRadiusZ;
-					if (lengthSq(xn, yn, zn) > 1) {
+					if (lengthSquared(xn, yn, zn) > 1) {
 						if (zz == 0) {
 							if (yy == 0) {
 								break forX;
@@ -89,9 +109,9 @@ public class Sphere extends Shape {
 						}
 						break forZ;
 					}
-					final boolean outer = lengthSq(nextXn, yn, zn) > 1
-							|| lengthSq(xn, nextYn, zn) > 1
-							|| lengthSq(xn, yn, nextZn) > 1;
+					final boolean outer = lengthSquared(nextXn, yn, zn) > 1
+							|| lengthSquared(xn, nextYn, zn) > 1
+							|| lengthSquared(xn, yn, nextZn) > 1;
 					setter.setMaterial(iwgo.transform(px + xx, py + yy, pz + zz), outer);
 					setter.setMaterial(iwgo.transform(px - xx, py + yy, pz + zz), outer);
 					setter.setMaterial(iwgo.transform(px + xx, py - yy, pz + zz), outer);
@@ -105,6 +125,13 @@ public class Sphere extends Shape {
 		}
 	}
 
+	private static double lengthSquared(double x, double y, double z) {
+		return x * x + y * y + z * z;
+	}
+
+	/**
+	 * Randomizes the size values of the line by recalculating them. Then calls the super method.
+	 */
 	@Override
 	public void randomize() {
 		super.randomize();
@@ -113,6 +140,12 @@ public class Sphere extends Shape {
 		radiusZ.calculate();
 	}
 
+	/**
+	 * Sets the random for each size value if they implement {@link org.spout.infobjects.util.RandomOwner}.
+	 * Calls the super method.
+	 *
+	 * @param random The random to use
+	 */
 	@Override
 	public void setRandom(Random random) {
 		super.setRandom(random);
@@ -127,13 +160,14 @@ public class Sphere extends Shape {
 		}
 	}
 
+	/**
+	 * Returns the string representation of the shape.
+	 *
+	 * @return The string form of the shape
+	 */
 	@Override
 	public String toString() {
 		return "Sphere{x=" + x + ", y=" + y + ", z=" + z + ", setter=" + setter + ", radiusX="
 				+ radiusX + ", radiusY=" + radiusY + ", radiusZ=" + radiusZ + '}';
-	}
-
-	private static double lengthSq(double x, double y, double z) {
-		return x * x + y * y + z * z;
 	}
 }

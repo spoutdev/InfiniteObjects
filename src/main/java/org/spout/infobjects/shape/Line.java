@@ -37,15 +37,32 @@ import org.spout.infobjects.exception.ShapeLoadingException;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
+/**
+ * A shape to draw a line from one point to another.
+ */
 public class Line extends Shape {
 	private Value lengthX;
 	private Value lengthY;
 	private Value lengthZ;
 
+	/**
+	 * Constructs a new line shape from the parent iWGO.
+	 *
+	 * @param iwgo The parent iWGO
+	 */
 	public Line(IWGO iwgo) {
 		super(iwgo);
 	}
 
+	/**
+	 * Sets the size of the line from the values in the map. The size of the line is defined like a
+	 * vector, with a component for each axis. The shortest distance from the origin to the point
+	 * defined by the size coordinates is the line. The expected values for the map are "x", "y" and
+	 * "z". If any of these are missing, an exception is thrown.
+	 *
+	 * @param sizes The size as a string, value map
+	 * @throws ShapeLoadingException If any of the "x", "y" or "z" keys are missing
+	 */
 	@Override
 	public void setSize(Map<String, Value> sizes) throws ShapeLoadingException {
 		super.setSize(sizes);
@@ -54,6 +71,11 @@ public class Line extends Shape {
 		lengthZ = sizes.get("z");
 	}
 
+	/**
+	 * Draws the shape. This uses the {@link org.spout.api.util.BlockIterator} to iterate from the
+	 * position to the position plus the size. Each block is set with the material setter as being
+	 * outer.
+	 */
 	@Override
 	public void draw() {
 		final Point start = iwgo.transform(x.getValue(), y.getValue(), z.getValue());
@@ -64,6 +86,9 @@ public class Line extends Shape {
 		}
 	}
 
+	/**
+	 * Randomizes the size values of the line by recalculating them. Then calls the super method.
+	 */
 	@Override
 	public void randomize() {
 		super.randomize();
@@ -72,6 +97,12 @@ public class Line extends Shape {
 		lengthZ.calculate();
 	}
 
+	/**
+	 * Sets the random for each size value if they implement {@link org.spout.infobjects.util.RandomOwner}.
+	 * Calls the super method.
+	 *
+	 * @param random The random to use
+	 */
 	@Override
 	public void setRandom(Random random) {
 		super.setRandom(random);
@@ -86,6 +117,11 @@ public class Line extends Shape {
 		}
 	}
 
+	/**
+	 * Returns the string representation of the shape.
+	 *
+	 * @return The string form of the shape
+	 */
 	@Override
 	public String toString() {
 		return "Line{x=" + x + ", y=" + y + ", z=" + z + ", setter=" + setter + ", lengthX="
