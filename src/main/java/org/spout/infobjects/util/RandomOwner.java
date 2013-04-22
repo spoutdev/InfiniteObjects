@@ -28,6 +28,15 @@ package org.spout.infobjects.util;
 
 import java.util.Random;
 
+/**
+ * An interface to represent objects which hold an instance of {@link java.util.Random} that can be
+ * set to a different value.
+ */
 public interface RandomOwner {
+	/**
+	 * Sets the random for this random owner.
+	 *
+	 * @param random The random to set
+	 */
 	public void setRandom(Random random);
 }

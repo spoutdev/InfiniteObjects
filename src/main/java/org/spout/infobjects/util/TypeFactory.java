@@ -30,15 +30,34 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A reflection based factor to generate various subclasses of a main class. Each subclass is
+ * associated to a type string representing it.
+ *
+ * @param <T> The main class and main type for this factory
+ */
 public class TypeFactory<T> {
 	private final Map<String, Constructor<? extends T>> TYPES =
 			new HashMap<String, Constructor<? extends T>>();
 	private final Class<?>[] constructorParams;
 
+	/**
+	 * Constructs a new type factory from the argument types for the subclass' constructors.
+	 *
+	 * @param constructorParams The constructor argument types for the subclass' constructors
+	 */
 	public TypeFactory(Class<?>... constructorParams) {
 		this.constructorParams = constructorParams;
 	}
 
+	/**
+	 * Register a new type, with a string representing its name and the subclass for the type.
+	 *
+	 * @param name The name of the type
+	 * @param type The subclass for the type
+	 * @throws IllegalArgumentException if the subclass doesn't have the constructor which requires
+	 * the types specified during construction of the factory
+	 */
 	public void register(String name, Class<? extends T> type) {
 		try {
 			TYPES.put(name, type.getConstructor(constructorParams));
@@ -47,6 +66,15 @@ public class TypeFactory<T> {
 		}
 	}
 
+	/**
+	 * Creates a new instance of the subclass for the desired type, returning it as the main class
+	 * type.
+	 *
+	 * @param type The type to create a new instance of
+	 * @param constructorParams The parameters to pass to the subclass constructor
+	 * @return A new subclass instance as the main class type
+	 * @throws IllegalArgumentException if the type hasn't been registered
+	 */
 	public T newInstance(String type, Object... constructorParams) {
 		if (!TYPES.containsKey(type)) {
 			throw new IllegalArgumentException("Type \"" + type + "\" is not a registered type");
