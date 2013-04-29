@@ -101,8 +101,9 @@ public class IWGOUtils {
 	 * Attempts to get a block material from it's name. Throws an exception if this fails.
 	 *
 	 * @param name The name of the block material
-	 * @return The block material @throw IllegalArgumentException If the name is null or an empty
-	 * string, if the name isn't associated to a material
+	 * @return The block material
+	 * @throws IllegalArgumentException If the name is null or an empty string, if the name isn't
+	 * associated to a material
 	 */
 	public static BlockMaterial tryGetBlockMaterial(String name) {
 		if (name == null || name.trim().equals("")) {

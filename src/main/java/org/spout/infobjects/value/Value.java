@@ -26,8 +26,23 @@
  */
 package org.spout.infobjects.value;
 
+/**
+ * Represents a numerical real (double) value. This value might be constant, random or calculated
+ * from a mathematical expression. It might also depend on other values as variables,
+ */
 public interface Value {
+	/**
+	 * Calculates the value. This will not alter constant values. It is designed for randomizing
+	 * random values or updating values that depend on mutable variables. To fetch the calculated
+	 * value, use {@link #getValue()}.
+	 */
 	public void calculate();
 
+	/**
+	 * Gets the real (double) value of this value. If the value can be altered by calling {@link #calculate()},
+	 * then the returned value is the result of the last {@code calculate()} call.
+	 *
+	 * @return The real value of this value.
+	 */
 	public double getValue();
 }

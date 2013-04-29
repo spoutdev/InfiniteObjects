@@ -35,7 +35,7 @@ import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
 /**
- * A shape to draw a cuboid.
+ * A shape to draw a cuboid defined by two opposite corners.
  */
 public class Cuboid extends Shape {
 	private Value length;
@@ -54,7 +54,7 @@ public class Cuboid extends Shape {
 	/**
 	 * Sets the size of the cuboid from the values in the map. The expected values are "x", "y" and
 	 * "z". The x size is the length, the y size, the height, and the z size, the depth. If any of
-	 * these values are missing, and exception is thrown.
+	 * these values are missing, an exception is thrown.
 	 *
 	 * @param sizes The size map as a string, value map
 	 * @throws ShapeLoadingException If any of the "x", "y" or "z" keys are missing

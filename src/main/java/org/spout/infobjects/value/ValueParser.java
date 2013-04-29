@@ -57,6 +57,18 @@ public class ValueParser {
 		}
 	}
 
+	/**
+	 * Attempts to parse a string into {@link Value}. An exception is thrown if this fails. This
+	 * method may return any of the following: {@link DoubleValue}, {@link MathExpressionValue},
+	 * {@link RandomDoubleValue}, {@link RandomIntValue} or {@link VariableMathExpressionValue}.
+	 * {@link org.spout.infobjects.variable.VariableSource}s may be passed to this method for
+	 * parsing {@link VariableMathExpressionValue}s.
+	 *
+	 * @param expression The expression to attempt to parse
+	 * @param sources Optional variable sources for parsing variable math expression values
+	 * @return The parsed value
+	 * @throws ValueParsingException If the value parsing fails
+	 */
 	public static Value parse(String expression, VariableSource... sources) {
 		if (expression == null || expression.trim().equals("")) {
 			throw new ValueParsingException("Value can not be null or empty");
@@ -88,6 +100,15 @@ public class ValueParser {
 		}
 	}
 
+	/**
+	 * Attempts to parse all of the expressions in the list.
+	 *
+	 * @param expressions The list of expression to attempt to parse
+	 * @param sources Optional variable sources for parsing variable math expression values
+	 * @return The parsed values as a list
+	 * @throws ValueParsingException If the value parsing fails for any expression
+	 * @see #parse(java.lang.String, org.spout.infobjects.variable.VariableSource[])
+	 */
 	public static List<Value> parse(List<String> expressions, VariableSource... sources) {
 		final List<Value> values = new ArrayList<Value>();
 		for (String expression : expressions) {
@@ -96,6 +117,15 @@ public class ValueParser {
 		return values;
 	}
 
+	/**
+	 * Attempts to parse all of the expressions in the set.
+	 *
+	 * @param expressions The set of expression to attempt to parse
+	 * @param sources Optional variable sources for parsing variable math expression values
+	 * @return The parsed values as a set
+	 * @throws ValueParsingException If the value parsing fails for any expression
+	 * @see #parse(java.lang.String, org.spout.infobjects.variable.VariableSource[])
+	 */
 	public static Set<Value> parse(Set<String> expressions, VariableSource... sources) {
 		final Set<Value> values = new HashSet<Value>();
 		for (String expression : expressions) {
@@ -104,6 +134,16 @@ public class ValueParser {
 		return values;
 	}
 
+	/**
+	 * Attempts to parse all of the expressions values in the map. This parses the values only, the
+	 * keys will not be changed.
+	 *
+	 * @param expressions The map of expression to attempt to parse
+	 * @param sources Optional variable sources for parsing variable math expression values
+	 * @return The parsed values as a map with the same mapping
+	 * @throws ValueParsingException If the value parsing fails for any expression
+	 * @see #parse(java.lang.String, org.spout.infobjects.variable.VariableSource[])
+	 */
 	public static Map<String, Value> parse(Map<String, String> expressions, VariableSource... sources) {
 		final Map<String, Value> values = new HashMap<String, Value>();
 		for (Map.Entry<String, String> entry : expressions.entrySet()) {

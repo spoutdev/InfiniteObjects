@@ -26,35 +26,66 @@
  */
 package org.spout.infobjects.value;
 
+/**
+ * Represents a value that can be incremented. This is done by wrapping an original value.
+ * Incrementing does not alter the real value of the original value and can be reset. The amount to
+ * increment is determined by a second value, which is recalculated and added to the increment sum
+ * for each incrementation.
+ */
 public class IncrementableValue implements Value {
 	private final Value value;
 	private final Value increment;
 	private double totalIncrement;
 
+	/**
+	 * Construct a new incrementable value from the original value and the increment value.
+	 *
+	 * @param value The value to increment
+	 * @param increment The value to define the amount to add for each increment
+	 */
 	public IncrementableValue(Value value, Value increment) {
 		this.value = value;
 		this.increment = increment;
 	}
 
+	/**
+	 * Calculated the original value.
+	 */
 	@Override
 	public void calculate() {
 		value.calculate();
 	}
 
+	/**
+	 * Return the original value's real value plus the increment sum.
+	 *
+	 * @return The incremented value
+	 */
 	@Override
 	public double getValue() {
 		return value.getValue() + totalIncrement;
 	}
 
+	/**
+	 * Calculates the increment value and add its real value to the increment sum.
+	 */
 	public void increment() {
 		increment.calculate();
 		totalIncrement += increment.getValue();
 	}
 
+	/**
+	 * Sets the increment sum to 0. The real value of the original value is now unaltered.
+	 */
 	public void reset() {
 		totalIncrement = 0;
 	}
 
+	/**
+	 * Returns the string representation of the value.
+	 *
+	 * @return The string form of the value
+	 */
 	@Override
 	public String toString() {
 		return "IncrementableValue{value=" + value + ", increment=" + increment

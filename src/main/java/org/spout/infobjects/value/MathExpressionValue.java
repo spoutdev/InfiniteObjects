@@ -37,42 +37,89 @@ import org.spout.infobjects.function.RandomDoubleFunction;
 import org.spout.infobjects.function.RandomIntFunction;
 import org.spout.infobjects.util.RandomOwner;
 
+/**
+ * Represents a value defined by a random mathematical expression. Unlike using {@link DoubleValue}
+ * with the {@link Double#Double(java.lang.String)} constructor, this class conserves the
+ * mathematical expression as a {@link de.congrace.exp4j.expression.Calculable} and recalculates it
+ * for each {@link #calculate()} call. This is ideal for expression with random functions, and this
+ * class has been designed for such use.
+ */
 public class MathExpressionValue implements Value, RandomOwner {
 	private final RandomIntFunction randomIntFunction = new RandomIntFunction();
 	private final RandomDoubleFunction randomFloatFunction = new RandomDoubleFunction();
 	protected final Calculable calculable;
 	private double value;
 
+	/**
+	 * Constructs a new math expression value from the expression string.
+	 *
+	 * @param expression The expression for this value
+	 * @throws UnknownFunctionException If the expression has one or more undeclared function
+	 * @throws UnparsableExpressionException If the expression cannot be parsed
+	 */
 	public MathExpressionValue(String expression)
 			throws UnknownFunctionException, UnparsableExpressionException {
 		this(new ExpressionBuilder(expression));
 	}
 
+	/**
+	 * Constructs a new math expression value from the expression builder. Use this constructor if
+	 * you whish to add any unregistered custom function and set values for any variables.
+	 *
+	 * @param expressionBuilder The expression builder for this value
+	 * @throws UnknownFunctionException If the expression has one or more undeclared function
+	 * @throws UnparsableExpressionException If the expression cannot be parsed
+	 */
 	public MathExpressionValue(ExpressionBuilder expressionBuilder)
 			throws UnknownFunctionException, UnparsableExpressionException {
 		calculable = expressionBuilder.withCustomFunctions(randomIntFunction, randomFloatFunction).build();
 	}
 
-	public MathExpressionValue(Calculable value) {
-		this.calculable = value;
+	/**
+	 * Constructs a new math expression value from the calculable form of the expression.
+	 *
+	 * @param calculable The calculable form of the expression
+	 */
+	public MathExpressionValue(Calculable calculable) {
+		this.calculable = calculable;
 	}
 
+	/**
+	 * Returns the real value of the mathematical expression.
+	 *
+	 * @return The real value
+	 */
 	@Override
 	public double getValue() {
 		return value;
 	}
 
+	/**
+	 * Reevaluates the math expression.
+	 */
 	@Override
 	public void calculate() {
 		value = calculable.calculate();
 	}
 
+	/**
+	 * Sets the randoms for the {@link org.spout.infobjects.function.RandomIntFunction} and
+	 * {@link org.spout.infobjects.function.RandomDoubleFunction} functions if any are present in
+	 * the expression.
+	 *
+	 * @param random
+	 */
 	@Override
 	public void setRandom(Random random) {
 		randomIntFunction.setRandom(random);
 		randomFloatFunction.setRandom(random);
 	}
 
+	/**
+	 * Returns the string representation of the value.
+	 *
+	 * @return The string form of the value
+	 */
 	@Override
 	public String toString() {
 		return "MathExpressionValue{" + "value=" + value + '}';

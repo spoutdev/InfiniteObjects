@@ -28,28 +28,80 @@ package org.spout.infobjects.value;
 
 import de.congrace.exp4j.exception.UnknownFunctionException;
 import de.congrace.exp4j.exception.UnparsableExpressionException;
+import de.congrace.exp4j.expression.Calculable;
 import de.congrace.exp4j.expression.ExpressionBuilder;
 
+/**
+ * Represent a constant double value.
+ */
 public class DoubleValue implements Value {
 	private final double value;
 
+	/**
+	 * Construct a new double value from it's real double value.
+	 *
+	 * @param value The real value
+	 */
 	public DoubleValue(double value) {
 		this.value = value;
 	}
 
-	public DoubleValue(String exp) throws UnknownFunctionException, UnparsableExpressionException {
-		value = new ExpressionBuilder(exp).build().calculate();
+	/**
+	 * Construct a new double value from a mathematical expression. This constructor will evaluate
+	 * the expression and use the resulting value as the double value.
+	 *
+	 * @param expression The expression to evaluate
+	 * @throws UnknownFunctionException If the expression has one or more undeclared function
+	 * @throws UnparsableExpressionException If the expression cannot be parsed
+	 */
+	public DoubleValue(String expression) throws UnknownFunctionException, UnparsableExpressionException {
+		this(new ExpressionBuilder(expression));
 	}
 
+	/**
+	 * Constructs a new double value from the expression builder. Use this constructor if you whish
+	 * to add any unregistered custom function and set values for any variables.
+	 *
+	 * @param expressionBuilder The expression builder for this value
+	 * @throws UnknownFunctionException If the expression has one or more undeclared function
+	 * @throws UnparsableExpressionException If the expression cannot be parsed
+	 */
+	public DoubleValue(ExpressionBuilder expressionBuilder) throws UnknownFunctionException, UnparsableExpressionException {
+		this(expressionBuilder.build());
+	}
+
+	/**
+	 * Constructs a double value from the real value of calculable form of an expression.
+	 *
+	 * @param calculable The calculable form of the expression
+	 */
+	public DoubleValue(Calculable calculable) {
+		value = calculable.calculate();
+	}
+
+	/**
+	 * Gets the real value of this value. The returned double is always the same as this is a
+	 * constant value.
+	 *
+	 * @return The real value of this value
+	 */
 	@Override
 	public double getValue() {
 		return value;
 	}
 
+	/**
+	 * Does nothing as this value is constant.
+	 */
 	@Override
 	public void calculate() {
 	}
 
+	/**
+	 * Returns the string representation of the value.
+	 *
+	 * @return The string form of the value
+	 */
 	@Override
 	public String toString() {
 		return "DoubleValue{" + "value=" + value + '}';

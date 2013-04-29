@@ -28,6 +28,7 @@ package org.spout.infobjects.value;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,24 +44,58 @@ import de.congrace.exp4j.function.Functions;
 
 import org.spout.infobjects.variable.VariableSource;
 
+/**
+ * A variable math expression value. This is an extension of {@link MathExpressionValue} which adds
+ * support for variables on top of random functions. To provide values for the variables, {@link org.spout.infobjects.variable.VariableSource}s
+ * must be added using {@link #addVariableSources(org.spout.infobjects.variable.VariableSource[])}.
+ * When reevaluating the expression, this value will fetch the variable values from these sources.
+ * If a variable cannot be found, the value will be zero.
+ */
 public class VariableMathExpressionValue extends MathExpressionValue {
 	protected static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zA-Z_]\\w*");
 	private final Set<VariableSource> variableSources = new HashSet<VariableSource>();
 
-	public VariableMathExpressionValue(Calculable value) {
-		super(value);
-	}
-
+	/**
+	 * Constructs a new variable math value from the expression. This constructor will find the
+	 * variables and declare them on its own.
+	 *
+	 * @param expression The expression for this value
+	 * @throws UnknownFunctionException If the expression has one or more undeclared function
+	 * @throws UnparsableExpressionException If the expression cannot be parsed
+	 */
 	public VariableMathExpressionValue(String expression)
 			throws UnknownFunctionException, UnparsableExpressionException {
 		this(new ExpressionBuilder(expression));
 	}
 
+	/**
+	 * Constructs a new variable math value from the expression. This constructor will find the
+	 * variables and declare them on its own.
+	 *
+	 * @param expressionBuilder The expression builder for this value
+	 * @throws UnknownFunctionException If the expression has one or more undeclared function
+	 * @throws UnparsableExpressionException If the expression cannot be parsed
+	 */
 	public VariableMathExpressionValue(ExpressionBuilder expressionBuilder)
 			throws UnknownFunctionException, UnparsableExpressionException {
 		super(expressionBuilder.withVariableNames(findVariables(expressionBuilder.getExpression())));
 	}
 
+	/**
+	 * Constructs a new variable math expression value from the calculable form of the expression.
+	 *
+	 * @param calculable The calculable form of the expression
+	 */
+	public VariableMathExpressionValue(Calculable calculable) {
+		super(calculable);
+	}
+
+	/**
+	 * Reevaluates the math expression, updating the values of the variable from the variable
+	 * sources.
+	 *
+	 * @throws IllegalStateException If no variable sources have been added
+	 */
 	@Override
 	public void calculate() {
 		if (variableSources.isEmpty()) {
@@ -77,10 +112,29 @@ public class VariableMathExpressionValue extends MathExpressionValue {
 		super.calculate();
 	}
 
+	/**
+	 * Adds the variable sources to this variable math expression.
+	 *
+	 * @param sources The variable sources to add
+	 */
 	public void addVariableSources(VariableSource... sources) {
-		variableSources.addAll(Arrays.asList(sources));
+		addVariableSources(Arrays.asList(sources));
 	}
-	
+
+	/**
+	 * Adds the variable sources to this variable math expression.
+	 *
+	 * @param sources The variable sources to add as a collection
+	 */
+	public void addVariableSources(Collection<VariableSource> sources) {
+		variableSources.addAll(sources);
+	}
+
+	/**
+	 * Returns the string representation of the value.
+	 *
+	 * @return The string form of the value
+	 */
 	@Override
 	public String toString() {
 		return "VariableMathExpressionValue{" + "value=" + getValue() + '}';

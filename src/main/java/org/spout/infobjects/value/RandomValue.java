@@ -30,9 +30,18 @@ import java.util.Random;
 
 import org.spout.infobjects.util.RandomOwner;
 
+/**
+ * Represent an abstract random value. This class provides the random instance and implements {@link org.spout.infobjects.util.RandomOwner}
+ * for setting which random to use.
+ */
 public abstract class RandomValue implements Value, RandomOwner {
 	protected Random random = new Random();
 
+	/**
+	 * Sets the random to use when calculating this value.
+	 *
+	 * @param random The random to use
+	 */
 	@Override
 	public void setRandom(Random random) {
 		this.random = random;

@@ -35,7 +35,7 @@ import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
 /**
- * A shape to draw a sphere.
+ * A shape to draw a sphere defined by its radiuses on x, y and z.
  */
 public class Sphere extends Shape {
 	private Value radiusX;

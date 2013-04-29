@@ -28,32 +28,62 @@ package org.spout.infobjects.value;
 
 import org.spout.infobjects.util.IWGOUtils;
 
+/**
+ * Represents a random double value. This is an optimizations to replace {@link MathExpressionValue}
+ * with a faster one when the value only has one random function.
+ */
 public class RandomDoubleValue extends RandomValue {
 	private final double min;
 	private final double max;
 	private double value;
 
+	/**
+	 * Constructs a new random double value from the minimum and maximum of the random number range.
+	 *
+	 * @param min The minimum possible random real value
+	 * @param max The maximum possible random real value
+	 */
 	public RandomDoubleValue(double min, double max) {
 		this.min = min;
 		this.max = max;
 	}
 
-	public RandomDoubleValue(String exp) {
-		final String[] minMax = exp.split("=")[1].split("-");
+	/**
+	 * Constructs a new random double value from the expression. Note that this expression has a
+	 * different format than usual mathematical expression. It must follow this format: {@code ranF=[min]-[max]},
+	 * where the bracketed words are the parameters as real values.
+	 *
+	 * @param expression The random double value expression
+	 */
+	public RandomDoubleValue(String expression) {
+		final String[] minMax = expression.split("=")[1].split("-");
 		min = Double.parseDouble(minMax[0]);
 		max = Double.parseDouble(minMax[1]);
 	}
 
+	/**
+	 * Gets the real value for this random double value.
+	 *
+	 * @return The real value
+	 */
 	@Override
 	public double getValue() {
 		return value;
 	}
 
+	/**
+	 * Calculates the next random double value between the specified minimum and maximum.
+	 */
 	@Override
 	public void calculate() {
 		value = IWGOUtils.nextDouble(random, min, max);
 	}
 
+	/**
+	 * Returns the string representation of the value.
+	 *
+	 * @return The string form of the value
+	 */
 	@Override
 	public String toString() {
 		return "RandomDoubleValue{" + "value=" + value + '}';
