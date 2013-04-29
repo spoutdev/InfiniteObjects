@@ -235,7 +235,7 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 	}
 
 	/**
-	 * Returns the variable map (mapped as name and variable) from the iWGO. Changes to this map are
+	 * Gets the variable map (mapped as name and variable) from the iWGO. Changes to this map are
 	 * reflected in the iWGO.
 	 *
 	 * @return The variable map.
@@ -286,7 +286,7 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 	}
 
 	/**
-	 * Returns the material setter map (mapped as name and material setter) from the iWGO. Changes
+	 * Gets the material setter map (mapped as name and material setter) from the iWGO. Changes
 	 * to this map are reflected in the iWGO.
 	 *
 	 * @return The material setter map.
@@ -353,7 +353,7 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 	}
 
 	/**
-	 * Returns the instruction map (mapped as name and instruction) from the iWGO. Changes to this
+	 * Gets the instruction map (mapped as name and instruction) from the iWGO. Changes to this
 	 * map are reflected in the iWGO.
 	 *
 	 * @return The instruction map.

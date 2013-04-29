@@ -41,7 +41,7 @@ import org.spout.api.util.config.ConfigurationNode;
  */
 public class IWGOUtils {
 	/**
-	 * Returns the next integer from the provided random between the two bounds, inclusively.
+	 * Gets the next integer from the provided random between the two bounds, inclusively.
 	 *
 	 * @param random The random to use
 	 * @param min The lower bound
@@ -53,7 +53,7 @@ public class IWGOUtils {
 	}
 
 	/**
-	 * Returns the next double from the provided random between the two bounds, exclusively for the
+	 * Gets the next double from the provided random between the two bounds, exclusively for the
 	 * higher bound.
 	 *
 	 * @param random The random to use

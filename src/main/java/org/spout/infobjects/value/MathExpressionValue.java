@@ -85,7 +85,7 @@ public class MathExpressionValue implements Value, RandomOwner {
 	}
 
 	/**
-	 * Returns the real value of the mathematical expression.
+	 * Gets the real value of the mathematical expression.
 	 *
 	 * @return The real value
 	 */
