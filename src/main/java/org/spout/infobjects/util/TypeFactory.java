@@ -37,7 +37,7 @@ import java.util.Map;
  * @param <T> The main class and main type for this factory
  */
 public class TypeFactory<T> {
-	private final Map<String, Constructor<? extends T>> TYPES =
+	private final Map<String, Constructor<? extends T>> types =
 			new HashMap<String, Constructor<? extends T>>();
 	private final Class<?>[] constructorParams;
 
@@ -59,8 +59,11 @@ public class TypeFactory<T> {
 	 * the types specified during construction of the factory
 	 */
 	public void register(String name, Class<? extends T> type) {
+		if (types.containsKey(name)) {
+			throw new IllegalArgumentException("Type \"" + type + "\" has already been registered");
+		}
 		try {
-			TYPES.put(name, type.getConstructor(constructorParams));
+			types.put(name, type.getConstructor(constructorParams));
 		} catch (NoSuchMethodException ex) {
 			throw new IllegalArgumentException("Type \"" + type + "\" doesn't have the required constructor");
 		}
@@ -76,11 +79,11 @@ public class TypeFactory<T> {
 	 * @throws IllegalArgumentException if the type hasn't been registered
 	 */
 	public T newInstance(String type, Object... constructorParams) {
-		if (!TYPES.containsKey(type)) {
+		if (!types.containsKey(type)) {
 			throw new IllegalArgumentException("Type \"" + type + "\" is not a registered type");
 		}
 		try {
-			return TYPES.get(type).newInstance(constructorParams);
+			return types.get(type).newInstance(constructorParams);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null;
