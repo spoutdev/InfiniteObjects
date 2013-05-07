@@ -33,7 +33,6 @@ import java.util.Random;
 import org.spout.api.material.BlockMaterial;
 import org.spout.api.material.Material;
 import org.spout.api.material.MaterialRegistry;
-
 import org.spout.api.util.config.ConfigurationNode;
 
 /**
