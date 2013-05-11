@@ -29,7 +29,7 @@ package org.spout.infobjects.exception;
 /**
  * An exception thrown when the loading of a condition fails.
  */
-public class ConditionLoadingException extends Exception {
+public class ConditionLoadingException extends LoadingException {
 	/**
 	 * Constructs a new condition loading exception from the message.
 	 *

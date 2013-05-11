@@ -26,21 +26,22 @@
  */
 package org.spout.infobjects.material;
 
-import java.util.Map;
-
 import org.spout.api.geo.World;
 import org.spout.api.geo.discrete.Point;
 import org.spout.api.util.Named;
+import org.spout.api.util.config.ConfigurationNode;
+import org.spout.infobjects.util.ConfigurationLoadable;
 
 import org.spout.infobjects.util.TypeFactory;
 
 /**
- * An abstract material setter. Provides the name and some overloads for the {@link #setMaterial(org.spout.api.geo.World, int, int, int, boolean)}
- * method. Register your own material setter with {@link #register(java.lang.String, java.lang.Class)}
- * so the iWGO loader can recognize it. Make sure there's at least one constructor with the same
- * arguments as the one for this class, as it's the one that will be called for construction.
+ * An abstract material setter. Provides the name and some overloads for the
+ * {@link #setMaterial(org.spout.api.geo.World, int, int, int, boolean)} method. Register your own
+ * material setter with {@link #register(java.lang.String, java.lang.Class)} so the iWGO loader can
+ * recognize it. Make sure there's at least one constructor with the same arguments as the one for
+ * this class, as it's the one that will be called for construction.
  */
-public abstract class MaterialSetter implements Named {
+public abstract class MaterialSetter implements ConfigurationLoadable, Named {
 	private static final TypeFactory<MaterialSetter> SETTERS = new TypeFactory<MaterialSetter>(String.class);
 	private final String name;
 
@@ -60,7 +61,8 @@ public abstract class MaterialSetter implements Named {
 	 *
 	 * @param properties The properties as a string, string map
 	 */
-	public abstract void configure(Map<String, String> properties);
+	@Override
+	public abstract void load(ConfigurationNode properties);
 
 	/**
 	 * Sets a material at the point. The material depends on the material setter implementation and

@@ -29,7 +29,7 @@ package org.spout.infobjects.exception;
 /**
  * An exception thrown when the loading of a variable fails.
  */
-public class VariableLoadingException extends Exception {
+public class VariableLoadingException extends LoadingException {
 	/**
 	 * Constructs a new variable loading exception from the name of the variable and the parent
 	 * exception.

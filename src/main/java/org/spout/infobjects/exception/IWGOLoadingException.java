@@ -29,7 +29,7 @@ package org.spout.infobjects.exception;
 /**
  * An exception thrown when the loading of an iWGO fails.
  */
-public class IWGOLoadingException extends Exception {
+public class IWGOLoadingException extends LoadingException {
 	/**
 	 * Constructs a new iWGO loading exception from the source of the iWGO and the parent exception.
 	 *

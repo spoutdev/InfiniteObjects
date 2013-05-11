@@ -24,29 +24,22 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.exception;
+package org.spout.infobjects.util;
+
+import org.spout.api.util.config.ConfigurationNode;
+import org.spout.infobjects.exception.LoadingException;
 
 /**
- * An exception thrown when the loading of an instruction fails.
+ * Represent an object which can be loaded from a
+ * {@link org.spout.api.util.config.ConfigurationNode}.
  */
-public class InstructionLoadingException extends LoadingException {
+public interface ConfigurationLoadable {
 	/**
-	 * Constructs a new instruction loading exception from the message.
+	 * Load the object from a {@link org.spout.api.util.config.ConfigurationNode}. Throws a
+	 * {@link org.spout.infobjects.exception.LoadingException} if the loading fails.
 	 *
-	 * @param string The message of this exception
+	 * @param properties The node from which to load the properties
+	 * @throws LoadingException If the loading fails
 	 */
-	public InstructionLoadingException(String string) {
-		super(string);
-	}
-
-	/**
-	 * Constructs a new instruction loading exception from the name of the instruction and the
-	 * parent exception.
-	 *
-	 * @param name The name of the instruction
-	 * @param thrwbl The exception that caused this one
-	 */
-	public InstructionLoadingException(String name, Throwable thrwbl) {
-		super("Could not load instruction \"" + name + "\"", thrwbl);
-	}
+	public void load(ConfigurationNode properties) throws LoadingException;
 }

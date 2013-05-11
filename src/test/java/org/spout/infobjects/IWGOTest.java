@@ -56,7 +56,7 @@ public class IWGOTest {
 	public void test() {
 		final IWGOManager manager = new IWGOManager(new File("src/test/resources"), false);
 		manager.loadIWGOs();
-		final IWGO iwgo = manager.getIWGO("tree");
+		final IWGO iwgo = manager.getIWGO("huge_tree");
 
 		iwgo.setRandom(new Random());
 

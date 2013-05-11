@@ -26,35 +26,27 @@
  */
 package org.spout.infobjects.condition;
 
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
-import org.spout.api.material.BlockMaterial;
+import org.spout.api.util.config.ConfigurationNode;
 
 import org.spout.infobjects.IWGO;
 import org.spout.infobjects.exception.ConditionLoadingException;
+import org.spout.infobjects.util.ConfigurationLoadable;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.util.TypeFactory;
-import org.spout.infobjects.value.Value;
 
 /**
- * An abstract condition. This class stores all the basics for a condition, including the materials,
- * the position, the mode (exclude or include) and the parent iWGO. Extend this class, implement {@link #check()}
- * and override {@link #setSize(java.util.Map)} to create your own condition. For the loader to
- * recognize it it will also need to be registered with {@link #register(java.lang.String, java.lang.Class)}.
- * It is important to make sure the extending class has a constructor with the same arguments as
- * this class, as it is necessary for the creations of new conditions via reflection.
+ * An abstract condition. This class stores only the parent iWGO. Extend this class, implement
+ * {@link #load(org.spout.api.util.config.ConfigurationNode)}, {@link #check()} and
+ * {@link #setRandom(java.util.Random)} to create your own condition. For the loader to recognize it
+ * it will also need to be registered with {@link #register(java.lang.String, java.lang.Class)}. It
+ * is important to make sure the extending class has a constructor with the same arguments as this
+ * class, as it is necessary for the creations of new conditions via reflection.
  */
-public abstract class Condition implements RandomOwner {
+public abstract class Condition implements ConfigurationLoadable, RandomOwner {
 	private static final TypeFactory<Condition> CONDITIONS = new TypeFactory<Condition>(IWGO.class);
-	protected final IWGO iwgo;
-	protected final Set<BlockMaterial> materials = new HashSet<BlockMaterial>();
-	protected Value x;
-	protected Value y;
-	protected Value z;
-	protected ConditionMode mode;
+	private final IWGO iwgo;
 
 	/**
 	 * Constructs a new condition.
@@ -75,203 +67,34 @@ public abstract class Condition implements RandomOwner {
 	}
 
 	/**
-	 * Gets the {@link org.spout.infobjects.value.Value} representing the x coordinate.
+	 * Loads this condition from the properties node in the condition declaration.
 	 *
-	 * @return The value for x
+	 * @param properties The properties node
+	 * @throws ConditionLoadingException If the loading fail
 	 */
-	public Value getX() {
-		return x;
-	}
+	@Override
+	public abstract void load(ConfigurationNode properties) throws ConditionLoadingException;
 
 	/**
-	 * Sets the {@link org.spout.infobjects.value.Value} representing the x coordinate.
-	 *
-	 * @param x The value for x
-	 */
-	public void setX(Value x) {
-		this.x = x;
-	}
-
-	/**
-	 * Gets the {@link org.spout.infobjects.value.Value} representing the y coordinate.
-	 *
-	 * @return The value for y
-	 */
-	public Value getY() {
-		return y;
-	}
-
-	/**
-	 * Sets the {@link org.spout.infobjects.value.Value} representing the y coordinate.
-	 *
-	 * @param y The value for y
-	 */
-	public void setY(Value y) {
-		this.y = y;
-	}
-
-	/**
-	 * Gets the {@link org.spout.infobjects.value.Value} representing the z coordinate.
-	 *
-	 * @return The value for z
-	 */
-	public Value getZ() {
-		return z;
-	}
-
-	/**
-	 * Sets the {@link org.spout.infobjects.value.Value} representing the z coordinate.
-	 *
-	 * @param z The value for z
-	 */
-	public void setZ(Value z) {
-		this.z = z;
-	}
-
-	/**
-	 * Sets the {@link org.spout.infobjects.value.Value}s representing the x, y and z coordinates.
-	 *
-	 * @param x The value for z
-	 * @param y The value for Y
-	 * @param z The value for Y
-	 */
-	public void setPosition(Value x, Value y, Value z) {
-		setX(x);
-		setY(y);
-		setZ(z);
-	}
-
-	/**
-	 * Partial method for setting the size of the condition. As the actual size parameters depend on
-	 * the extending class, this method cannot set them. This method does provide exception throwing
-	 * for shapes which have x, y, and z size parameters when one of them is missing. In such case a
-	 * call to the super method can be used. The sizes are stored as map, mapped as name and value.
-	 * The name is as declared in the iWGO configuration.
-	 *
-	 * @param sizes The size as a map
-	 * @throws ConditionLoadingException If the x, y, or z size is missing
-	 */
-	public void setSize(Map<String, Value> sizes) throws ConditionLoadingException {
-		if (!sizes.containsKey("x")) {
-			throw new ConditionLoadingException("x size is missing");
-		}
-		if (!sizes.containsKey("y")) {
-			throw new ConditionLoadingException("y size is missing");
-		}
-		if (!sizes.containsKey("z")) {
-			throw new ConditionLoadingException("z size is missing");
-		}
-	}
-
-	/**
-	 * Sets the position values for x, y and z. The positions are passes as a name and {@link org.spout.infobjects.value.Value}
-	 * map. The name is as declared in the iWGO configuration. Expected size values are x, y, and z.
-	 *
-	 * @param position The position as a map
-	 * @throws ConditionLoadingException If the x, y, or z coordinate is missing
-	 */
-	public void setPosition(Map<String, Value> position) throws ConditionLoadingException {
-		if (!position.containsKey("x")) {
-			throw new ConditionLoadingException("x coordinate for position is missing");
-		}
-		if (!position.containsKey("y")) {
-			throw new ConditionLoadingException("y coordinate for position is missing");
-		}
-		if (!position.containsKey("z")) {
-			throw new ConditionLoadingException("z coordinate for position is missing");
-		}
-		setPosition(position.get("x"), position.get("y"), position.get("z"));
-	}
-
-	/**
-	 * Adds a block material to this condition. The materials are used in checks, where the
-	 * condition's volume is tested for either absence or presence of the materials.
-	 *
-	 * @param material The material to add
-	 */
-	public void addBlockMaterial(BlockMaterial material) {
-		materials.add(material);
-	}
-
-	/**
-	 * Remove the material from the condition.
-	 *
-	 * @param material The material to remove
-	 */
-	public void removeMaterial(BlockMaterial material) {
-		materials.remove(material);
-	}
-
-	/**
-	 * Gets the materials of this condition. Changes in the set are reflected in the condition.
-	 *
-	 * @return The materials as a set
-	 */
-	public Set<BlockMaterial> getMaterials() {
-		return materials;
-	}
-
-	/**
-	 * Gets the checking mode of this condition.
-	 *
-	 * @return The condition's mode
-	 */
-	public ConditionMode getMode() {
-		return mode;
-	}
-
-	/**
-	 * Sets the condition's mode. The mode is used by the extending class to determine if it should
-	 * check for the absence or presence of the materials.
-	 *
-	 * @param mode The mode to set
-	 */
-	public void setMode(ConditionMode mode) {
-		this.mode = mode;
-	}
-
-	/**
-	 * An abstract method which is implemented by the extending class. The implementation has to
-	 * determine whether or not the volume of this condition, starting from the position and ending
-	 * at the position plus the size, contains or not the materials from {@link #getMaterials()}.
-	 * The actual shape of the volume is decided by the implementation. Whether or not the
-	 * implementation should check for the presence (include) or absence (exclude) of the materials
-	 * is decided by the mode from {@link #getMode()}. If the check is successful, this method
-	 * should return true, false if it isn't. Take a look at {@link CuboidCondition} for an example
-	 * of an implementation.
+	 * An abstract method which is implemented by the extending class. Returns true if the condition
+	 * check is successful, false it not.
 	 *
 	 * @return True if the check is successful, false if not.
 	 */
 	public abstract boolean check();
 
 	/**
-	 * Recalculates the position of this condition. The position will only change if the {@link org.spout.infobjects.value.Value}s
-	 * representing it are randomizable.
+	 * Randomizes this condition.
 	 */
-	public void randomize() {
-		x.calculate();
-		y.calculate();
-		z.calculate();
-	}
+	public abstract void randomize();
 
 	/**
-	 * Sets the randoms of the position {@link org.spout.infobjects.value.Value}s to the provided
-	 * one, if they implement {@link org.spout.infobjects.util.RandomOwner}.
+	 * Sets the random for this condition.
 	 *
 	 * @param random The random to set
 	 */
 	@Override
-	public void setRandom(Random random) {
-		if (x instanceof RandomOwner) {
-			((RandomOwner) x).setRandom(random);
-		}
-		if (y instanceof RandomOwner) {
-			((RandomOwner) y).setRandom(random);
-		}
-		if (z instanceof RandomOwner) {
-			((RandomOwner) z).setRandom(random);
-		}
-	}
+	public abstract void setRandom(Random random);
 
 	/**
 	 * Registers a new condition. This is necessary for the loader to recognize it when loading a
@@ -295,35 +118,5 @@ public abstract class Condition implements RandomOwner {
 	 */
 	public static Condition newCondition(String type, IWGO iwgo) {
 		return CONDITIONS.newInstance(type, iwgo);
-	}
-
-	/**
-	 * An enum with the modes a condition can have when checking the condition volume for materials.
-	 * The include mode means the condition should return true only if all the materials are present
-	 * in the volume. The exclude mode means it should check that none are present.
-	 */
-	public static enum ConditionMode {
-		INCLUDE, EXCLUDE;
-
-		/**
-		 * Runs the check for a material according to the mode. If the mode is include, this method
-		 * will return false if the material is in the provided set. If it is exclude, it will
-		 * return false if it is not.
-		 *
-		 * @param material The material to check
-		 * @param materials The material set to check in
-		 * @return True or false depending on the mode and the presence or absence of the material
-		 * in the set
-		 */
-		public boolean check(BlockMaterial material, Set<BlockMaterial> materials) {
-			switch (this) {
-				case INCLUDE:
-					return materials.contains(material);
-				case EXCLUDE:
-					return !materials.contains(material);
-				default:
-					return false;
-			}
-		}
 	}
 }

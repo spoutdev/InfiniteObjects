@@ -29,7 +29,7 @@ package org.spout.infobjects.exception;
 /**
  * An exception thrown when the loading of a material setter fails.
  */
-public class MaterialSetterLoadingException extends Exception {
+public class MaterialSetterLoadingException extends LoadingException {
 	/**
 	 * Constructs a new material setter exception from the message.
 	 *

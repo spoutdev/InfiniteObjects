@@ -26,10 +26,9 @@
  */
 package org.spout.infobjects.material;
 
-import java.util.Map;
-
 import org.spout.api.geo.World;
 import org.spout.api.material.BlockMaterial;
+import org.spout.api.util.config.ConfigurationNode;
 
 import org.spout.infobjects.util.IWGOUtils;
 
@@ -60,10 +59,10 @@ public class SimpleSetter extends MaterialSetter {
 	 * @param properties The properties as a string, string map
 	 */
 	@Override
-	public void configure(Map<String, String> properties) {
-		material = IWGOUtils.tryGetBlockMaterial(properties.get("material"));
-		if (properties.containsKey("data")) {
-			data = Short.parseShort(properties.get("data"));
+	public void load(ConfigurationNode properties) {
+		material = IWGOUtils.tryGetBlockMaterial(properties.getNode("material").getString());
+		if (properties.hasNode("data")) {
+			data = properties.getNode("data").getShort();
 		} else {
 			data = -1;
 		}

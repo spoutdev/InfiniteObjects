@@ -40,16 +40,9 @@ import org.spout.infobjects.exception.ConditionLoadingException;
 import org.spout.infobjects.exception.IWGOLoadingException;
 import org.spout.infobjects.exception.InstructionLoadingException;
 import org.spout.infobjects.exception.MaterialSetterLoadingException;
-import org.spout.infobjects.exception.ShapeLoadingException;
 import org.spout.infobjects.exception.VariableLoadingException;
-import org.spout.infobjects.instruction.BlockInstruction;
 import org.spout.infobjects.instruction.Instruction;
-import org.spout.infobjects.instruction.ShapeInstruction;
-import org.spout.infobjects.instruction.RepeatInstruction;
 import org.spout.infobjects.material.MaterialSetter;
-import org.spout.infobjects.shape.Shape;
-import org.spout.infobjects.util.IWGOUtils;
-import org.spout.infobjects.value.IncrementableValue;
 import org.spout.infobjects.value.ValueParser;
 import org.spout.infobjects.variable.Variable;
 import org.spout.infobjects.variable.VariableSource;
@@ -158,7 +151,7 @@ public class IWGOLoader {
 				final ConfigurationNode setterNode = settersNode.getNode(key);
 				final MaterialSetter setter =
 						MaterialSetter.newMaterialSetter(setterNode.getNode("type").getString(), key);
-				setter.configure(IWGOUtils.toStringMap(setterNode.getNode("properties")));
+				setter.load(setterNode.getNode("properties"));
 				iwgo.addMaterialSetter(setter);
 			} catch (Exception ex) {
 				throw new MaterialSetterLoadingException(key, ex);
@@ -181,78 +174,12 @@ public class IWGOLoader {
 				final Instruction instruction =
 						Instruction.newInstruction(instructionNode.getNode("type").getString(), iwgo, key);
 				loadVariables(instruction, instructionNode.getNode("variables"), iwgo, instruction);
-				if (instruction instanceof ShapeInstruction) {
-					loadShapeInstruction((ShapeInstruction) instruction, instructionNode);
-				} else if (instruction instanceof RepeatInstruction) {
-					loadRepeatInstruction((RepeatInstruction) instruction, instructionNode);
-				} else if (instruction instanceof BlockInstruction) {
-					loadBlockInstruction((BlockInstruction) instruction, instructionNode);
-				}
+				instruction.load(instructionNode.getNode("properties"));
 				iwgo.addInstruction(instruction);
 			} catch (Exception ex) {
 				throw new InstructionLoadingException(key, ex);
 			}
 		}
-	}
-
-	private static void loadShapeInstruction(ShapeInstruction instruction, ConfigurationNode placeNode)
-			throws ShapeLoadingException {
-		final IWGO iwgo = instruction.getIWGO();
-		final ConfigurationNode shapesNode = placeNode.getNode("shapes");
-		for (String key : shapesNode.getKeys(false)) {
-			try {
-				final ConfigurationNode shapeNode = shapesNode.getNode(key);
-				final Shape shape = Shape.newShape(shapeNode.getNode("type").getString(), iwgo);
-				shape.setSize(ValueParser.parse(IWGOUtils.toStringMap(shapeNode.getNode("size")), iwgo, instruction));
-				shape.setPosition(ValueParser.parse(IWGOUtils.toStringMap(shapeNode.getNode("position")), iwgo, instruction));
-				final MaterialSetter setter = iwgo.getMaterialSetter(shapeNode.getNode("material").getString());
-				if (setter == null) {
-					throw new ShapeLoadingException("Material setter \"" + shapeNode.getNode("material").getString()
-							+ "\" does not exist");
-				}
-				shape.setMaterialSetter(setter);
-				instruction.addShape(shape);
-			} catch (Exception ex) {
-				throw new ShapeLoadingException(key, ex);
-			}
-		}
-	}
-
-	private static void loadRepeatInstruction(RepeatInstruction instruction, ConfigurationNode repeatNode)
-			throws InstructionLoadingException {
-		final IWGO iwgo = instruction.getIWGO();
-		final Instruction repeat = iwgo.getInstruction(repeatNode.getNode("repeat").getString());
-		if (repeat == null) {
-			throw new InstructionLoadingException("Repeat instruction \""
-					+ repeatNode.getNode("repeat").getString() + "\" does not exist");
-		}
-		instruction.setRepeat(repeat);
-		instruction.setTimes(ValueParser.parse(repeatNode.getNode("times").getString(), iwgo, instruction));
-		final ConfigurationNode incrementNode = repeatNode.getNode("increment");
-		for (String key : incrementNode.getKeys(false)) {
-			final Variable increment = iwgo.getVariable(key);
-			if (increment == null) {
-				throw new InstructionLoadingException("Increment variable \"" + key + "\" does not exist");
-			}
-			instruction.addIncrementableValue(key, new IncrementableValue(increment.getRawValue(),
-					ValueParser.parse(incrementNode.getNode(key).getString(), iwgo, instruction)));
-		}
-	}
-
-	private static void loadBlockInstruction(BlockInstruction instruction, ConfigurationNode blockNode)
-			throws InstructionLoadingException {
-		final IWGO iwgo = instruction.getIWGO();
-		final ConfigurationNode positionNode = blockNode.getNode("position");
-		instruction.setX(ValueParser.parse(positionNode.getNode("x").getString(), iwgo, instruction));
-		instruction.setY(ValueParser.parse(positionNode.getNode("y").getString(), iwgo, instruction));
-		instruction.setZ(ValueParser.parse(positionNode.getNode("z").getString(), iwgo, instruction));
-		final MaterialSetter setter = iwgo.getMaterialSetter(blockNode.getNode("material").getString());
-		if (setter == null) {
-			throw new InstructionLoadingException("Material setter \"" + blockNode.getNode("material").getString()
-					+ "\" does not exist");
-		}
-		instruction.setMaterialSetter(setter);
-		instruction.setOuter(Boolean.parseBoolean(blockNode.getNode("outer").getString()));
 	}
 
 	/**
@@ -267,13 +194,8 @@ public class IWGOLoader {
 		for (String key : conditionsNode.getKeys(false)) {
 			try {
 				final ConfigurationNode conditionNode = conditionsNode.getNode(key);
-				final Condition condition = Condition.newCondition(conditionNode.getNode("shape").getString(), iwgo);
-				condition.setMode(Condition.ConditionMode.valueOf(conditionNode.getNode("mode").getString().toUpperCase()));
-				condition.setSize(ValueParser.parse(IWGOUtils.toStringMap(conditionNode.getNode("size")), iwgo));
-				condition.setPosition(ValueParser.parse(IWGOUtils.toStringMap(conditionNode.getNode("position")), iwgo));
-				for (String name : conditionNode.getNode("check").getStringList()) {
-					condition.addBlockMaterial(IWGOUtils.tryGetBlockMaterial(name));
-				}
+				final Condition condition = Condition.newCondition(conditionNode.getNode("type").getString(), iwgo);
+				condition.load(conditionNode.getNode("properties"));
 				iwgo.addCondition(condition);
 			} catch (Exception ex) {
 				throw new ConditionLoadingException(key, ex);
@@ -282,8 +204,8 @@ public class IWGOLoader {
 	}
 
 	/**
-	 * Logs iWGO loading exceptions to the Spout default logger (as defined by {@link org.spout.api.Spout#getLogger()})
-	 * in a user friendly manner.
+	 * Logs iWGO loading exceptions to the Spout default logger (as defined by
+	 * {@link org.spout.api.Spout#getLogger()}) in a user friendly manner.
 	 *
 	 * @param exception The exception to log
 	 */

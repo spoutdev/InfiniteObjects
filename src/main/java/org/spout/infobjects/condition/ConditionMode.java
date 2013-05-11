@@ -24,29 +24,37 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package org.spout.infobjects.exception;
+package org.spout.infobjects.condition;
+
+import java.util.Set;
+import org.spout.api.material.BlockMaterial;
 
 /**
- * An exception thrown when the loading of an instruction fails.
+ * An enum with the modes a condition can have when checking the condition volume for materials. The
+ * include mode means the condition should return true only if all the materials are present in the
+ * volume. The exclude mode means it should check that none are present.
  */
-public class InstructionLoadingException extends LoadingException {
-	/**
-	 * Constructs a new instruction loading exception from the message.
-	 *
-	 * @param string The message of this exception
-	 */
-	public InstructionLoadingException(String string) {
-		super(string);
-	}
+public enum ConditionMode {
+	INCLUDE, EXCLUDE;
 
 	/**
-	 * Constructs a new instruction loading exception from the name of the instruction and the
-	 * parent exception.
+	 * Runs the check for a material according to the mode. If the mode is include, this method will
+	 * return false if the material is in the provided set. If it is exclude, it will return false
+	 * if it is not.
 	 *
-	 * @param name The name of the instruction
-	 * @param thrwbl The exception that caused this one
+	 * @param material The material to check
+	 * @param materials The material set to check in
+	 * @return True or false depending on the mode and the presence or absence of the material in
+	 * the set
 	 */
-	public InstructionLoadingException(String name, Throwable thrwbl) {
-		super("Could not load instruction \"" + name + "\"", thrwbl);
+	public boolean check(BlockMaterial material, Set<BlockMaterial> materials) {
+		switch (this) {
+			case INCLUDE:
+				return materials.contains(material);
+			case EXCLUDE:
+				return !materials.contains(material);
+			default:
+				return false;
+		}
 	}
 }

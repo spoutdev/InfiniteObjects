@@ -26,10 +26,10 @@
  */
 package org.spout.infobjects.material;
 
-import java.util.Map;
 import java.util.Random;
 
 import org.spout.api.geo.World;
+import org.spout.api.util.config.ConfigurationNode;
 
 import org.spout.infobjects.util.RandomOwner;
 
@@ -62,10 +62,10 @@ public class RandomInnerOuterSetter extends InnerOuterSetter implements RandomOw
 	 * @param properties The property map as a string, string map.
 	 */
 	@Override
-	public void configure(Map<String, String> properties) {
-		super.configure(properties);
-		innerOdd = Byte.parseByte(properties.get("inner.odd"));
-		outerOdd = Byte.parseByte(properties.get("outer.odd"));
+	public void load(ConfigurationNode properties) {
+		super.load(properties);
+		innerOdd = properties.getNode("inner", "odd").getByte();
+		outerOdd = properties.getNode("outer", "odd").getByte();
 	}
 
 	/**

@@ -29,10 +29,16 @@ package org.spout.infobjects.instruction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.spout.api.util.config.ConfigurationNode;
 
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.exception.InstructionLoadingException;
+import org.spout.infobjects.exception.ShapeLoadingException;
+import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.shape.Shape;
+import org.spout.infobjects.util.IWGOUtils;
 import org.spout.infobjects.util.RandomOwner;
+import org.spout.infobjects.value.ValueParser;
 
 /**
  * A shape placing instruction.
@@ -71,6 +77,36 @@ public class ShapeInstruction extends Instruction {
 	 */
 	public List<Shape> getShapes() {
 		return shapes;
+	}
+
+	/**
+	 * Loads the shape instruction from the properties node. The expected values are the shapes and
+	 * their types, sizes, positions and material setter.
+	 *
+	 * @param properties The properties node to load from
+	 * @throws InstructionLoadingException If the loading fails
+	 */
+	@Override
+	public void load(ConfigurationNode properties) throws InstructionLoadingException {
+		final IWGO iwgo = getIWGO();
+		final ConfigurationNode shapesNode = properties.getNode("shapes");
+		for (String key : shapesNode.getKeys(false)) {
+			try {
+				final ConfigurationNode shapeNode = shapesNode.getNode(key);
+				final Shape shape = Shape.newShape(shapeNode.getNode("type").getString(), iwgo);
+				shape.setSize(ValueParser.parse(IWGOUtils.toStringMap(shapeNode.getNode("size")), iwgo, this));
+				shape.setPosition(ValueParser.parse(IWGOUtils.toStringMap(shapeNode.getNode("position")), iwgo, this));
+				final MaterialSetter setter = iwgo.getMaterialSetter(shapeNode.getNode("material").getString());
+				if (setter == null) {
+					throw new ShapeLoadingException("Material setter \"" + shapeNode.getNode("material").getString()
+							+ "\" does not exist");
+				}
+				shape.setMaterialSetter(setter);
+				addShape(shape);
+			} catch (Exception ex) {
+				throw new ShapeLoadingException(key, ex);
+			}
+		}
 	}
 
 	/**

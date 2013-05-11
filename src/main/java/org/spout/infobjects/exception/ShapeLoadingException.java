@@ -29,7 +29,7 @@ package org.spout.infobjects.exception;
 /**
  * An exception thrown when the loading of a shape fails.
  */
-public class ShapeLoadingException extends Exception {
+public class ShapeLoadingException extends InstructionLoadingException {
 	/**
 	 * Constructs a new shape loading exception from the message.
 	 *

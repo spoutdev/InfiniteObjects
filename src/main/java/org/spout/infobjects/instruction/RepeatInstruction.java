@@ -26,15 +26,18 @@
  */
 package org.spout.infobjects.instruction;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import org.spout.api.util.config.ConfigurationNode;
+
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.exception.InstructionLoadingException;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.IncrementableValue;
 import org.spout.infobjects.value.Value;
+import org.spout.infobjects.value.ValueParser;
 import org.spout.infobjects.variable.Variable;
 
 /**
@@ -118,6 +121,34 @@ public class RepeatInstruction extends Instruction {
 	 */
 	public Set<IncrementableValue> getIncrementables() {
 		return incrementables;
+	}
+
+	/**
+	 * Load the repeat instruction from the properties node. The expected values are the instruction
+	 * to repeat, the times value, the variables to increment with their increments.
+	 *
+	 * @param properties The properties node to load from
+	 * @throws InstructionLoadingException If the loading fails
+	 */
+	@Override
+	public void load(ConfigurationNode properties) throws InstructionLoadingException {
+		final IWGO iwgo = getIWGO();
+		final Instruction toRepeat = iwgo.getInstruction(properties.getNode("repeat").getString());
+		if (toRepeat == null) {
+			throw new InstructionLoadingException("Repeat instruction \""
+					+ properties.getNode("repeat").getString() + "\" does not exist");
+		}
+		setRepeat(toRepeat);
+		setTimes(ValueParser.parse(properties.getNode("times").getString(), iwgo, this));
+		final ConfigurationNode incrementNode = properties.getNode("increment");
+		for (String key : incrementNode.getKeys(false)) {
+			final Variable increment = iwgo.getVariable(key);
+			if (increment == null) {
+				throw new InstructionLoadingException("Increment variable \"" + key + "\" does not exist");
+			}
+			addIncrementableValue(key, new IncrementableValue(increment.getRawValue(),
+					ValueParser.parse(incrementNode.getNode(key).getString(), iwgo, this)));
+		}
 	}
 
 	/**

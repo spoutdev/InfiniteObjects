@@ -28,10 +28,13 @@ package org.spout.infobjects.instruction;
 
 import java.util.Random;
 
+import org.spout.api.util.config.ConfigurationNode;
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.exception.InstructionLoadingException;
 import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
+import org.spout.infobjects.value.ValueParser;
 
 /**
  * An instruction to place a single block at a position. The outer boolean dictates whether the
@@ -56,6 +59,29 @@ public class BlockInstruction extends Instruction {
 	 */
 	public BlockInstruction(IWGO iwgo, String name) {
 		super(iwgo, name);
+	}
+
+	/**
+	 * Loads the block instruction from the properties node. Expected values are the position (x, y
+	 * and z), the material setter and the outer boolean.
+	 *
+	 * @param properties The properties node to load from
+	 * @throws InstructionLoadingException If the loading fails
+	 */
+	@Override
+	public void load(ConfigurationNode properties) throws InstructionLoadingException {
+		final IWGO iwgo = getIWGO();
+		final ConfigurationNode positionNode = properties.getNode("position");
+		setX(ValueParser.parse(positionNode.getNode("x").getString(), iwgo, this));
+		setY(ValueParser.parse(positionNode.getNode("y").getString(), iwgo, this));
+		setZ(ValueParser.parse(positionNode.getNode("z").getString(), iwgo, this));
+		final MaterialSetter material = iwgo.getMaterialSetter(properties.getNode("material").getString());
+		if (material == null) {
+			throw new InstructionLoadingException("Material setter \"" + properties.getNode("material").getString()
+					+ "\" does not exist");
+		}
+		setMaterialSetter(material);
+		setOuter(Boolean.parseBoolean(properties.getNode("outer").getString()));
 	}
 
 	/**

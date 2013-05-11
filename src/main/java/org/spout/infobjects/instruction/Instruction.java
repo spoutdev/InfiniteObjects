@@ -31,7 +31,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
+import org.spout.api.util.config.ConfigurationNode;
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.exception.InstructionLoadingException;
+import org.spout.infobjects.util.ConfigurationLoadable;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.util.TypeFactory;
 import org.spout.infobjects.variable.Variable;
@@ -39,11 +42,12 @@ import org.spout.infobjects.variable.VariableSource;
 
 /**
  * An abstract instruction. This class provides the parent iWGO, the name of the instruction and
- * it's variables to the extending class. Register your own instruction with {@link #register(java.lang.String, java.lang.Class)}
- * so the iWGO loader can recognize it. Make sure there's at least one constructor with the same
- * arguments as the one for this class, as it's the one that will be called for construction.
+ * it's variables to the extending class. Register your own instruction with
+ * {@link #register(java.lang.String, java.lang.Class)} so the iWGO loader can recognize it. Make
+ * sure there's at least one constructor with the same arguments as the one for this class, as it's
+ * the one that will be called for construction.
  */
-public abstract class Instruction implements VariableSource, RandomOwner {
+public abstract class Instruction implements ConfigurationLoadable, VariableSource, RandomOwner {
 	private static final TypeFactory<Instruction> INSTRUCTIONS = new TypeFactory<Instruction>(IWGO.class, String.class);
 	private final IWGO iwgo;
 	private final String name;
@@ -77,6 +81,15 @@ public abstract class Instruction implements VariableSource, RandomOwner {
 	public String getName() {
 		return name;
 	}
+
+	/**
+	 * Loads the instruction from the properties node in the instruction definition.
+	 *
+	 * @param properties The properties node to load from
+	 * @throws InstructionLoadingException If the loading fails
+	 */
+	@Override
+	public abstract void load(ConfigurationNode properties) throws InstructionLoadingException;
 
 	/**
 	 * Executes this instruction. Each instruction is called once by placement call, unless another

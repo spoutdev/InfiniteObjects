@@ -26,10 +26,9 @@
  */
 package org.spout.infobjects.material;
 
-import java.util.Map;
-
 import org.spout.api.geo.World;
 import org.spout.api.material.BlockMaterial;
+import org.spout.api.util.config.ConfigurationNode;
 
 import org.spout.infobjects.util.IWGOUtils;
 
@@ -59,22 +58,25 @@ public class InnerOuterSetter extends MaterialSetter {
 	 * Configures the material setter. Expected properties are "inner.material" for the inner
 	 * material, "inner.data" for the inner material's data, "outer.material" for the outer material
 	 * and "outer.data" for the outer material's data. Material values are the simple names of the
-	 * materials. If the material's data (as obtained by {@link org.spout.api.material.Material#getData()})
-	 * is what should be used, the data value can be set to -1.
+	 * materials. If the material's data (as obtained by
+	 * {@link org.spout.api.material.Material#getData()}) is what should be used, the data value can
+	 * be set to -1.
 	 *
 	 * @param properties The property map as a string, string map
 	 */
 	@Override
-	public void configure(Map<String, String> properties) {
-		inner = IWGOUtils.tryGetBlockMaterial(properties.get("inner.material"));
-		if (properties.containsKey("inner.data")) {
-			innerData = Short.parseShort(properties.get("inner.data"));
+	public void load(ConfigurationNode properties) {
+		final ConfigurationNode innerMaterial = properties.getNode("inner");
+		inner = IWGOUtils.tryGetBlockMaterial(innerMaterial.getNode("material").getString());
+		if (innerMaterial.hasNode("data")) {
+			innerData = innerMaterial.getNode("data").getShort();
 		} else {
 			innerData = -1;
 		}
-		outer = IWGOUtils.tryGetBlockMaterial(properties.get("outer.material"));
-		if (properties.containsKey("outer.data")) {
-			outerData = Short.parseShort(properties.get("outer.data"));
+		final ConfigurationNode outerMaterial = properties.getNode("outer");
+		outer = IWGOUtils.tryGetBlockMaterial(outerMaterial.getNode("material").getString());
+		if (outerMaterial.hasNode("data")) {
+			outerData = outerMaterial.getNode("data").getShort();
 		} else {
 			outerData = -1;
 		}
@@ -82,8 +84,8 @@ public class InnerOuterSetter extends MaterialSetter {
 
 	/**
 	 * Sets the material at the desired coordinated inside the world. If outer is true, the outer
-	 * material and data is used, if false, the inner one is. If data is -1, {@link org.spout.api.material.Material#getData()}
-	 * is used.
+	 * material and data is used, if false, the inner one is. If data is -1,
+	 * {@link org.spout.api.material.Material#getData()} is used.
 	 *
 	 * @param world The world to set the material in
 	 * @param x The x coordinate of the world position
