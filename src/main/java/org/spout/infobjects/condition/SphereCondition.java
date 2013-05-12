@@ -100,6 +100,7 @@ public class SphereCondition extends ShapeCondition {
 		final int ceilRadiusX = (int) Math.ceil(rx);
 		final int ceilRadiusY = (int) Math.ceil(ry);
 		final int ceilRadiusZ = (int) Math.ceil(rz);
+		final IWGO iwgo = getIWGO();
 		final ConditionMode mode = getMode();
 		final Set<BlockMaterial> materials = getMaterials();
 		double nextXn = 0;
@@ -126,42 +127,42 @@ public class SphereCondition extends ShapeCondition {
 						}
 						break forZ;
 					}
-					final Point pos0 = getIWGO().transform(px + xx, py + yy, pz + zz);
+					final Point pos0 = iwgo.transform(px + xx, py + yy, pz + zz);
 					if (!mode.check(pos0.getWorld().getBlockMaterial(pos0.getBlockX(),
 							pos0.getBlockY(), pos0.getBlockZ()), materials)) {
 						return false;
 					}
-					final Point pos1 = getIWGO().transform(px - xx, py + yy, pz + zz);
+					final Point pos1 = iwgo.transform(px - xx, py + yy, pz + zz);
 					if (!mode.check(pos1.getWorld().getBlockMaterial(pos1.getBlockX(),
 							pos1.getBlockY(), pos1.getBlockZ()), materials)) {
 						return false;
 					}
-					final Point pos2 = getIWGO().transform(px + xx, py - yy, pz + zz);
+					final Point pos2 = iwgo.transform(px + xx, py - yy, pz + zz);
 					if (!mode.check(pos2.getWorld().getBlockMaterial(pos2.getBlockX(),
 							pos2.getBlockY(), pos2.getBlockZ()), materials)) {
 						return false;
 					}
-					final Point pos3 = getIWGO().transform(px + xx, py + yy, pz - zz);
+					final Point pos3 = iwgo.transform(px + xx, py + yy, pz - zz);
 					if (!mode.check(pos3.getWorld().getBlockMaterial(pos3.getBlockX(),
 							pos3.getBlockY(), pos3.getBlockZ()), materials)) {
 						return false;
 					}
-					final Point pos4 = getIWGO().transform(px - xx, py - yy, pz + zz);
+					final Point pos4 = iwgo.transform(px - xx, py - yy, pz + zz);
 					if (!mode.check(pos4.getWorld().getBlockMaterial(pos4.getBlockX(),
 							pos4.getBlockY(), pos4.getBlockZ()), materials)) {
 						return false;
 					}
-					final Point pos5 = getIWGO().transform(px + xx, py - yy, pz - zz);
+					final Point pos5 = iwgo.transform(px + xx, py - yy, pz - zz);
 					if (!mode.check(pos5.getWorld().getBlockMaterial(pos5.getBlockX(),
 							pos5.getBlockY(), pos5.getBlockZ()), materials)) {
 						return false;
 					}
-					final Point pos6 = getIWGO().transform(px - xx, py + yy, pz - zz);
+					final Point pos6 = iwgo.transform(px - xx, py + yy, pz - zz);
 					if (!mode.check(pos6.getWorld().getBlockMaterial(pos6.getBlockX(),
 							pos6.getBlockY(), pos6.getBlockZ()), materials)) {
 						return false;
 					}
-					final Point pos7 = getIWGO().transform(px - xx, py - yy, pz - zz);
+					final Point pos7 = iwgo.transform(px - xx, py - yy, pz - zz);
 					if (!mode.check(pos7.getWorld().getBlockMaterial(pos7.getBlockX(),
 							pos7.getBlockY(), pos7.getBlockZ()), materials)) {
 						return false;

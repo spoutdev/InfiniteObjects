@@ -31,6 +31,7 @@ import java.util.Random;
 
 import org.spout.infobjects.IWGO;
 import org.spout.infobjects.exception.ShapeLoadingException;
+import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
@@ -41,6 +42,10 @@ public class Cuboid extends Shape {
 	private Value length;
 	private Value height;
 	private Value depth;
+
+	static {
+		register("cuboid", Cuboid.class);
+	}
 
 	/**
 	 * Constructs a new cuboid from the parent iWGO.
@@ -61,7 +66,15 @@ public class Cuboid extends Shape {
 	 */
 	@Override
 	public void setSize(Map<String, Value> sizes) throws ShapeLoadingException {
-		super.setSize(sizes);
+		if (!sizes.containsKey("x")) {
+			throw new ShapeLoadingException("x size is missing");
+		}
+		if (!sizes.containsKey("y")) {
+			throw new ShapeLoadingException("y size is missing");
+		}
+		if (!sizes.containsKey("z")) {
+			throw new ShapeLoadingException("z size is missing");
+		}
 		length = sizes.get("x");
 		height = sizes.get("y");
 		depth = sizes.get("z");
@@ -73,12 +86,14 @@ public class Cuboid extends Shape {
 	 */
 	@Override
 	public void draw() {
-		final int px = (int) x.getValue();
-		final int py = (int) y.getValue();
-		final int pz = (int) z.getValue();
+		final int px = (int) getX().getValue();
+		final int py = (int) getY().getValue();
+		final int pz = (int) getZ().getValue();
 		final int sizeX = (int) length.getValue();
 		final int sizeY = (int) height.getValue();
 		final int sizeZ = (int) depth.getValue();
+		final IWGO iwgo = getIWGO();
+		final MaterialSetter setter = getMaterialSetter();
 		for (int xx = 0; xx < sizeX; xx++) {
 			for (int yy = 0; yy < sizeY; yy++) {
 				for (int zz = 0; zz < sizeZ; zz++) {
@@ -127,7 +142,7 @@ public class Cuboid extends Shape {
 	 */
 	@Override
 	public String toString() {
-		return "Cuboid{x=" + x + ", y=" + y + ", z=" + z + ", setter=" + setter + ", length="
-				+ length + ", height=" + height + ", depth=" + depth + '}';
+		return "Cuboid{x=" + getX() + ", y=" + getY() + ", z=" + getZ() + ", setter=" + getMaterialSetter()
+				+ ", length=" + length + ", height=" + height + ", depth=" + depth + '}';
 	}
 }

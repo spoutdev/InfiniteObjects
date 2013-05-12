@@ -31,6 +31,7 @@ import java.util.Random;
 
 import org.spout.infobjects.IWGO;
 import org.spout.infobjects.exception.ShapeLoadingException;
+import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
@@ -41,6 +42,10 @@ public class Sphere extends Shape {
 	private Value radiusX;
 	private Value radiusY;
 	private Value radiusZ;
+
+	static {
+		register("sphere", Sphere.class);
+	}
 
 	/**
 	 * Constructs a new sphere shape from the parent iWGO.
@@ -53,18 +58,27 @@ public class Sphere extends Shape {
 
 	/**
 	 * Sets the size of the sphere from the values in the map. The size values represent the
-	 * radiuses for each axis. The expected values for the map are "x", "y" and "z". The x size If
-	 * any of these are missing, an exception is thrown.
+	 * radiuses for each axis. The expected values for the map are "radiusX", "radiusY" and
+	 * "radiusZ". The x size If any of these are missing, an exception is thrown.
 	 *
 	 * @param sizes The size as a string, value map
-	 * @throws ShapeLoadingException If any of the "x", "y" or "z" keys are missing
+	 * @throws ShapeLoadingException If any of the "radiusX", "radiusY" or "radiusZ" keys are
+	 * missing
 	 */
 	@Override
 	public void setSize(Map<String, Value> sizes) throws ShapeLoadingException {
-		super.setSize(sizes);
-		radiusX = sizes.get("x");
-		radiusY = sizes.get("y");
-		radiusZ = sizes.get("z");
+		if (!sizes.containsKey("radiusX")) {
+			throw new ShapeLoadingException("radiusX size is missing");
+		}
+		if (!sizes.containsKey("radiusY")) {
+			throw new ShapeLoadingException("radiusY size is missing");
+		}
+		if (!sizes.containsKey("radiusZ")) {
+			throw new ShapeLoadingException("radiusZ size is missing");
+		}
+		radiusX = sizes.get("radiusX");
+		radiusY = sizes.get("radiusY");
+		radiusZ = sizes.get("radiusZ");
 	}
 
 	/**
@@ -73,9 +87,9 @@ public class Sphere extends Shape {
 	 */
 	@Override
 	public void draw() {
-		final int px = (int) x.getValue();
-		final int py = (int) y.getValue();
-		final int pz = (int) z.getValue();
+		final int px = (int) getX().getValue();
+		final int py = (int) getY().getValue();
+		final int pz = (int) getZ().getValue();
 		final double rx = radiusX.getValue() + 0.5;
 		final double ry = radiusY.getValue() + 0.5;
 		final double rz = radiusZ.getValue() + 0.5;
@@ -85,6 +99,8 @@ public class Sphere extends Shape {
 		final int ceilRadiusX = (int) Math.ceil(rx);
 		final int ceilRadiusY = (int) Math.ceil(ry);
 		final int ceilRadiusZ = (int) Math.ceil(rz);
+		final IWGO iwgo = getIWGO();
+		final MaterialSetter setter = getMaterialSetter();
 		double nextXn = 0;
 		forX:
 		for (int xx = 0; xx <= ceilRadiusX; xx++) {
@@ -167,7 +183,7 @@ public class Sphere extends Shape {
 	 */
 	@Override
 	public String toString() {
-		return "Sphere{x=" + x + ", y=" + y + ", z=" + z + ", setter=" + setter + ", radiusX="
-				+ radiusX + ", radiusY=" + radiusY + ", radiusZ=" + radiusZ + '}';
+		return "Sphere{x=" + getX() + ", y=" + getY() + ", z=" + getZ() + ", setter=" + getMaterialSetter()
+				+ ", radiusX=" + radiusX + ", radiusY=" + radiusY + ", radiusZ=" + radiusZ + '}';
 	}
 }

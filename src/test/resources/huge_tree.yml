@@ -66,26 +66,28 @@ instructions:
       shapes:
         leafPod:
           type: sphere
-          size:
-            x: ranI=2-4
-            y: ranI=2-4
-            z: ranI=2-4
-          position:
-            x: offsetX
-            y: minLeafHeight
-            z: offsetZ
-          material: leaves
+          properties:
+            size:
+              radiusX: ranI=2-4
+              radiusY: ranI=2-4
+              radiusZ: ranI=2-4
+            position:
+              x: offsetX
+              y: minLeafHeight
+              z: offsetZ
+            material: leaves
         branch:
           type: line
-          size:
-            x: offsetX
-            y: 3
-            z: offsetZ
-          position:
-            x: 0
-            y: minLeafHeight - 3
-            z: 0
-          material: wood
+          properties:
+            size:
+              lengthX: offsetX
+              lengthY: 3
+              lengthZ: offsetZ
+            position:
+              x: 0
+              y: minLeafHeight - 3
+              z: 0
+            material: wood
   leafPods:
     type: repeat
     properties:
@@ -99,26 +101,28 @@ instructions:
       shapes:
         canopy:
           type: sphere
-          size:
-            x: ranI=5-6
-            y: ranI=2-3
-            z: ranI=5-6
-          position:
-            x: 0
-            y: height + 1
-            z: 0
-          material: leaves
+          properties:
+            size:
+              radiusX: ranI=5-6
+              radiusY: ranI=2-3
+              radiusZ: ranI=5-6
+            position:
+              x: 0
+              y: height + 1
+              z: 0
+            material: leaves
         trunk:
           type: cuboid
-          size:
-            x: 2
-            y: height
-            z: 2
-          position:
-            x: 0
-            y: 0
-            z: 0
-          material: wood
+          properties:
+            size:
+              x: 2
+              y: height
+              z: 2
+            position:
+              x: 0
+              y: 0
+              z: 0
+            material: wood
   top:
     type: block
     properties:

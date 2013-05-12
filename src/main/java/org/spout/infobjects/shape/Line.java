@@ -45,6 +45,10 @@ public class Line extends Shape {
 	private Value lengthY;
 	private Value lengthZ;
 
+	static {
+		register("line", Line.class);
+	}
+
 	/**
 	 * Constructs a new line shape from the parent iWGO.
 	 *
@@ -57,18 +61,27 @@ public class Line extends Shape {
 	/**
 	 * Sets the size of the line from the values in the map. The size of the line is defined like a
 	 * vector, with a component for each axis. The shortest distance from the origin to the point
-	 * defined by the size coordinates is the line. The expected values for the map are "x", "y" and
-	 * "z". If any of these are missing, an exception is thrown.
+	 * defined by the size coordinates is the line. The expected values for the map are "lengthX",
+	 * "lengthY" and "lengthZ". If any of these are missing, an exception is thrown.
 	 *
 	 * @param sizes The size as a string, value map
-	 * @throws ShapeLoadingException If any of the "x", "y" or "z" keys are missing
+	 * @throws ShapeLoadingException If any of the "lengthX", "lengthY" or "lengthZ" keys are
+	 * missing
 	 */
 	@Override
 	public void setSize(Map<String, Value> sizes) throws ShapeLoadingException {
-		super.setSize(sizes);
-		lengthX = sizes.get("x");
-		lengthY = sizes.get("y");
-		lengthZ = sizes.get("z");
+		if (!sizes.containsKey("lengthX")) {
+			throw new ShapeLoadingException("lengthX size is missing");
+		}
+		if (!sizes.containsKey("lengthY")) {
+			throw new ShapeLoadingException("lengthY size is missing");
+		}
+		if (!sizes.containsKey("lengthZ")) {
+			throw new ShapeLoadingException("lengthZ size is missing");
+		}
+		lengthX = sizes.get("lengthX");
+		lengthY = sizes.get("lengthY");
+		lengthZ = sizes.get("lengthZ");
 	}
 
 	/**
@@ -78,11 +91,11 @@ public class Line extends Shape {
 	 */
 	@Override
 	public void draw() {
-		final Point start = iwgo.transform(x.getValue(), y.getValue(), z.getValue());
+		final Point start = getIWGO().transform(getX().getValue(), getY().getValue(), getZ().getValue());
 		final BlockIterator line = new BlockIterator(start, start.add(lengthX.getValue(),
 				lengthY.getValue(), lengthZ.getValue()));
 		while (line.hasNext()) {
-			setter.setMaterial(line.next().getPosition(), true);
+			getMaterialSetter().setMaterial(line.next().getPosition(), true);
 		}
 	}
 
@@ -124,7 +137,7 @@ public class Line extends Shape {
 	 */
 	@Override
 	public String toString() {
-		return "Line{x=" + x + ", y=" + y + ", z=" + z + ", setter=" + setter + ", lengthX="
-				+ lengthX + ", lengthY=" + lengthY + ", lengthZ=" + lengthZ + '}';
+		return "Line{x=" + getX() + ", y=" + getY() + ", z=" + getZ() + ", setter=" + getMaterialSetter()
+				+ ", lengthX=" + lengthX + ", lengthY=" + lengthY + ", lengthZ=" + lengthZ + '}';
 	}
 }

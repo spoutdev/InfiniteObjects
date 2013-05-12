@@ -29,30 +29,31 @@ package org.spout.infobjects.shape;
 import java.util.Map;
 import java.util.Random;
 
+import org.spout.api.util.config.ConfigurationNode;
+
 import org.spout.infobjects.IWGO;
+import org.spout.infobjects.IWGOLoader;
+import org.spout.infobjects.exception.LoadingException;
 import org.spout.infobjects.exception.ShapeLoadingException;
 import org.spout.infobjects.material.MaterialSetter;
+import org.spout.infobjects.util.ConfigurationLoadable;
+import org.spout.infobjects.util.IWGOUtils;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.util.TypeFactory;
 import org.spout.infobjects.value.Value;
+import org.spout.infobjects.value.ValueParser;
 
 /**
  * An abstract shape. This class provides the parent iWGO, position coordinate {@link org.spout.infobjects.value.Value}s
  * and the material setter.
  */
-public abstract class Shape implements RandomOwner {
+public abstract class Shape implements ConfigurationLoadable, RandomOwner {
 	private static final TypeFactory<Shape> SHAPES = new TypeFactory<Shape>(IWGO.class);
-	protected final IWGO iwgo;
-	protected Value x;
-	protected Value y;
-	protected Value z;
-	protected MaterialSetter setter;
-
-	static {
-		register("cuboid", Cuboid.class);
-		register("line", Line.class);
-		register("sphere", Sphere.class);
-	}
+	private final IWGO iwgo;
+	private Value x;
+	private Value y;
+	private Value z;
+	private MaterialSetter setter;
 
 	/**
 	 * Construct a new iWGO from its parent iWGO.
@@ -187,16 +188,25 @@ public abstract class Shape implements RandomOwner {
 	 * @param sizes The size values as a string, value map
 	 * @throws ShapeLoadingException If any of the "x", "y" or "z" keys are missing
 	 */
-	public void setSize(Map<String, Value> sizes) throws ShapeLoadingException {
-		if (!sizes.containsKey("x")) {
-			throw new ShapeLoadingException("x size is missing");
+	public abstract void setSize(Map<String, Value> sizes) throws ShapeLoadingException;
+
+	/**
+	 * Loads the shape from the configuration node. The expected properties are the size, position
+	 * and material setter.
+	 *
+	 * @param properties The properties to load this shape from
+	 * @throws ShapeLoadingException If the shape loading fails
+	 */
+	@Override
+	public void load(ConfigurationNode properties) throws ShapeLoadingException {
+		setSize(ValueParser.parse(IWGOUtils.toStringMap(properties.getNode("size")), iwgo));
+		setPosition(ValueParser.parse(IWGOUtils.toStringMap(properties.getNode("position")), iwgo));
+		final MaterialSetter materialSetter = iwgo.getMaterialSetter(properties.getNode("material").getString());
+		if (materialSetter == null) {
+			throw new ShapeLoadingException("Material setter \"" + properties.getNode("material").getString()
+					+ "\" does not exist");
 		}
-		if (!sizes.containsKey("y")) {
-			throw new ShapeLoadingException("y size is missing");
-		}
-		if (!sizes.containsKey("z")) {
-			throw new ShapeLoadingException("z size is missing");
-		}
+		setMaterialSetter(materialSetter);
 	}
 
 	/**

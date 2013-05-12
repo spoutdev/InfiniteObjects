@@ -94,12 +94,13 @@ public class CuboidCondition extends ShapeCondition {
 		final int sizeX = (int) length.getValue();
 		final int sizeY = (int) height.getValue();
 		final int sizeZ = (int) depth.getValue();
+		final IWGO iwgo = getIWGO();
 		final ConditionMode mode = getMode();
 		final Set<BlockMaterial> materials = getMaterials();
 		for (int xx = 0; xx < sizeX; xx++) {
 			for (int yy = 0; yy < sizeY; yy++) {
 				for (int zz = 0; zz < sizeZ; zz++) {
-					final Point pos = getIWGO().transform(px + xx, py + yy, pz + zz);
+					final Point pos = iwgo.transform(px + xx, py + yy, pz + zz);
 					if (!mode.check(pos.getWorld().getBlockMaterial(pos.getBlockX(),
 							pos.getBlockY(), pos.getBlockZ()), materials)) {
 						return false;
