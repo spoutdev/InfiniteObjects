@@ -55,6 +55,7 @@ public class IWGOLoader {
 		// Load all included resources so they can register themselves
 		try {
 			Class.forName("org.spout.infobjects.condition.CuboidCondition");
+			Class.forName("org.spout.infobjects.condition.SphereCondition");
 			Class.forName("org.spout.infobjects.instruction.ShapeInstruction");
 			Class.forName("org.spout.infobjects.instruction.RepeatInstruction");
 			Class.forName("org.spout.infobjects.instruction.BlockInstruction");

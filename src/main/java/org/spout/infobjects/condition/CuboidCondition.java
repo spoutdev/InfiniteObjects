@@ -26,31 +26,22 @@
  */
 package org.spout.infobjects.condition;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
 import org.spout.api.geo.discrete.Point;
 import org.spout.api.material.BlockMaterial;
-import org.spout.api.util.config.ConfigurationNode;
 
 import org.spout.infobjects.IWGO;
 import org.spout.infobjects.exception.ConditionLoadingException;
-import org.spout.infobjects.util.IWGOUtils;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
-import org.spout.infobjects.value.ValueParser;
 
 /**
- * An implementation of {@link Condition}. This condition will check cuboid volumes.
+ * An implementation of {@link ShapeCondition}. This condition will check cuboid volumes.
  */
-public class CuboidCondition extends Condition {
-	private final Set<BlockMaterial> materials = new HashSet<BlockMaterial>();
-	private ConditionMode mode;
-	private Value x;
-	private Value y;
-	private Value z;
+public class CuboidCondition extends ShapeCondition {
 	private Value length;
 	private Value height;
 	private Value depth;
@@ -60,7 +51,7 @@ public class CuboidCondition extends Condition {
 	}
 
 	/**
-	 * Constructs a new cuboid condition.
+	 * Constructs a new cuboid condition from the parent iWGO.
 	 *
 	 * @param iwgo The parent iWGO
 	 */
@@ -69,29 +60,12 @@ public class CuboidCondition extends Condition {
 	}
 
 	/**
-	 * Gets the checking mode of this condition.
-	 *
-	 * @return The condition's mode
-	 */
-	public ConditionMode getMode() {
-		return mode;
-	}
-
-	/**
-	 * Sets the condition's mode. The mode is used by the extending class to determine if it should
-	 * check for the absence or presence of the materials.
-	 *
-	 * @param mode The mode to set
-	 */
-	public void setMode(ConditionMode mode) {
-		this.mode = mode;
-	}
-
-	/**
 	 * Sets the size of the cuboid volume. Expected size values are x, y, and z.
 	 *
 	 * @param sizes The sizes mapped as name and value
+	 * @throws ConditionLoadingException If any of the expect values are missing
 	 */
+	@Override
 	public void setSize(Map<String, Value> sizes) throws ConditionLoadingException {
 		if (!sizes.containsKey("x")) {
 			throw new ConditionLoadingException("x size is missing");
@@ -108,142 +82,20 @@ public class CuboidCondition extends Condition {
 	}
 
 	/**
-	 * Sets the {@link org.spout.infobjects.value.Value} representing the x coordinate.
-	 *
-	 * @param x The value for x
-	 */
-	public void setX(Value x) {
-		this.x = x;
-	}
-
-	/**
-	 * Gets the {@link org.spout.infobjects.value.Value} representing the y coordinate.
-	 *
-	 * @return The value for y
-	 */
-	public Value getY() {
-		return y;
-	}
-
-	/**
-	 * Sets the {@link org.spout.infobjects.value.Value} representing the y coordinate.
-	 *
-	 * @param y The value for y
-	 */
-	public void setY(Value y) {
-		this.y = y;
-	}
-
-	/**
-	 * Gets the {@link org.spout.infobjects.value.Value} representing the z coordinate.
-	 *
-	 * @return The value for z
-	 */
-	public Value getZ() {
-		return z;
-	}
-
-	/**
-	 * Sets the {@link org.spout.infobjects.value.Value} representing the z coordinate.
-	 *
-	 * @param z The value for z
-	 */
-	public void setZ(Value z) {
-		this.z = z;
-	}
-
-	/**
-	 * Sets the {@link org.spout.infobjects.value.Value}s representing the x, y and z coordinates.
-	 *
-	 * @param x The value for z
-	 * @param y The value for Y
-	 * @param z The value for Y
-	 */
-	public void setPosition(Value x, Value y, Value z) {
-		setX(x);
-		setY(y);
-		setZ(z);
-	}
-
-	/**
-	 * Sets the position values for x, y and z. The positions are passed as a name and
-	 * {@link org.spout.infobjects.value.Value} map. The name is as declared in the iWGO
-	 * configuration. Expected size values are x, y, and z.
-	 *
-	 * @param position The position as a map
-	 * @throws ConditionLoadingException If the x, y, or z coordinate is missing
-	 */
-	public void setPosition(Map<String, Value> position) throws ConditionLoadingException {
-		if (!position.containsKey("x")) {
-			throw new ConditionLoadingException("x coordinate for position is missing");
-		}
-		if (!position.containsKey("y")) {
-			throw new ConditionLoadingException("y coordinate for position is missing");
-		}
-		if (!position.containsKey("z")) {
-			throw new ConditionLoadingException("z coordinate for position is missing");
-		}
-		setPosition(position.get("x"), position.get("y"), position.get("z"));
-	}
-
-	/**
-	 * Adds a block material to this condition. The materials are used in checks, where the
-	 * condition's volume is tested for either absence or presence of the materials.
-	 *
-	 * @param material The material to add
-	 */
-	public void addBlockMaterial(BlockMaterial material) {
-		materials.add(material);
-	}
-
-	/**
-	 * Remove the material from the condition.
-	 *
-	 * @param material The material to remove
-	 */
-	public void removeMaterial(BlockMaterial material) {
-		materials.remove(material);
-	}
-
-	/**
-	 * Gets the materials of this condition. Changes in the set are reflected in the condition.
-	 *
-	 * @return The materials as a set
-	 */
-	public Set<BlockMaterial> getMaterials() {
-		return materials;
-	}
-
-	/**
-	 * Loads the condition from the properties node in the condition declaration. Expected
-	 * properties are: the mode, the size, the position and the list of materials to check.
-	 *
-	 * @param properties The properties node to load
-	 * @throws ConditionLoadingException If the loading fails
-	 */
-	@Override
-	public void load(ConfigurationNode properties) throws ConditionLoadingException {
-		setMode(ConditionMode.valueOf(properties.getNode("mode").getString().toUpperCase()));
-		setSize(ValueParser.parse(IWGOUtils.toStringMap(properties.getNode("size")), getIWGO()));
-		setPosition(ValueParser.parse(IWGOUtils.toStringMap(properties.getNode("position")), getIWGO()));
-		for (String name : properties.getNode("check").getStringList()) {
-			addBlockMaterial(IWGOUtils.tryGetBlockMaterial(name));
-		}
-	}
-
-	/**
 	 * Checks the cuboid volume defined from the position to the position plus the size.
 	 *
 	 * @return True if successful, false if not
 	 */
 	@Override
 	public boolean check() {
-		final int px = (int) x.getValue();
-		final int py = (int) y.getValue();
-		final int pz = (int) z.getValue();
+		final int px = (int) getX().getValue();
+		final int py = (int) getY().getValue();
+		final int pz = (int) getZ().getValue();
 		final int sizeX = (int) length.getValue();
 		final int sizeY = (int) height.getValue();
 		final int sizeZ = (int) depth.getValue();
+		final ConditionMode mode = getMode();
+		final Set<BlockMaterial> materials = getMaterials();
 		for (int xx = 0; xx < sizeX; xx++) {
 			for (int yy = 0; yy < sizeY; yy++) {
 				for (int zz = 0; zz < sizeZ; zz++) {
@@ -264,9 +116,7 @@ public class CuboidCondition extends Condition {
 	 */
 	@Override
 	public void randomize() {
-		x.calculate();
-		y.calculate();
-		z.calculate();
+		super.randomize();
 		length.calculate();
 		height.calculate();
 		depth.calculate();
@@ -280,15 +130,7 @@ public class CuboidCondition extends Condition {
 	 */
 	@Override
 	public void setRandom(Random random) {
-		if (x instanceof RandomOwner) {
-			((RandomOwner) x).setRandom(random);
-		}
-		if (y instanceof RandomOwner) {
-			((RandomOwner) y).setRandom(random);
-		}
-		if (z instanceof RandomOwner) {
-			((RandomOwner) z).setRandom(random);
-		}
+		super.setRandom(random);
 		if (length instanceof RandomOwner) {
 			((RandomOwner) length).setRandom(random);
 		}
@@ -307,8 +149,8 @@ public class CuboidCondition extends Condition {
 	 */
 	@Override
 	public String toString() {
-		return "CuboidCondition{x=" + x + ", y=" + y + ", z=" + z + ", materials="
-				+ materials + ", length=" + length + ", height=" + height
-				+ ", depth=" + depth + ", mode=" + mode + '}';
+		return "CuboidCondition{x=" + getX() + ", y=" + getY() + ", z=" + getZ() + ", materials="
+				+ getMaterials() + ", length=" + length + ", height=" + height
+				+ ", depth=" + depth + ", mode=" + getMode() + '}';
 	}
 }
