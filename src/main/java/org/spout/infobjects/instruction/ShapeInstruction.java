@@ -102,7 +102,7 @@ public class ShapeInstruction extends Instruction {
 		for (String key : shapesNode.getKeys(false)) {
 			try {
 				final ConfigurationNode shapeNode = shapesNode.getNode(key);
-				final Shape shape = Shape.newShape(shapeNode.getNode("type").getString(), iwgo);
+				final Shape shape = Shape.newShape(shapeNode.getNode("type").getString(), this);
 				shape.load(shapeNode.getNode("properties"));
 				addShape(shape);
 			} catch (Exception ex) {

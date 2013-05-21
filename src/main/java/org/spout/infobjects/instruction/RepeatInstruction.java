@@ -165,7 +165,7 @@ public class RepeatInstruction extends Instruction {
 	 * Sets the random of the value for the times to repeat the repeated instruction and calls the
 	 * super method.
 	 *
-	 * @param random THe random to use
+	 * @param random The random to use
 	 */
 	@Override
 	public void setRandom(Random random) {
@@ -182,16 +182,17 @@ public class RepeatInstruction extends Instruction {
 	 */
 	@Override
 	public void execute() {
-		for (int i = (int) times.getValue(); i >= 0; i--) {
-			repeat.execute();
+		for (int i = (int) times.getValue(); i >= 1; i--) {
 			for (IncrementableValue increment : incrementables) {
 				increment.increment();
 			}
 			repeat.randomize();
+			repeat.execute();
 		}
 		for (IncrementableValue increment : incrementables) {
 			increment.reset();
 		}
+		repeat.randomize();
 	}
 
 	/**

@@ -35,7 +35,7 @@ package org.spout.infobjects.value;
 public class IncrementableValue implements Value {
 	private final Value value;
 	private final Value increment;
-	private double totalIncrement;
+	private double totalIncrement = 0;
 
 	/**
 	 * Construct a new incrementable value from the original value and the increment value.

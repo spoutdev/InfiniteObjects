@@ -32,8 +32,9 @@ import java.util.Random;
 import org.spout.api.geo.discrete.Point;
 import org.spout.api.util.BlockIterator;
 
-import org.spout.infobjects.IWGO;
 import org.spout.infobjects.exception.ShapeLoadingException;
+import org.spout.infobjects.instruction.Instruction;
+import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
 
@@ -50,12 +51,12 @@ public class Line extends Shape {
 	}
 
 	/**
-	 * Constructs a new line shape from the parent iWGO.
+	 * Constructs a new line shape from the parent instruction.
 	 *
-	 * @param iwgo The parent iWGO
+	 * @param instruction The parent instruction
 	 */
-	public Line(IWGO iwgo) {
-		super(iwgo);
+	public Line(Instruction instruction) {
+		super(instruction);
 	}
 
 	/**
@@ -91,11 +92,13 @@ public class Line extends Shape {
 	 */
 	@Override
 	public void draw() {
-		final Point start = getIWGO().transform(getX().getValue(), getY().getValue(), getZ().getValue());
+		final Point start = getInstruction().getIWGO().transform(getX().getValue(), getY().getValue(), getZ().getValue());
 		final BlockIterator line = new BlockIterator(start, start.add(lengthX.getValue(),
 				lengthY.getValue(), lengthZ.getValue()));
+		final MaterialSetter materialSetter = getMaterialSetter();
+		materialSetter.setMaterial(start, true);
 		while (line.hasNext()) {
-			getMaterialSetter().setMaterial(line.next().getPosition(), true);
+			materialSetter.setMaterial(line.next().getPosition(), true);
 		}
 	}
 
@@ -111,8 +114,8 @@ public class Line extends Shape {
 	}
 
 	/**
-	 * Sets the random for each size value if they implement {@link org.spout.infobjects.util.RandomOwner}.
-	 * Calls the super method.
+	 * Sets the random for each size value if they implement
+	 * {@link org.spout.infobjects.util.RandomOwner}. Calls the super method.
 	 *
 	 * @param random The random to use
 	 */

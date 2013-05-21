@@ -31,6 +31,7 @@ import java.util.Random;
 
 import org.spout.infobjects.IWGO;
 import org.spout.infobjects.exception.ShapeLoadingException;
+import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.util.RandomOwner;
 import org.spout.infobjects.value.Value;
@@ -48,12 +49,12 @@ public class Cuboid extends Shape {
 	}
 
 	/**
-	 * Constructs a new cuboid from the parent iWGO.
+	 * Constructs a new cuboid from the parent instruction.
 	 *
-	 * @param iwgo The parent iWGO
+	 * @param instruction The parent instruction
 	 */
-	public Cuboid(IWGO iwgo) {
-		super(iwgo);
+	public Cuboid(Instruction instruction) {
+		super(instruction);
 	}
 
 	/**
@@ -92,13 +93,13 @@ public class Cuboid extends Shape {
 		final int sizeX = (int) length.getValue();
 		final int sizeY = (int) height.getValue();
 		final int sizeZ = (int) depth.getValue();
-		final IWGO iwgo = getIWGO();
+		final IWGO iwgo = getInstruction().getIWGO();
 		final MaterialSetter setter = getMaterialSetter();
 		for (int xx = 0; xx < sizeX; xx++) {
 			for (int yy = 0; yy < sizeY; yy++) {
 				for (int zz = 0; zz < sizeZ; zz++) {
 					setter.setMaterial(iwgo.transform(px + xx, py + yy, pz + zz),
-							xx == 0 || yy == 0 || zz == 0 | xx == sizeX || yy == sizeY || zz == sizeZ);
+							xx == 0 || yy == 0 || zz == 0 || xx == sizeX - 1 || yy == sizeY - 1 || zz == sizeZ - 1);
 				}
 			}
 		}

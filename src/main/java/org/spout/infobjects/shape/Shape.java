@@ -33,8 +33,8 @@ import org.spout.api.util.config.ConfigurationNode;
 
 import org.spout.infobjects.IWGO;
 import org.spout.infobjects.IWGOLoader;
-import org.spout.infobjects.exception.LoadingException;
 import org.spout.infobjects.exception.ShapeLoadingException;
+import org.spout.infobjects.instruction.Instruction;
 import org.spout.infobjects.material.MaterialSetter;
 import org.spout.infobjects.util.ConfigurationLoadable;
 import org.spout.infobjects.util.IWGOUtils;
@@ -44,33 +44,33 @@ import org.spout.infobjects.value.Value;
 import org.spout.infobjects.value.ValueParser;
 
 /**
- * An abstract shape. This class provides the parent iWGO, position coordinate {@link org.spout.infobjects.value.Value}s
- * and the material setter.
+ * An abstract shape. This class provides the parent instruction, position coordinate
+ * {@link org.spout.infobjects.value.Value}s and the material setter.
  */
 public abstract class Shape implements ConfigurationLoadable, RandomOwner {
-	private static final TypeFactory<Shape> SHAPES = new TypeFactory<Shape>(IWGO.class);
-	private final IWGO iwgo;
+	private static final TypeFactory<Shape> SHAPES = new TypeFactory<Shape>(Instruction.class);
+	private final Instruction instruction;
 	private Value x;
 	private Value y;
 	private Value z;
 	private MaterialSetter setter;
 
 	/**
-	 * Construct a new iWGO from its parent iWGO.
+	 * Construct a new iWGO from its parent instruction.
 	 *
-	 * @param iwgo The parent iWGO
+	 * @param instruction The parent instruction
 	 */
-	public Shape(IWGO iwgo) {
-		this.iwgo = iwgo;
+	public Shape(Instruction instruction) {
+		this.instruction = instruction;
 	}
 
 	/**
-	 * Gets the parent iWGO.
+	 * Gets the parent instruction.
 	 *
-	 * @return The parent iWGO
+	 * @return The parent instruction
 	 */
-	public IWGO getIWGO() {
-		return iwgo;
+	public Instruction getInstruction() {
+		return instruction;
 	}
 
 	/**
@@ -199,8 +199,9 @@ public abstract class Shape implements ConfigurationLoadable, RandomOwner {
 	 */
 	@Override
 	public void load(ConfigurationNode properties) throws ShapeLoadingException {
-		setSize(ValueParser.parse(IWGOUtils.toStringMap(properties.getNode("size")), iwgo));
-		setPosition(ValueParser.parse(IWGOUtils.toStringMap(properties.getNode("position")), iwgo));
+		final IWGO iwgo = instruction.getIWGO();
+		setSize(ValueParser.parse(IWGOUtils.toStringMap(properties.getNode("size")), instruction, iwgo));
+		setPosition(ValueParser.parse(IWGOUtils.toStringMap(properties.getNode("position")), instruction, iwgo));
 		final MaterialSetter materialSetter = iwgo.getMaterialSetter(properties.getNode("material").getString());
 		if (materialSetter == null) {
 			throw new ShapeLoadingException("Material setter \"" + properties.getNode("material").getString()
@@ -220,7 +221,8 @@ public abstract class Shape implements ConfigurationLoadable, RandomOwner {
 	}
 
 	/**
-	 * Sets the random for the x, y and z coordinate values if they implement {@link org.spout.infobjects.util.RandomOwner}.
+	 * Sets the random for the x, y and z coordinate values if they implement
+	 * {@link org.spout.infobjects.util.RandomOwner}.
 	 *
 	 * @param random The random to use
 	 */
@@ -239,19 +241,20 @@ public abstract class Shape implements ConfigurationLoadable, RandomOwner {
 
 	/**
 	 * Draws the shape. This method is abstract and so the result of this call depends on the
-	 * extending class. This method is called during placement of the iWGO by the {@link org.spout.infobjects.instruction.ShapeInstruction}
-	 * to add the shapes which compose the iWGO structure. Implementations of this method should
-	 * iterate through all the blocks that compose the shape, of size defined by the size values, at
-	 * the position defined by the position values. It should then call the material setter to set
-	 * the material for each block, with outer being true if the block is at the edge of the shape,
-	 * false if it is inside.
+	 * extending class. This method is called during placement of the iWGO by the
+	 * {@link org.spout.infobjects.instruction.ShapeInstruction} to add the shapes which compose the
+	 * iWGO structure. Implementations of this method should iterate through all the blocks that
+	 * compose the shape, of size defined by the size values, at the position defined by the
+	 * position values. It should then call the material setter to set the material for each block,
+	 * with outer being true if the block is at the edge of the shape, false if it is inside.
 	 */
 	public abstract void draw();
 
 	/**
-	 * Registers a type of shape so it may be recognized and used by the {@link org.spout.infobjects.IWGOLoader}
-	 * during loading of iWGOs. The type is what will be used in the iWGO configuration. Example:
-	 * "cuboid", "sphere" or "line". The type must be unique.
+	 * Registers a type of shape so it may be recognized and used by the
+	 * {@link org.spout.infobjects.IWGOLoader} during loading of iWGOs. The type is what will be
+	 * used in the iWGO configuration. Example: "cuboid", "sphere" or "line". The type must be
+	 * unique.
 	 *
 	 * @param type The type of shape
 	 * @param shape The class for the shape to register
@@ -264,10 +267,10 @@ public abstract class Shape implements ConfigurationLoadable, RandomOwner {
 	 * Constructs a new instance of a shape of the desired type.
 	 *
 	 * @param type The type of the shape, as used in the iWGO configuration
-	 * @param iwgo The parent iWGO to be passed to the constructor
+	 * @param instruction The parent instruction
 	 * @return The new shape instance
 	 */
-	public static Shape newShape(String type, IWGO iwgo) {
-		return SHAPES.newInstance(type, iwgo);
+	public static Shape newShape(String type, Instruction instruction) {
+		return SHAPES.newInstance(type, instruction);
 	}
 }

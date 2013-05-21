@@ -50,8 +50,8 @@ import org.spout.infobjects.variable.VariableSource;
 
 /**
  * A user defined WorldGeneratorObject. This WGO is loaded from a configuration. It is not thread
- * safe and must be synchronized externally. Alternatively more copies can be loaded using the {@link org.spout.infobjects.IWGOLoader}
- * class for unsynchronized thread local use.
+ * safe and must be synchronized externally. Alternatively more copies can be loaded using the
+ * {@link org.spout.infobjects.IWGOLoader} class for unsynchronized thread local use.
  */
 public class IWGO extends WorldGeneratorObject implements VariableSource, Named, RandomOwner {
 	private final String name;
@@ -63,8 +63,8 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 	private final Map<String, Instruction> instructions = new LinkedHashMap<String, Instruction>();
 
 	/**
-	 * Constructs a new iWGO. To create a new iWGO, load it using {@link org.spout.infobjects.IWGOLoader}
-	 * from a configuration.
+	 * Constructs a new iWGO. To create a new iWGO, load it using
+	 * {@link org.spout.infobjects.IWGOLoader} from a configuration.
 	 *
 	 * @param name The name of the iWGO
 	 */
@@ -177,7 +177,7 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 	 * @return The absolute coordinates plus the world
 	 */
 	public Point transform(double xx, double yy, double zz) {
-		return transform(GenericMath.floor(xx), GenericMath.floor(yy), GenericMath.floor(zz));
+		return transform((float) xx, (float) yy, (float) zz);
 	}
 
 	/**
@@ -189,7 +189,7 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 	 * @param zz The relative z coordinate
 	 * @return The absolute coordinates plus the world
 	 */
-	public Point transform(int xx, int yy, int zz) {
+	public Point transform(float xx, float yy, float zz) {
 		return new Point(world, xx + position.getX(), yy + position.getY(), zz + position.getZ());
 	}
 
@@ -286,8 +286,8 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 	}
 
 	/**
-	 * Gets the material setter map (mapped as name and material setter) from the iWGO. Changes
-	 * to this map are reflected in the iWGO.
+	 * Gets the material setter map (mapped as name and material setter) from the iWGO. Changes to
+	 * this map are reflected in the iWGO.
 	 *
 	 * @return The material setter map.
 	 */
@@ -353,8 +353,8 @@ public class IWGO extends WorldGeneratorObject implements VariableSource, Named,
 	}
 
 	/**
-	 * Gets the instruction map (mapped as name and instruction) from the iWGO. Changes to this
-	 * map are reflected in the iWGO.
+	 * Gets the instruction map (mapped as name and instruction) from the iWGO. Changes to this map
+	 * are reflected in the iWGO.
 	 *
 	 * @return The instruction map.
 	 */
