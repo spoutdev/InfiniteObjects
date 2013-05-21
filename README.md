@@ -16,7 +16,7 @@ Copyright (c) 2011-2012, SpoutDev <<http://www.spout.org/>>
 ## Getting the Source
 The latest and greatest source can be found on [GitHub].  
 Download the latest builds from [Jenkins]. [![Build Status](http://build.spout.org/job/InfiniteObjects/badge/icon)][Jenkins]  
-View the latest [Javadoc].
+View the latest [Javadoc][Javadoc].
 
 ## Compiling the Source
 InfiniteObjects uses Maven to handle its dependencies.
@@ -59,6 +59,7 @@ If you do not already have repo.spout.org in your repository list, you will need
 [Website]: http://www.spout.org
 [Forums]: http://forums.spout.org
 [GitHub]: https://github.com/SpoutDev/InfiniteObjects
+[Javadoc]: http://jd.spout.org/infiniteobjects/
 [Jenkins]: http://build.spout.org/job/InfiniteObjects
 [Issues]: http://issues.spout.org/browse/InfiniteObjects
 [Twitter]: http://spout.in/twitter
