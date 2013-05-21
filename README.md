@@ -1,4 +1,4 @@
-InfObjects
+InfiniteObjects
 ==========
 An experimental project for user definable world generator objects using a script like file format based on YAML syntax.
 
@@ -8,18 +8,18 @@ View issues and bugs on our [issue tracker][Issues].
 [![Follow us on Twitter][Twitter Logo]][Twitter][![Like us on Facebook][Facebook Logo]][Facebook][![Donate to the Spout project][Donate Logo]][Donate]
 
 ## The License
-InfObjects is licensed under the [GNU Lesser General Public License Version 3][License], but with a provision that files are released under the MIT license 180 days after they are published. Please see the `LICENSE.txt` file for details.
+InfiniteObjects is licensed under the [GNU Lesser General Public License Version 3][License], but with a provision that files are released under the MIT license 180 days after they are published. Please see the `LICENSE.txt` file for details.
 
 Copyright (c) 2011-2012, SpoutDev <<http://www.spout.org/>>  
 [![Spout][Author Logo]][Website]
 
 ## Getting the Source
 The latest and greatest source can be found on [GitHub].  
-Download the latest builds from [Jenkins]. [![Build Status](http://build.spout.org/job/InfObjects/badge/icon)][Jenkins]  
+Download the latest builds from [Jenkins]. [![Build Status](http://build.spout.org/job/InfiniteObjects/badge/icon)][Jenkins]  
 View the latest [Javadoc].
 
 ## Compiling the Source
-InfObjects uses Maven to handle its dependencies.
+InfiniteObjects uses Maven to handle its dependencies.
 
 * Install [Maven 2 or 3](http://maven.apache.org/download.html)  
 * Checkout this repo and run: `mvn clean install`
@@ -54,13 +54,13 @@ If you do not already have repo.spout.org in your repository list, you will need
 
 **Please follow the above conventions if you want your pull request(s) accepted.**
 
-[Author Logo]: http://cdn.spout.org/img/logo/spout_305x135.png
+[Author Logo]: http://cdn.spout.org/img/button/twitter_follow_us.png
 [License]: http://www.spout.org/SpoutDevLicenseV1.txt
 [Website]: http://www.spout.org
 [Forums]: http://forums.spout.org
-[GitHub]: https://github.com/VanillaDev/InfObjects
-[Jenkins]: http://build.spout.org/job/InfObjects
-[Issues]: http://issues.spout.org/browse/InfObjects
+[GitHub]: https://github.com/SpoutDev/InfiniteObjects
+[Jenkins]: http://build.spout.org/job/InfiniteObjects
+[Issues]: http://issues.spout.org/browse/InfiniteObjects
 [Twitter]: http://spout.in/twitter
 [Twitter Logo]: http://cdn.spout.org/img/button/twitter_follow_us.png
 [Facebook]: http://spout.in/facebook

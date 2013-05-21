@@ -37,21 +37,21 @@
 
 	<!-- Source code access -->
 	<scm>
-		<developerConnection>scm:git:git@github.com:VanillaDev/InfObjects.git</developerConnection>
-		<connection>scm:git:git://github.com/VanillaDev/InfObjects.git</connection>
-		<url>https://github.com/VanillaDev/InfObjects</url>
+		<developerConnection>scm:git:git@github.com:SpoutDev/InfiniteObjects.git</developerConnection>
+		<connection>scm:git:git://github.com/SpoutDev/InfiniteObjects.git</connection>
+		<url>https://github.com/SpoutDev/InfiniteObjects.git</url>
 	</scm>
 
 	<!-- Build server -->
 	<ciManagement>
 		<system>jenkins</system>
-		<url>http://build.spout.org/job/InfObjects</url>
+		<url>http://build.spout.org/job/InfiniteObjects/</url>
 	</ciManagement>
 
 	<!-- Issue management -->
 	<issueManagement>
 		<system>jira</system>
-		<url>http://issues.spout.org/browse/InfObjects</url>
+		<url>http://issues.spout.org/browse/InfiniteObjects/</url>
 	</issueManagement>
 
 	<!-- Dependency repositories -->
