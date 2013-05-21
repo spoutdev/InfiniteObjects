@@ -51,7 +51,7 @@ public class Sphere extends Shape {
 	/**
 	 * Constructs a new sphere shape from the parent instruction.
 	 *
-	 * @param iwgo The parent instruction
+	 * @param instruction The parent instruction
 	 */
 	public Sphere(Instruction instruction) {
 		super(instruction);
