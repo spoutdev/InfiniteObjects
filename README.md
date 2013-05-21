@@ -54,7 +54,7 @@ If you do not already have repo.spout.org in your repository list, you will need
 
 **Please follow the above conventions if you want your pull request(s) accepted.**
 
-[Author Logo]: http://cdn.spout.org/img/button/twitter_follow_us.png
+[Author Logo]: http://cdn.spout.org/spout-github.png
 [License]: http://www.spout.org/SpoutDevLicenseV1.txt
 [Website]: http://www.spout.org
 [Forums]: http://forums.spout.org
