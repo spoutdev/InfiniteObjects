@@ -10,7 +10,7 @@
 	<packaging>jar</packaging>
 	<url>http://www.spout.org</url>
 	<inceptionYear>2012</inceptionYear>
-	<description>User definable world generator objects using a script like file format based on YAML syntax.</description>
+	<description>InfiniteObjects is a plugin for the Spout voxel game platform that provides user definable world generator objects using a script like file format based on YAML syntax.</description>
 
 	<!-- Build properties -->
 	<properties>

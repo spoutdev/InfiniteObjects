@@ -1,6 +1,6 @@
 InfiniteObjects
 ===============
-User definable world generator objects using a script like file format based on YAML syntax.
+InfiniteObjects is a plugin for the [Spout voxel game platform](https://github.com/SpoutDev/Spout) that provides user definable world generator objects using a script like file format based on YAML syntax.
 
 [Homepage] | [Forums] | [Twitter] | [Facebook]
 
@@ -42,7 +42,7 @@ If you're using [Maven](http://maven.apache.org/download.html) to manage project
         <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
-If you do not already have our repo in your repository list, you will need to add this also:
+If you do not already have our repo in your repository list, you will need to add this as well:
 
     <repository>
         <id>spout-repo</id>
