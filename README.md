@@ -1,31 +1,40 @@
 InfiniteObjects
-==========
-An experimental project for user definable world generator objects using a script like file format based on YAML syntax.
+===============
+User definable world generator objects using a script like file format based on YAML syntax.
 
-Visit our [website][Website] or get support on our [forums][Forums].  
-View issues and bugs on our [issue tracker][Issues].
+[Homepage] | [Forums] | [Twitter] | [Facebook]
 
-[![Follow us on Twitter][Twitter Logo]][Twitter][![Like us on Facebook][Facebook Logo]][Facebook][![Donate to the Spout project][Donate Logo]][Donate]
+## Using
+It's easy to get started! Simply [download the latest][Download] compatible InfiniteObjects jar, then place the jar in your [Spout](http://get.spout.org) plugins folder. Configure as desired, and fire up your server! Simple as that!
 
-## The License
-InfiniteObjects is licensed under the [GNU Lesser General Public License Version 3][License], but with a provision that files are released under the MIT license 180 days after they are published. Please see the `LICENSE.txt` file for details.
+## Contributing
+Like the project? Feel free to [donate] to help continue development!
 
-Copyright (c) 2011-2012, SpoutDev <<http://www.spout.org/>>  
-[![Spout][Author Logo]][Website]
+Are you a talented programmer looking to contribute some code? We'd love the help!
+* Open a pull request with your changes, following our [guidelines and coding standards](http://spout.in/prguide).
+* Please follow the above guidelines for your pull request(s) accepted.
+* For help setting up the project, keep reading!
 
-## Getting the Source
-The latest and greatest source can be found on [GitHub].  
-Download the latest builds from [Jenkins]. [![Build Status](http://build.spout.org/job/InfiniteObjects/badge/icon)][Jenkins]  
-View the latest [Javadoc][Javadoc].
+## The license
+InfiniteObjects is licensed under the [GNU Lesser General Public License Version 3][License], but with a provision that files are released under the MIT license 180 days after they are published. This dual license is referred to as the [Spout License Version 1][License].
 
-## Compiling the Source
-InfiniteObjects uses Maven to handle its dependencies.
+## Getting the source
+The latest and greatest source can be found here on [GitHub][Source].
 
-* Install [Maven 2 or 3](http://maven.apache.org/download.html)  
+If you are using Git, use this command to clone the project:
+
+    git clone git://github.com/SpoutDev/InfiniteObjects.git
+
+Or download the [latest zip archive][Download Source].
+
+## Compiling the source
+SpoutPlugin uses Maven to handle its dependencies.
+
+* Download and install [Maven 2 or 3](http://maven.apache.org/download.html)  
 * Checkout this repo and run: `mvn clean install`
 
-## Using with Your Project
-For those using [Maven](http://maven.apache.org/download.html) to manage project dependencies, simply include the following in your pom.xml:
+## Using with your project
+If you're using [Maven](http://maven.apache.org/download.html) to manage project dependencies, simply include the following in your `pom.xml`:
 
     <dependency>
         <groupId>org.spout</groupId>
@@ -33,38 +42,26 @@ For those using [Maven](http://maven.apache.org/download.html) to manage project
         <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
-If you do not already have repo.spout.org in your repository list, you will need to add this also:
+If you do not already have our repo in your repository list, you will need to add this also:
 
     <repository>
         <id>spout-repo</id>
-        <url>http://repo.spout.org</url>
+        <url>http://nexus.spout.org/content/groups/public</url>
     </repository>
 
-## Coding and Pull Request Conventions
-* Generally follow the Oracle coding standards.
-* No spaces, only tabs for indentation.
-* No trailing whitespaces on new lines.
-* 200 column limit for readability.
-* Pull requests must compile, work, and be formatted properly.
-* Sign-off on ALL your commits - this indicates you agree to the terms of our license.
-* No merges should be included in pull requests unless the pull request's purpose is a merge.
-* Number of commits in a pull request should be kept to *one commit* and all additional commits must be *squashed*.
-* You may have more than one commit in a pull request if the commits are separate changes, otherwise squash them.
-* For clarification, see the full pull request guidelines [here](http://spout.in/prguide).
+If you'd prefer to manually import the latest .jar file, you can get it from our [download site][Download].
 
-**Please follow the above conventions if you want your pull request(s) accepted.**
+Want to know how to use the API? Check out the latest [docs][Docs].
 
-[Author Logo]: http://cdn.spout.org/spout-github.png
-[License]: http://www.spout.org/SpoutDevLicenseV1.txt
-[Website]: http://www.spout.org
+[Homepage]: http://www.spout.org
 [Forums]: http://forums.spout.org
-[GitHub]: https://github.com/SpoutDev/InfiniteObjects
-[Javadoc]: http://jd.spout.org/infiniteobjects/
-[Jenkins]: http://build.spout.org/job/InfiniteObjects
-[Issues]: http://issues.spout.org/browse/InfiniteObjects
+[License]: http://spout.in/licensev1
+[Source]: https://github.com/SpoutDev/InfiniteObjects
+[Download]: http://get.spout.org/dev/infobjects.jar
+[Download Source]: https://github.com/SpoutDev/InfiniteObjects/archive/master.zip
+[Builds]: https://travis-ci.org/SpoutDev/InfiniteObjects
+[Docs]: http://jd.spout.org/infiniteobjects
+[Issues]: https://spoutdev.atlassian.net/browse/INFOBJECTS
 [Twitter]: http://spout.in/twitter
-[Twitter Logo]: http://cdn.spout.org/img/button/twitter_follow_us.png
 [Facebook]: http://spout.in/facebook
-[Facebook Logo]: http://cdn.spout.org/img/button/facebook_like_us.png
 [Donate]: http://spout.in/donate
-[Donate Logo]: http://cdn.spout.org/img/button/donate_paypal_96x96.png
